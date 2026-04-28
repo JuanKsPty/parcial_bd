@@ -25,6 +25,10 @@
     color: var(--text);
     padding: 24px 16px 60px;
   }
+  .page-shell {
+    width: min(100%, 960px);
+    margin: 0 auto;
+  }
   header {
     background: var(--primary);
     color: #fff;
@@ -316,10 +320,20 @@
   }
   #goto-first-btn.visible { display: block; }
   #goto-first-btn:hover { background: var(--red-light); }
+
+  @media (min-width: 1200px) {
+    .page-shell { max-width: 900px; }
+  }
+
+  @media (max-width: 640px) {
+    body { padding: 16px 10px 44px; }
+    .page-shell { width: 100%; }
+  }
 </style>
 </head>
 <body>
 
+<main class="page-shell">
 <header>
   <h1>🎓 BASE DE DATOS — PARCIAL No. 1</h1>
   <p>Universidad Tecnológica de Panamá</p>
@@ -361,6 +375,7 @@
   </div>
   <button id="reset-btn" onclick="resetQuiz()">🔄 Intentar de nuevo</button>
 </div>
+</main>
 
 <script>
 // ══════════════════════════════════════════════
