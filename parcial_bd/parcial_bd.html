@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parcial No. 1 – Base de Datos</title>
+<style>
+  :root {
+    --primary: #1a237e;
+    --accent:  #283593;
+    --green:   #2e7d32;
+    --red:     #c62828;
+    --red-light: #ffebee;
+    --red-border: #ef9a9a;
+    --yellow:  #f9a825;
+    --bg:      #f0f2f8;
+    --card:    #ffffff;
+    --border:  #c5cae9;
+    --text:    #1a1a2e;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 24px 16px 60px;
+  }
+  header {
+    background: var(--primary);
+    color: #fff;
+    border-radius: 14px;
+    padding: 24px 28px;
+    margin-bottom: 28px;
+    text-align: center;
+    box-shadow: 0 4px 18px rgba(26,35,126,.3);
+  }
+  header h1 { font-size: 1.35rem; letter-spacing: .5px; }
+  header p  { font-size: .85rem; opacity: .85; margin-top: 6px; }
+
+  .part-title {
+    background: var(--accent);
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 28px 0 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.15);
+  }
+  .part-title span { font-weight: 400; font-size: .85rem; opacity: .85; }
+
+  /* ── True / False ── */
+  .tf-card {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+    transition: border-color .2s, background .2s;
+    scroll-margin-top: 16px;
+  }
+  .tf-card:hover { border-color: var(--accent); }
+  .tf-card .q-num {
+    font-size: .75rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: .8px;
+  }
+  .tf-card p { font-size: .92rem; line-height: 1.55; margin-bottom: 14px; }
+  .tf-options { display: flex; gap: 12px; }
+  .tf-btn {
+    flex: 1;
+    padding: 9px 0;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    background: #fff;
+    font-size: .92rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .18s;
+    color: var(--text);
+  }
+  .tf-btn:hover { background: #e8eaf6; border-color: var(--accent); }
+  .tf-btn.selected { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  /* ── Multiple Choice ── */
+  .mc-card {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 22px;
+    margin-bottom: 14px;
+    transition: border-color .2s, background .2s;
+    scroll-margin-top: 16px;
+  }
+  .mc-card:hover { border-color: var(--accent); }
+  .mc-card .q-num {
+    font-size: .75rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: .8px;
+  }
+  .mc-card .q-text { font-size: .93rem; line-height: 1.6; margin-bottom: 14px; font-weight: 500; }
+  .mc-options { display: flex; flex-direction: column; gap: 8px; }
+  .mc-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: .9rem;
+    transition: all .18s;
+    background: #fff;
+  }
+  .mc-option:hover { background: #e8eaf6; border-color: var(--accent); }
+  .mc-option.selected { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .mc-option .opt-letter {
+    font-weight: 700;
+    min-width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--border);
+    font-size: .8rem;
+    transition: background .18s;
+  }
+  .mc-option.selected .opt-letter { background: rgba(255,255,255,.3); }
+
+  /* ── Unanswered state ── */
+  .tf-card.unanswered,
+  .mc-card.unanswered {
+    border-color: var(--red) !important;
+    background: var(--red-light) !important;
+    animation: shake .4s ease;
+  }
+  @keyframes shake {
+    0%   { transform: translateX(0); }
+    20%  { transform: translateX(-6px); }
+    40%  { transform: translateX(6px); }
+    60%  { transform: translateX(-4px); }
+    80%  { transform: translateX(4px); }
+    100% { transform: translateX(0); }
+  }
+
+  /* ── Inline error message per card ── */
+  .inline-error {
+    display: none;
+    align-items: center;
+    gap: 7px;
+    margin-top: 10px;
+    background: #ffcdd2;
+    border: 1.5px solid var(--red-border);
+    border-radius: 8px;
+    padding: 8px 13px;
+    font-size: .83rem;
+    font-weight: 700;
+    color: var(--red);
+  }
+  .inline-error.visible { display: flex; }
+  .inline-error svg { flex-shrink: 0; }
+
+  /* ── Global error banner ── */
+  #global-error {
+    display: none;
+    background: #c62828;
+    color: #fff;
+    border-radius: 12px;
+    padding: 14px 20px;
+    margin-bottom: 18px;
+    font-size: .93rem;
+    font-weight: 700;
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(198,40,40,.35);
+    cursor: pointer;
+    transition: background .2s;
+  }
+  #global-error.visible { display: block; }
+  #global-error:hover { background: #b71c1c; }
+  #global-error .error-sub {
+    font-size: .8rem;
+    font-weight: 400;
+    opacity: .85;
+    margin-top: 4px;
+  }
+
+  /* ── Pending counter badge ── */
+  #pending-badge {
+    display: inline-block;
+    background: #fff;
+    color: var(--red);
+    border-radius: 20px;
+    padding: 2px 10px;
+    font-size: .82rem;
+    font-weight: 800;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+
+  /* ── Evaluate button ── */
+  #eval-btn {
+    display: block;
+    width: 100%;
+    max-width: 420px;
+    margin: 32px auto 0;
+    padding: 16px;
+    background: var(--primary);
+    color: #fff;
+    font-size: 1.05rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    letter-spacing: .5px;
+    box-shadow: 0 4px 16px rgba(26,35,126,.35);
+    transition: background .2s, transform .1s;
+  }
+  #eval-btn:hover { background: var(--accent); transform: translateY(-2px); }
+  #eval-btn:active { transform: translateY(0); }
+
+  /* ── Results ── */
+  #results { display: none; }
+  .result-summary {
+    background: var(--primary);
+    color: #fff;
+    border-radius: 14px;
+    padding: 26px 28px;
+    margin: 28px 0 22px;
+    text-align: center;
+    box-shadow: 0 4px 18px rgba(26,35,126,.3);
+  }
+  .result-summary .score-big { font-size: 3rem; font-weight: 800; line-height: 1; }
+  .result-summary .score-label { font-size: .9rem; opacity: .8; margin-top: 6px; }
+  .result-summary .score-breakdown {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 14px;
+    font-size: .88rem;
+  }
+  .result-summary .score-breakdown div {
+    background: rgba(255,255,255,.15);
+    border-radius: 8px;
+    padding: 8px 16px;
+  }
+
+  .tf-card.correct   { border-color: var(--green); background: #f1f8f1; }
+  .tf-card.incorrect { border-color: var(--red);   background: #fff5f5; }
+  .mc-card.correct   { border-color: var(--green); background: #f1f8f1; }
+  .mc-card.incorrect { border-color: var(--red);   background: #fff5f5; }
+
+  .feedback-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: .82rem;
+    font-weight: 700;
+    margin-top: 10px;
+  }
+  .badge-correct   { background: #c8e6c9; color: var(--green); }
+  .badge-incorrect { background: #ffcdd2; color: var(--red);   }
+  .correct-answer-note {
+    font-size: .82rem;
+    color: var(--green);
+    font-weight: 600;
+    margin-top: 6px;
+  }
+
+  .tf-btn.result-correct   { background: var(--green); color: #fff; border-color: var(--green); }
+  .tf-btn.result-incorrect { background: var(--red);   color: #fff; border-color: var(--red); }
+  .mc-option.result-correct   { background: var(--green); color: #fff; border-color: var(--green); }
+  .mc-option.result-incorrect { background: var(--red);   color: #fff; border-color: var(--red); }
+
+  #reset-btn {
+    display: block;
+    width: 100%;
+    max-width: 420px;
+    margin: 16px auto 0;
+    padding: 13px;
+    background: #fff;
+    color: var(--primary);
+    font-size: .97rem;
+    font-weight: 700;
+    border: 2px solid var(--primary);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  #reset-btn:hover { background: var(--bg); }
+
+  /* ── Go to first error button ── */
+  #goto-first-btn {
+    display: none;
+    width: 100%;
+    max-width: 420px;
+    margin: 12px auto 0;
+    padding: 12px;
+    background: #fff;
+    color: var(--red);
+    font-size: .9rem;
+    font-weight: 700;
+    border: 2px solid var(--red);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all .2s;
+    text-align: center;
+  }
+  #goto-first-btn.visible { display: block; }
+  #goto-first-btn:hover { background: var(--red-light); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🎓 BASE DE DATOS — PARCIAL No. 1</h1>
+  <p>Universidad Tecnológica de Panamá · Facilitadora: Ing. Dilsa E. Vergara D.</p>
+</header>
+
+<!-- ══════════════ GLOBAL ERROR ══════════════ -->
+<div id="global-error" onclick="goToFirstUnanswered()">
+  <div>⚠️ Debes responder todas las preguntas antes de evaluar <span id="pending-badge"></span></div>
+  <div class="error-sub">Haz clic aquí para ir a la primera pregunta sin responder →</div>
+</div>
+
+<!-- ══════════════ PARTE I ══════════════ -->
+<div class="part-title">
+  I Parte: Cierto y Falso
+  <span>— Coloca C (Cierto) o F (Falso) en cada enunciado · 40 puntos</span>
+</div>
+<div id="tf-section"></div>
+
+<!-- ══════════════ PARTE II ══════════════ -->
+<div class="part-title">
+  II Parte: Selección Múltiple
+  <span>— Escoge la respuesta correcta · 24 puntos</span>
+</div>
+<div id="mc-section"></div>
+
+<!-- ══════════════ BOTONES ══════════════ -->
+<button id="eval-btn" onclick="checkAndEvaluate()">✅ Evaluar mis respuestas</button>
+<button id="goto-first-btn" onclick="goToFirstUnanswered()">↑ Ir a la primera pregunta sin responder</button>
+
+<!-- ══════════════ RESULTADOS ══════════════ -->
+<div id="results">
+  <div class="result-summary">
+    <div class="score-big" id="score-pct">—</div>
+    <div class="score-label">Puntuación total sobre 64 puntos</div>
+    <div class="score-breakdown">
+      <div id="score-tf">Parte I: —/40</div>
+      <div id="score-mc">Parte II: —/24</div>
+    </div>
+  </div>
+  <button id="reset-btn" onclick="resetQuiz()">🔄 Intentar de nuevo</button>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+//  DATOS DEL PARCIAL
+// ══════════════════════════════════════════════
+const tfQuestions = [
+  { text: "La técnica basada en archivos prestaba diversos servicios a los usuarios finales pero presentaba el inconveniente de que existían problemas al querer establecer referencias cruzadas.", answer: "C" },
+  { text: "Cuando existe una dependencia entre los datos y los programas resulta difícil realizar cambios a una estructura que depende del almacenamiento y de programas de aplicación.", answer: "C" },
+  { text: "Lo que se busca al utilizar sistemas de BD es contar con diferentes repositorios corporativos de datos centralizados, compuestos por datos que pueden ser utilizados simultáneamente por múltiples departamentos y usuarios.", answer: "F" },
+  { text: "Las BD representan las entidades, atributos y relaciones lógicas entre las entidades de forma independiente y no se establecen las interrelaciones de forma marcada.", answer: "F" },
+  { text: "Los sistemas de gestión de base de datos se refieren al sistema de software que permite a los usuarios definir, crear, mantener y controlar el acceso a la base de datos.", answer: "C" },
+  { text: "Las arquitecturas de bases de datos han evolucionado mucho desde sus comienzos, aunque la considerada estándar es la descrita por el comité ANSI-ISO 1200.", answer: "F" },
+  { text: "El modelo de los datos es el conjunto de conceptos para describir la estructura de la base de datos: los datos, relaciones, semántica asociada a los datos y restricciones de consistencia.", answer: "C" },
+  { text: "El lenguaje de manipulación de datos (LMD), se utiliza para definir los esquemas en un gestor de base de datos.", answer: "F" },
+  { text: "Una transacción es una colección de operaciones que hacen una función lógica simple en una aplicación de base de datos.", answer: "C" },
+  { text: "La arquitectura de tres esquemas o tres niveles está compuesta por el nivel externo, nivel de capa de datos (incluye metadata) y el nivel de aplicaciones.", answer: "F" },
+  { text: "Un SGBD debe proporcionar un mecanismo que garantice que se lleven a cabo todas las actualizaciones correspondientes a una determinada transacción, o que no se lleve a cabo ninguna.", answer: "C" },
+  { text: "Uno de los objetivos de la arquitectura ANSI SPARC es que ayuda a ocultar los detalles físicos de almacenamiento a los usuarios que manejan diferentes vistas.", answer: "C" },
+  { text: "Como los sistemas de BD son un componente fundamental de los sistemas de información corporativos, el ciclo de vida de desarrollo de un sistema de BD no puede estar asociado al ciclo de vida de los sistemas de información.", answer: "F" },
+  { text: "Los modelos de datos son medios formales para representar los datos asociados a una situación real y para manipular tal representación.", answer: "C" },
+  { text: "Las bases de datos almacenan el conjunto de datos que se relacionan lógicamente y que se representan a través de tablas.", answer: "C" },
+  { text: "Los usuarios que comparten una misma base de datos tienen acceso a toda la información contenida en ella.", answer: "F" },
+  { text: "El lenguaje de definición de datos (LDD), especifica la estructura, tipo de datos, así como las restricciones sobre los datos.", answer: "C" },
+  { text: "Un DBMS, puede ser descrito como una colección desorganizada y no relacionada de datos.", answer: "F" },
+  { text: "La independencia física de los datos permite modificar la forma en que los datos están almacenados en una base de datos sin necesidad de cambiar las aplicaciones que acceden a ellos.", answer: "C" },
+  { text: "A nivel externo (arquitectura de tres niveles), diferentes usuarios tendrán la misma vista de la data del sistema.", answer: "F" }
+];
+
+const mcQuestions = [
+  {
+    text: "Al disponer de un repositorio centralizado para todos los datos, se dispone de un lenguaje que permite a los usuarios insertar, actualizar, borrar y extraer datos de la base de datos. Dicho lenguaje se conoce como:",
+    options: [
+      { letter: "a", text: "Lenguaje de consulta" },
+      { letter: "b", text: "Lenguaje estructurado de consulta (SQL)" },
+      { letter: "c", text: "Lenguaje de manipulación de datos" },
+      { letter: "d", text: "Lenguaje de definición de datos" },
+      { letter: "e", text: "Lenguaje de aplicación" }
+    ],
+    answer: "c"
+  },
+  {
+    text: "Son aquellos programas que le permiten a los usuarios interactuar con la base de datos y que se utilizan para alimentar y mantener la base de datos y para generar información:",
+    options: [
+      { letter: "a", text: "Programas de consulta" },
+      { letter: "b", text: "Lenguaje estructurado de consulta (SQL)" },
+      { letter: "c", text: "Lenguaje de manipulación de datos" },
+      { letter: "d", text: "Lenguaje de definición de datos" },
+      { letter: "e", text: "Programas de aplicación" }
+    ],
+    answer: "e"
+  },
+  {
+    text: "Es todo sistema de software que permite a los usuarios definir, crear, mantener y controlar el acceso a la base de datos:",
+    options: [
+      { letter: "a", text: "Base de Datos" },
+      { letter: "b", text: "Sistema de gestión de base de datos" },
+      { letter: "c", text: "Programas de aplicación de base de datos" },
+      { letter: "d", text: "Sistemas de archivos" },
+      { letter: "e", text: "Sistemas de registros" }
+    ],
+    answer: "b"
+  },
+  {
+    text: "Es aquel concepto que hace referencia a la validez y coherencia de los datos, misma que se expresa en términos de sus restricciones, es decir reglas de coherencia que no se permite que la base de datos viole.",
+    options: [
+      { letter: "a", text: "Coherencia" },
+      { letter: "b", text: "Integridad de los datos" },
+      { letter: "c", text: "Seguridad" },
+      { letter: "d", text: "Redundancia" },
+      { letter: "e", text: "Compartición de datos" }
+    ],
+    answer: "b"
+  },
+  {
+    text: "Uno de los beneficios o ventajas del uso de las bases de datos habla sobre eliminar los desperdicios de espacio al almacenar la misma información en más de un archivo. Este concepto es conocido como:",
+    options: [
+      { letter: "a", text: "Imposición de estándares" },
+      { letter: "b", text: "Control de la redundancia de los datos" },
+      { letter: "c", text: "Seguridad de los datos" },
+      { letter: "d", text: "Nivel de concurrencia" },
+      { letter: "e", text: "Compartición de los datos" }
+    ],
+    answer: "b"
+  },
+  {
+    text: "Una de las funcionalidades a nivel de los SGBD que permiten a los usuarios especificar las estructuras y tipos de datos y las restricciones aplicables a los datos que hay que almacenar en la base de datos:",
+    options: [
+      { letter: "a", text: "Lenguaje de consulta" },
+      { letter: "b", text: "Lenguaje estructurado de consulta (SQL)" },
+      { letter: "c", text: "Lenguaje de manipulación de datos" },
+      { letter: "d", text: "Lenguaje de definición de datos" },
+      { letter: "e", text: "Lenguaje de aplicación" }
+    ],
+    answer: "d"
+  },
+  {
+    text: "Propiedad que describe algún aspecto del objeto que se quiere almacenar a nivel del esquema conceptual de la base de datos.",
+    options: [
+      { letter: "a", text: "Entidad" },
+      { letter: "b", text: "Atributo" },
+      { letter: "c", text: "Relaciones" },
+      { letter: "d", text: "Caso de uso" }
+    ],
+    answer: "b"
+  },
+  {
+    text: "Capacidad de cambiar el esquema conceptual sin tener que cambiar el esquema externo o los programas. Ejemplo: eliminación de una entidad, atributo.",
+    options: [
+      { letter: "a", text: "Independencia lógica" },
+      { letter: "b", text: "Independencia física" },
+      { letter: "c", text: "Interdependencia de datos y programas" },
+      { letter: "d", text: "Independencia total de datos" }
+    ],
+    answer: "a"
+  },
+  {
+    text: "Capacidad de cambiar el esquema interno sin tener cambios en el conceptual o en el externo. Ejemplo de estos cambios pueden ser los que se producen por una reorganización física de los archivos.",
+    options: [
+      { letter: "a", text: "Independencia lógica" },
+      { letter: "b", text: "Independencia física" },
+      { letter: "c", text: "Interdependencia de datos y programas" },
+      { letter: "d", text: "Independencia total de datos" }
+    ],
+    answer: "b"
+  },
+  {
+    text: "Es un objeto distintivo dentro la organización y que es de gran valor para la representación de un modelo conceptual de BD.",
+    options: [
+      { letter: "a", text: "Entidad" },
+      { letter: "b", text: "Atributo" },
+      { letter: "c", text: "Relaciones" },
+      { letter: "d", text: "Caso de uso" }
+    ],
+    answer: "a"
+  }
+];
+
+// ══════════════════════════════════════════════
+//  ESTADO
+// ══════════════════════════════════════════════
+const tfAnswers = new Array(tfQuestions.length).fill(null);
+const mcAnswers = new Array(mcQuestions.length).fill(null);
+
+// SVG icon for error
+const errorIcon = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`;
+
+// ══════════════════════════════════════════════
+//  RENDER
+// ══════════════════════════════════════════════
+function renderTF() {
+  const container = document.getElementById('tf-section');
+  tfQuestions.forEach((q, i) => {
+    const card = document.createElement('div');
+    card.className = 'tf-card';
+    card.id = `tf-card-${i}`;
+    card.innerHTML = `
+      <div class="q-num">Pregunta ${i + 1} de ${tfQuestions.length}</div>
+      <p>${q.text}</p>
+      <div class="tf-options">
+        <button class="tf-btn" id="tf-C-${i}" onclick="selectTF(${i}, 'C')">C — Cierto</button>
+        <button class="tf-btn" id="tf-F-${i}" onclick="selectTF(${i}, 'F')">F — Falso</button>
+      </div>
+      <div class="inline-error" id="tf-error-${i}">${errorIcon} Debes seleccionar Cierto o Falso para continuar.</div>
+      <div id="tf-feedback-${i}"></div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function renderMC() {
+  const container = document.getElementById('mc-section');
+  mcQuestions.forEach((q, i) => {
+    const card = document.createElement('div');
+    card.className = 'mc-card';
+    card.id = `mc-card-${i}`;
+    const optionsHTML = q.options.map(opt => `
+      <div class="mc-option" id="mc-opt-${i}-${opt.letter}" onclick="selectMC(${i}, '${opt.letter}')">
+        <span class="opt-letter">${opt.letter.toUpperCase()}</span>
+        <span>${opt.text}</span>
+      </div>
+    `).join('');
+    card.innerHTML = `
+      <div class="q-num">Pregunta ${i + 1} de ${mcQuestions.length}</div>
+      <div class="q-text">${i + 1}. ${q.text}</div>
+      <div class="mc-options">${optionsHTML}</div>
+      <div class="inline-error" id="mc-error-${i}">${errorIcon} Debes seleccionar una opción para continuar.</div>
+      <div id="mc-feedback-${i}"></div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+// ══════════════════════════════════════════════
+//  SELECCIÓN
+// ══════════════════════════════════════════════
+function selectTF(i, val) {
+  tfAnswers[i] = val;
+  document.getElementById(`tf-C-${i}`).classList.toggle('selected', val === 'C');
+  document.getElementById(`tf-F-${i}`).classList.toggle('selected', val === 'F');
+  // Clear error state
+  const card = document.getElementById(`tf-card-${i}`);
+  card.classList.remove('unanswered');
+  document.getElementById(`tf-error-${i}`).classList.remove('visible');
+  updateGlobalError();
+}
+
+function selectMC(i, letter) {
+  mcAnswers[i] = letter;
+  const card = document.getElementById(`mc-card-${i}`);
+  card.querySelectorAll('.mc-option').forEach(opt => opt.classList.remove('selected'));
+  document.getElementById(`mc-opt-${i}-${letter}`).classList.add('selected');
+  // Clear error state
+  card.classList.remove('unanswered');
+  document.getElementById(`mc-error-${i}`).classList.remove('visible');
+  updateGlobalError();
+}
+
+// ══════════════════════════════════════════════
+//  GLOBAL ERROR UPDATE (live count)
+// ══════════════════════════════════════════════
+function countUnanswered() {
+  const missingTF = tfAnswers.filter(a => a === null).length;
+  const missingMC = mcAnswers.filter(a => a === null).length;
+  return missingTF + missingMC;
+}
+
+function updateGlobalError() {
+  const total = countUnanswered();
+  if (total === 0) {
+    document.getElementById('global-error').classList.remove('visible');
+    document.getElementById('goto-first-btn').classList.remove('visible');
+  } else {
+    const badge = document.getElementById('pending-badge');
+    badge.textContent = `${total} sin responder`;
+    // Update only if already visible (don't show mid-quiz)
+    if (document.getElementById('global-error').classList.contains('visible')) {
+      // keep visible, update count
+    }
+  }
+}
+
+// ══════════════════════════════════════════════
+//  GO TO FIRST UNANSWERED
+// ══════════════════════════════════════════════
+function goToFirstUnanswered() {
+  // Find first unanswered TF
+  for (let i = 0; i < tfAnswers.length; i++) {
+    if (tfAnswers[i] === null) {
+      document.getElementById(`tf-card-${i}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+  }
+  // Find first unanswered MC
+  for (let i = 0; i < mcAnswers.length; i++) {
+    if (mcAnswers[i] === null) {
+      document.getElementById(`mc-card-${i}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+  }
+}
+
+// ══════════════════════════════════════════════
+//  EVALUACIÓN
+// ══════════════════════════════════════════════
+function checkAndEvaluate() {
+  const missingTF = tfAnswers.some(a => a === null);
+  const missingMC = mcAnswers.some(a => a === null);
+
+  if (missingTF || missingMC) {
+    // Show global error banner
+    const total = countUnanswered();
+    document.getElementById('pending-badge').textContent = `${total} sin responder`;
+    document.getElementById('global-error').classList.add('visible');
+    document.getElementById('goto-first-btn').classList.add('visible');
+
+    // Mark all unanswered TF
+    tfAnswers.forEach((a, i) => {
+      if (a === null) {
+        document.getElementById(`tf-card-${i}`).classList.add('unanswered');
+        document.getElementById(`tf-error-${i}`).classList.add('visible');
+      }
+    });
+
+    // Mark all unanswered MC
+    mcAnswers.forEach((a, i) => {
+      if (a === null) {
+        document.getElementById(`mc-card-${i}`).classList.add('unanswered');
+        document.getElementById(`mc-error-${i}`).classList.add('visible');
+      }
+    });
+
+    // Scroll to first unanswered
+    goToFirstUnanswered();
+    return;
+  }
+
+  // All answered — proceed with evaluation
+  document.getElementById('global-error').classList.remove('visible');
+  document.getElementById('goto-first-btn').classList.remove('visible');
+
+  let tfCorrect = 0;
+  let mcCorrect = 0;
+
+  // Evaluate TF
+  tfQuestions.forEach((q, i) => {
+    const card = document.getElementById(`tf-card-${i}`);
+    const userAns = tfAnswers[i];
+    const correct = userAns === q.answer;
+
+    ['C','F'].forEach(v => {
+      const btn = document.getElementById(`tf-${v}-${i}`);
+      btn.onclick = null;
+      btn.style.cursor = 'default';
+      btn.classList.remove('selected');
+    });
+
+    if (correct) {
+      tfCorrect++;
+      card.classList.add('correct');
+      document.getElementById(`tf-${userAns}-${i}`).classList.add('result-correct');
+      document.getElementById(`tf-feedback-${i}`).innerHTML =
+        `<span class="feedback-badge badge-correct">✅ Correcto — ${q.answer === 'C' ? 'Cierto' : 'Falso'}</span>`;
+    } else {
+      card.classList.add('incorrect');
+      document.getElementById(`tf-${userAns}-${i}`).classList.add('result-incorrect');
+      document.getElementById(`tf-${q.answer}-${i}`).classList.add('result-correct');
+      document.getElementById(`tf-feedback-${i}`).innerHTML =
+        `<span class="feedback-badge badge-incorrect">❌ Incorrecto — Tu respuesta: ${userAns === 'C' ? 'Cierto' : 'Falso'}</span>
+         <p class="correct-answer-note">✔ Respuesta correcta: ${q.answer === 'C' ? 'Cierto (C)' : 'Falso (F)'}</p>`;
+    }
+  });
+
+  // Evaluate MC
+  mcQuestions.forEach((q, i) => {
+    const card = document.getElementById(`mc-card-${i}`);
+    const userAns = mcAnswers[i];
+    const correct = userAns === q.answer;
+
+    card.querySelectorAll('.mc-option').forEach(opt => {
+      opt.onclick = null;
+      opt.style.cursor = 'default';
+      opt.classList.remove('selected');
+    });
+
+    const correctOpt = q.options.find(o => o.letter === q.answer);
+    if (correct) {
+      mcCorrect++;
+      card.classList.add('correct');
+      document.getElementById(`mc-opt-${i}-${userAns}`).classList.add('result-correct');
+      document.getElementById(`mc-feedback-${i}`).innerHTML =
+        `<span class="feedback-badge badge-correct">✅ Correcto</span>`;
+    } else {
+      card.classList.add('incorrect');
+      document.getElementById(`mc-opt-${i}-${userAns}`).classList.add('result-incorrect');
+      document.getElementById(`mc-opt-${i}-${q.answer}`).classList.add('result-correct');
+      const userOpt = q.options.find(o => o.letter === userAns);
+      document.getElementById(`mc-feedback-${i}`).innerHTML =
+        `<span class="feedback-badge badge-incorrect">❌ Incorrecto — Elegiste: (${userAns.toUpperCase()}) ${userOpt.text}</span>
+         <p class="correct-answer-note">✔ Respuesta correcta: (${q.answer.toUpperCase()}) ${correctOpt.text}</p>`;
+    }
+  });
+
+  const ptsTF = tfCorrect * 2;
+  const ptsMC = mcCorrect * 2.4;
+  const totalPts = ptsTF + ptsMC;
+
+  document.getElementById('score-pct').textContent = totalPts.toFixed(1) + ' / 64';
+  document.getElementById('score-tf').textContent  = `Parte I: ${ptsTF}/40 (${tfCorrect}/${tfQuestions.length} correctas)`;
+  document.getElementById('score-mc').textContent  = `Parte II: ${ptsMC.toFixed(1)}/24 (${mcCorrect}/${mcQuestions.length} correctas)`;
+
+  document.getElementById('eval-btn').style.display = 'none';
+  document.getElementById('results').style.display  = 'block';
+  document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ══════════════════════════════════════════════
+//  RESET
+// ══════════════════════════════════════════════
+function resetQuiz() {
+  window.location.reload();
+}
+
+// ══════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════
+renderTF();
+renderMC();
+</script>
+</body>
+</html>
