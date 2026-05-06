@@ -3,766 +3,610 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Parcial No. 1 – Base de Datos</title>
+<title>Examen — Ingeniería de Software 1</title>
 <style>
-  :root {
-    --primary: #1a237e;
-    --accent:  #283593;
-    --green:   #2e7d32;
-    --red:     #c62828;
-    --red-light: #ffebee;
-    --red-border: #ef9a9a;
-    --yellow:  #f9a825;
-    --bg:      #f0f2f8;
-    --card:    #ffffff;
-    --border:  #c5cae9;
-    --text:    #1a1a2e;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: 'Segoe UI', Arial, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    padding: 24px 16px 60px;
-  }
-  .page-shell {
-    width: min(100%, 960px);
-    margin: 0 auto;
-  }
-  header {
-    background: var(--primary);
-    color: #fff;
-    border-radius: 14px;
-    padding: 24px 28px;
-    margin-bottom: 28px;
-    text-align: center;
-    box-shadow: 0 4px 18px rgba(26,35,126,.3);
-  }
-  header h1 { font-size: 1.35rem; letter-spacing: .5px; }
-  header p  { font-size: .85rem; opacity: .85; margin-top: 6px; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#f4f5f7;min-height:100vh;padding:24px;color:#1a1a2e}
+  .container{max-width:820px;margin:0 auto;background:#fff;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.08);overflow:hidden}
 
-  .part-title {
-    background: var(--accent);
-    color: #fff;
-    padding: 12px 20px;
-    border-radius: 10px;
-    font-size: 1rem;
-    font-weight: 700;
-    margin: 28px 0 16px;
-    box-shadow: 0 2px 8px rgba(0,0,0,.15);
-  }
-  .part-title span { font-weight: 400; font-size: .85rem; opacity: .85; }
+  /* HEADER */
+  .header{background:#1a1a2e;color:#fff;padding:48px 36px;text-align:center}
+  .header h1{font-size:1.6em;font-weight:700;letter-spacing:-.5px;margin-bottom:6px}
+  .header p{font-size:.92em;opacity:.6;font-weight:400}
+  .header .meta{margin-top:16px;display:flex;justify-content:center;gap:24px;font-size:.82em;opacity:.5}
+  .header .meta span{display:flex;align-items:center;gap:6px}
 
-  /* ── True / False ── */
-  .tf-card {
-    background: var(--card);
-    border: 1.5px solid var(--border);
-    border-radius: 12px;
-    padding: 16px 20px;
-    margin-bottom: 12px;
-    transition: border-color .2s, background .2s;
-    scroll-margin-top: 16px;
-  }
-  .tf-card:hover { border-color: var(--accent); }
-  .tf-card .q-num {
-    font-size: .75rem;
-    font-weight: 700;
-    color: var(--accent);
-    margin-bottom: 8px;
-    text-transform: uppercase;
-    letter-spacing: .8px;
-  }
-  .tf-card p { font-size: .92rem; line-height: 1.55; margin-bottom: 14px; }
-  .tf-options { display: flex; gap: 12px; }
-  .tf-btn {
-    flex: 1;
-    padding: 9px 0;
-    border: 2px solid var(--border);
-    border-radius: 8px;
-    background: #fff;
-    font-size: .92rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all .18s;
-    color: var(--text);
-  }
-  .tf-btn:hover { background: #e8eaf6; border-color: var(--accent); }
-  .tf-btn.selected { background: var(--accent); color: #fff; border-color: var(--accent); }
+  /* SVG icons inline */
+  .icon{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:middle}
 
-  /* ── Multiple Choice ── */
-  .mc-card {
-    background: var(--card);
-    border: 1.5px solid var(--border);
-    border-radius: 12px;
-    padding: 18px 22px;
-    margin-bottom: 14px;
-    transition: border-color .2s, background .2s;
-    scroll-margin-top: 16px;
-  }
-  .mc-card:hover { border-color: var(--accent); }
-  .mc-card .q-num {
-    font-size: .75rem;
-    font-weight: 700;
-    color: var(--accent);
-    margin-bottom: 8px;
-    text-transform: uppercase;
-    letter-spacing: .8px;
-  }
-  .mc-card .q-text { font-size: .93rem; line-height: 1.6; margin-bottom: 14px; font-weight: 500; }
-  .mc-options { display: flex; flex-direction: column; gap: 8px; }
-  .mc-option {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 14px;
-    border: 2px solid var(--border);
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: .9rem;
-    transition: all .18s;
-    background: #fff;
-  }
-  .mc-option:hover { background: #e8eaf6; border-color: var(--accent); }
-  .mc-option.selected { background: var(--accent); color: #fff; border-color: var(--accent); }
-  .mc-option .opt-letter {
-    font-weight: 700;
-    min-width: 22px;
-    height: 22px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    background: var(--border);
-    font-size: .8rem;
-    transition: background .18s;
-  }
-  .mc-option.selected .opt-letter { background: rgba(255,255,255,.3); }
+  /* PROGRESS */
+  .progress-wrap{height:3px;background:#eee}
+  .progress-bar{height:100%;width:0%;background:#1a1a2e;transition:width .5s ease}
 
-  /* ── Unanswered state ── */
-  .tf-card.unanswered,
-  .mc-card.unanswered {
-    border-color: var(--red) !important;
-    background: var(--red-light) !important;
-    animation: shake .4s ease;
-  }
-  @keyframes shake {
-    0%   { transform: translateX(0); }
-    20%  { transform: translateX(-6px); }
-    40%  { transform: translateX(6px); }
-    60%  { transform: translateX(-4px); }
-    80%  { transform: translateX(4px); }
-    100% { transform: translateX(0); }
-  }
+  /* SECTIONS */
+  .section-title{padding:14px 36px;font-size:.78em;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#fff;background:#6c63ff}
+  .section-title.cap2{background:#0ea5e9}
+  .section-title.match{background:#10b981}
 
-  /* ── Inline error message per card ── */
-  .inline-error {
-    display: none;
-    align-items: center;
-    gap: 7px;
-    margin-top: 10px;
-    background: #ffcdd2;
-    border: 1.5px solid var(--red-border);
-    border-radius: 8px;
-    padding: 8px 13px;
-    font-size: .83rem;
-    font-weight: 700;
-    color: var(--red);
-  }
-  .inline-error.visible { display: flex; }
-  .inline-error svg { flex-shrink: 0; }
+  /* QUESTION */
+  .question{padding:28px 36px;border-bottom:1px solid #f0f0f0}
+  .question:last-of-type{border-bottom:none}
+  .q-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+  .q-num{font-size:.8em;font-weight:700;color:#6c63ff;background:#f0eeff;padding:3px 10px;border-radius:6px}
+  .q-pts{font-size:.75em;color:#999}
+  .q-type{font-size:.68em;font-weight:600;padding:2px 8px;border-radius:4px;margin-left:8px;color:#fff}
+  .q-type.tf{background:#f59e0b}
+  .q-type.mc{background:#6c63ff}
+  .q-type.mt{background:#10b981}
+  .q-text{font-size:.95em;line-height:1.65;margin-bottom:16px;font-weight:500}
 
-  /* ── Global error banner ── */
-  #global-error {
-    display: none;
-    background: #c62828;
-    color: #fff;
-    border-radius: 12px;
-    padding: 14px 20px;
-    margin-bottom: 18px;
-    font-size: .93rem;
-    font-weight: 700;
-    text-align: center;
-    box-shadow: 0 4px 16px rgba(198,40,40,.35);
-    cursor: pointer;
-    transition: background .2s;
-  }
-  #global-error.visible { display: block; }
-  #global-error:hover { background: #b71c1c; }
-  #global-error .error-sub {
-    font-size: .8rem;
-    font-weight: 400;
-    opacity: .85;
-    margin-top: 4px;
-  }
+  /* OPTIONS */
+  .options label{display:flex;align-items:center;padding:11px 14px;margin:5px 0;border:1.5px solid #e8e8e8;border-radius:8px;cursor:pointer;transition:all .15s;font-size:.9em;position:relative}
+  .options label:hover{border-color:#c5c3e6;background:#fafaff}
+  .options input[type="radio"]{margin-right:10px;accent-color:#6c63ff;flex-shrink:0}
+  .options label.correct-answer{border-color:#10b981;background:#ecfdf5;color:#065f46;font-weight:600}
+  .options label.wrong-answer{border-color:#ef4444;background:#fef2f2;color:#991b1b;font-weight:600}
 
-  /* ── Pending counter badge ── */
-  #pending-badge {
-    display: inline-block;
-    background: #fff;
-    color: var(--red);
-    border-radius: 20px;
-    padding: 2px 10px;
-    font-size: .82rem;
-    font-weight: 800;
-    margin-left: 8px;
-    vertical-align: middle;
-  }
+  /* MATCH */
+  .match-row{display:flex;align-items:center;gap:12px;padding:6px 0;flex-wrap:wrap}
+  .match-label{font-weight:600;min-width:200px;font-size:.9em}
+  select.match-select{padding:8px 12px;border:1.5px solid #e8e8e8;border-radius:8px;font-size:.88em;width:100%;max-width:380px;cursor:pointer;transition:border .2s;background:#fff;font-family:inherit}
+  select.match-select:focus{border-color:#6c63ff;outline:none}
+  select.match-correct{border-color:#10b981!important;background:#ecfdf5!important}
+  select.match-wrong{border-color:#ef4444!important;background:#fef2f2!important}
 
-  /* ── Evaluate button ── */
-  #eval-btn {
-    display: block;
-    width: 100%;
-    max-width: 420px;
-    margin: 32px auto 0;
-    padding: 16px;
-    background: var(--primary);
-    color: #fff;
-    font-size: 1.05rem;
-    font-weight: 700;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    letter-spacing: .5px;
-    box-shadow: 0 4px 16px rgba(26,35,126,.35);
-    transition: background .2s, transform .1s;
-  }
-  #eval-btn:hover { background: var(--accent); transform: translateY(-2px); }
-  #eval-btn:active { transform: translateY(0); }
+  /* BUTTONS */
+  .btn-check{display:inline-flex;align-items:center;gap:6px;margin-top:14px;background:#1a1a2e;color:#fff;border:none;padding:9px 22px;border-radius:8px;font-size:.85em;font-weight:600;cursor:pointer;transition:opacity .2s}
+  .btn-check:hover{opacity:.85}
+  .btn-check:disabled{opacity:.3;cursor:not-allowed}
 
-  /* ── Results ── */
-  #results { display: none; }
-  .result-summary {
-    background: var(--primary);
-    color: #fff;
-    border-radius: 14px;
-    padding: 26px 28px;
-    margin: 28px 0 22px;
-    text-align: center;
-    box-shadow: 0 4px 18px rgba(26,35,126,.3);
-  }
-  .result-summary .score-big { font-size: 3rem; font-weight: 800; line-height: 1; }
-  .result-summary .score-label { font-size: .9rem; opacity: .8; margin-top: 6px; }
-  .result-summary .score-breakdown {
-    display: flex;
-    justify-content: center;
-    gap: 24px;
-    margin-top: 14px;
-    font-size: .88rem;
-  }
-  .result-summary .score-breakdown div {
-    background: rgba(255,255,255,.15);
-    border-radius: 8px;
-    padding: 8px 16px;
-  }
+  /* FEEDBACK (minimal, no text, just for matching feedback) */
+  .feedback{margin-top:8px;padding:0;font-size:.85em;font-weight:600;display:none}
+  .feedback.show{display:block}
+  .feedback.correct-fb{color:#10b981}
+  .feedback.wrong-fb{color:#ef4444}
 
-  .tf-card.correct   { border-color: var(--green); background: #f1f8f1; }
-  .tf-card.incorrect { border-color: var(--red);   background: #fff5f5; }
-  .mc-card.correct   { border-color: var(--green); background: #f1f8f1; }
-  .mc-card.incorrect { border-color: var(--red);   background: #fff5f5; }
+  /* SCORE */
+  .score-section{padding:40px 36px;text-align:center;background:#fafafa;border-top:1px solid #f0f0f0}
+  .score-section h2{font-size:1.1em;font-weight:700;color:#1a1a2e;margin-bottom:6px;letter-spacing:-.3px}
+  .score-display{font-size:2.8em;font-weight:800;color:#1a1a2e;margin:12px 0}
+  .score-display span{color:#6c63ff}
+  .btn-score{display:inline-flex;align-items:center;gap:6px;margin-top:16px;background:#6c63ff;color:#fff;border:none;padding:12px 32px;border-radius:10px;font-size:.95em;font-weight:700;cursor:pointer;transition:opacity .2s}
+  .btn-score:hover{opacity:.85}
+  .btn-reset{display:inline-flex;align-items:center;gap:6px;margin-top:12px;background:transparent;color:#999;border:1.5px solid #ddd;padding:10px 28px;border-radius:10px;font-size:.88em;font-weight:600;cursor:pointer;transition:all .2s}
+  .btn-reset:hover{border-color:#999;color:#666}
 
-  .feedback-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-size: .82rem;
-    font-weight: 700;
-    margin-top: 10px;
-  }
-  .badge-correct   { background: #c8e6c9; color: var(--green); }
-  .badge-incorrect { background: #ffcdd2; color: var(--red);   }
-  .correct-answer-note {
-    font-size: .82rem;
-    color: var(--green);
-    font-weight: 600;
-    margin-top: 6px;
-  }
-
-  .tf-btn.result-correct   { background: var(--green); color: #fff; border-color: var(--green); }
-  .tf-btn.result-incorrect { background: var(--red);   color: #fff; border-color: var(--red); }
-  .mc-option.result-correct   { background: var(--green); color: #fff; border-color: var(--green); }
-  .mc-option.result-incorrect { background: var(--red);   color: #fff; border-color: var(--red); }
-
-  #reset-btn {
-    display: block;
-    width: 100%;
-    max-width: 420px;
-    margin: 16px auto 0;
-    padding: 13px;
-    background: #fff;
-    color: var(--primary);
-    font-size: .97rem;
-    font-weight: 700;
-    border: 2px solid var(--primary);
-    border-radius: 12px;
-    cursor: pointer;
-    transition: all .2s;
-  }
-  #reset-btn:hover { background: var(--bg); }
-
-  /* ── Go to first error button ── */
-  #goto-first-btn {
-    display: none;
-    width: 100%;
-    max-width: 420px;
-    margin: 12px auto 0;
-    padding: 12px;
-    background: #fff;
-    color: var(--red);
-    font-size: .9rem;
-    font-weight: 700;
-    border: 2px solid var(--red);
-    border-radius: 12px;
-    cursor: pointer;
-    transition: all .2s;
-    text-align: center;
-  }
-  #goto-first-btn.visible { display: block; }
-  #goto-first-btn:hover { background: var(--red-light); }
-
-  @media (min-width: 1200px) {
-    .page-shell { max-width: 900px; }
-  }
-
-  @media (max-width: 640px) {
-    body { padding: 16px 10px 44px; }
-    .page-shell { width: 100%; }
-  }
+  .answered .options label{cursor:default;pointer-events:none}
+  .answered select.match-select{pointer-events:none}
 </style>
 </head>
 <body>
-
-<main class="page-shell">
-<header>
-  <h1>🎓 BASE DE DATOS — PARCIAL No. 1</h1>
-  <p>Universidad Tecnológica de Panamá</p>
-</header>
-
-<!-- ══════════════ GLOBAL ERROR ══════════════ -->
-<div id="global-error" onclick="goToFirstUnanswered()">
-  <div>⚠️ Debes responder todas las preguntas antes de evaluar <span id="pending-badge"></span></div>
-  <div class="error-sub">Haz clic aquí para ir a la primera pregunta sin responder →</div>
-</div>
-
-<!-- ══════════════ PARTE I ══════════════ -->
-<div class="part-title">
-  I Parte: Cierto y Falso
-  <span>— Coloca C (Cierto) o F (Falso) en cada enunciado · 40 puntos</span>
-</div>
-<div id="tf-section"></div>
-
-<!-- ══════════════ PARTE II ══════════════ -->
-<div class="part-title">
-  II Parte: Selección Múltiple
-  <span>— Escoge la respuesta correcta · 24 puntos</span>
-</div>
-<div id="mc-section"></div>
-
-<!-- ══════════════ BOTONES ══════════════ -->
-<button id="eval-btn" onclick="checkAndEvaluate()">✅ Evaluar mis respuestas</button>
-<button id="goto-first-btn" onclick="goToFirstUnanswered()">↑ Ir a la primera pregunta sin responder</button>
-
-<!-- ══════════════ RESULTADOS ══════════════ -->
-<div id="results">
-  <div class="result-summary">
-    <div class="score-big" id="score-pct">—</div>
-    <div class="score-label">Puntuación total sobre 64 puntos</div>
-    <div class="score-breakdown">
-      <div id="score-tf">Parte I: —/40</div>
-      <div id="score-mc">Parte II: —/24</div>
+<div class="container">
+  <div class="header">
+    <h1>Examen de Ingeniería de Software 1</h1>
+    <p>Capítulo 1: Fundamentos &mdash; Capítulo 2: Modelado del Negocio</p>
+    <div class="meta">
+      <span><svg class="icon"><circle cx="8" cy="8" r="7"/><path d="M8 4v4l3 3"/></svg> 25 preguntas</span>
+      <span><svg class="icon"><polygon points="8 1 10 6 16 6 11 9.5 13 15 8 11.5 3 15 5 9.5 0 6 6 6"/></svg> 100 puntos</span>
     </div>
   </div>
-  <button id="reset-btn" onclick="resetQuiz()">🔄 Intentar de nuevo</button>
+  <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+
+  <!-- ===================== CAP 1 — CIERTO O FALSO ===================== -->
+  <div class="section-title">Capítulo 1 — Cierto o Falso</div>
+
+  <!-- Q1 -->
+  <div class="question" id="q1">
+    <div class="q-head">
+      <span><span class="q-num">01</span><span class="q-type tf">C / F</span></span>
+      <span class="q-pts">4 pts</span>
+    </div>
+    <div class="q-text">El software es un producto físico que se deteriora con el tiempo.</div>
+    <div class="options">
+      <label id="q1_a"><input type="radio" name="q1" value="a"> Cierto</label>
+      <label id="q1_b"><input type="radio" name="q1" value="b"> Falso</label>
+    </div>
+    <button class="btn-check" onclick="grade('q1','b',4)">Calificar</button>
+  </div>
+
+  <!-- Q2 -->
+  <div class="question" id="q2">
+    <div class="q-head">
+      <span><span class="q-num">02</span><span class="q-type tf">C / F</span></span>
+      <span class="q-pts">4 pts</span>
+    </div>
+    <div class="q-text">Según el IEEE, la Ingeniería de Software es "la aplicación de un enfoque sistemático, disciplinado y cuantificable hacia el desarrollo, operación y mantenimiento del software".</div>
+    <div class="options">
+      <label id="q2_a"><input type="radio" name="q2" value="a"> Cierto</label>
+      <label id="q2_b"><input type="radio" name="q2" value="b"> Falso</label>
+    </div>
+    <button class="btn-check" onclick="grade('q2','a',4)">Calificar</button>
+  </div>
+
+  <!-- Q3 -->
+  <div class="question" id="q3">
+    <div class="q-head">
+      <span><span class="q-num">03</span><span class="q-type tf">C / F</span></span>
+      <span class="q-pts">4 pts</span>
+    </div>
+    <div class="q-text">Más del 80% del esfuerzo de mantenimiento del software es usado para acciones correctivas.</div>
+    <div class="options">
+      <label id="q3_a"><input type="radio" name="q3" value="a"> Cierto</label>
+      <label id="q3_b"><input type="radio" name="q3" value="b"> Falso</label>
+    </div>
+    <button class="btn-check" onclick="grade('q3','b',4)">Calificar</button>
+  </div>
+
+  <!-- Q4 -->
+  <div class="question" id="q4">
+    <div class="q-head">
+      <span><span class="q-num">04</span><span class="q-type tf">C / F</span></span>
+      <span class="q-pts">4 pts</span>
+    </div>
+    <div class="q-text">Un mismo participante en un proyecto de software puede cumplir varios roles o papeles.</div>
+    <div class="options">
+      <label id="q4_a"><input type="radio" name="q4" value="a"> Cierto</label>
+      <label id="q4_b"><input type="radio" name="q4" value="b"> Falso</label>
+    </div>
+    <button class="btn-check" onclick="grade('q4','a',4)">Calificar</button>
+  </div>
+
+  <!-- Q5 -->
+  <div class="question" id="q5">
+    <div class="q-head">
+      <span><span class="q-num">05</span><span class="q-type tf">C / F</span></span>
+      <span class="q-pts">4 pts</span>
+    </div>
+    <div class="q-text">La Ingeniería de Software es una disciplina que involucra actividades de modelado, solución de problemas y adquisición de conocimiento.</div>
+    <div class="options">
+      <label id="q5_a"><input type="radio" name="q5" value="a"> Cierto</label>
+      <label id="q5_b"><input type="radio" name="q5" value="b"> Falso</label>
+    </div>
+    <button class="btn-check" onclick="grade('q5','a',4)">Calificar</button>
+  </div>
+
+  <!-- ===================== CAP 1 — MEJOR RESPUESTA ===================== -->
+  <div class="section-title">Capítulo 1 — Mejor Respuesta</div>
+
+  <!-- Q6 -->
+  <div class="question" id="q6">
+    <div class="q-head">
+      <span><span class="q-num">06</span><span class="q-type mc">Selección</span></span>
+      <span class="q-pts">4 pts</span>
+    </div>
+    <div class="q-text">¿Cuáles son las cuatro capas de la Ingeniería de Software (de la base hacia arriba)?</div>
+    <div class="options">
+      <label id="q6_a"><input type="radio" name="q6" value="a"> Herramientas → Métodos → Proceso → Calidad</label>
+      <label id="q6_b"><input type="radio" name="q6" value="b"> Enfoque de calidad → Proceso → Métodos → Herramientas</label>
+      <label id="q6_c"><input type="radio" name="q6" value="c"> Proceso → Calidad → Herramientas → Métodos</label>
+      <label id="q6_d"><input type="radio" name="q6" value="d"> Calidad → Herramientas → Métodos → Proceso</label>
+    </div>
+    <button class="btn-check" onclick="grade('q6','b',4)">Calificar</button>
+  </div>
+
+  <!-- Q7 -->
+  <div class="question" id="q7">
+    <div class="q-head">
+      <span><span class="q-num">07</span><span class="q-type mc">Selección</span></span>
+      <span class="q-pts">4 pts</span>
+    </div>
+    <div class="q-text">¿En qué fase del desarrollo el costo relativo de corrección de errores es de 20?</div>
+    <div class="options">
+      <label id="q7_a"><input type="radio" name="q7" value="a"> Pruebas de Aceptación</label>
+      <label id="q7_b"><input type="radio" name="q7" value="b"> Diseño</label>
+      <label id="q7_c"><input type="radio" name="q7" value="c"> Mantenimiento</label>
+      <label id="q7_d"><input type="radio" name="q7" value="d"> Programación</label>
+    </div>
+    <button class="btn-check" onclick="grade('q7','c',4)">Calificar</button>
+  </div>
+
+  <!-- Q8 -->
+  <div class="question" id="q8">
+    <div class="q-head">
+      <span><span class="q-num">08</span><span class="q-type mc">Selección</span></span>
+      <span class="q-pts">4 pts</span>
+    </div>
+    <div class="q-text">¿Qué porcentaje de los proyectos de software fallan según las estadísticas presentadas?</div>
+    <div class="options">
+      <label id="q8_a"><input type="radio" name="q8" value="a"> 52%</label>
+      <label id="q8_b"><input type="radio" name="q8" value="b"> 31%</label>
+      <label id="q8_c"><input type="radio" name="q8" value="c"> 84%</label>
+      <label id="q8_d"><input type="radio" name="q8" value="d"> 67%</label>
+    </div>
+    <button class="btn-check" onclick="grade('q8','c',4)">Calificar</button>
+  </div>
+
+  <!-- Q9 -->
+  <div class="question" id="q9">
+    <div class="q-head">
+      <span><span class="q-num">09</span><span class="q-type mc">Selección</span></span>
+      <span class="q-pts">4 pts</span>
+    </div>
+    <div class="q-text">¿Cuál de los siguientes NO es un reto de la Ingeniería de Software mencionado en el capítulo?</div>
+    <div class="options">
+      <label id="q9_a"><input type="radio" name="q9" value="a"> Reto a lo heredado</label>
+      <label id="q9_b"><input type="radio" name="q9" value="b"> Reto de la heterogeneidad</label>
+      <label id="q9_c"><input type="radio" name="q9" value="c"> Reto de la entrega</label>
+      <label id="q9_d"><input type="radio" name="q9" value="d"> Reto de la inteligencia artificial</label>
+    </div>
+    <button class="btn-check" onclick="grade('q9','d',4)">Calificar</button>
+  </div>
+
+  <!-- Q10 -->
+  <div class="question" id="q10">
+    <div class="q-head">
+      <span><span class="q-num">10</span><span class="q-type mc">Selección</span></span>
+      <span class="q-pts">4 pts</span>
+    </div>
+    <div class="q-text">¿Cuál es el resultado principal de la actividad de Análisis del Sistema?</div>
+    <div class="options">
+      <label id="q10_a"><input type="radio" name="q10" value="a"> Código fuente funcional</label>
+      <label id="q10_b"><input type="radio" name="q10" value="b"> Especificación de requerimientos</label>
+      <label id="q10_c"><input type="radio" name="q10" value="c"> Modelo de objeto con atributos, operaciones y asociaciones</label>
+      <label id="q10_d"><input type="radio" name="q10" value="d"> Plan de pruebas</label>
+    </div>
+    <button class="btn-check" onclick="grade('q10','c',4)">Calificar</button>
+  </div>
+
+  <!-- Q11 -->
+  <div class="question" id="q11">
+    <div class="q-head">
+      <span><span class="q-num">11</span><span class="q-type mc">Selección</span></span>
+      <span class="q-pts">4 pts</span>
+    </div>
+    <div class="q-text">¿Quién es responsable de crear el plan de desarrollo, cronograma, calcular costos y supervisar el avance del proyecto?</div>
+    <div class="options">
+      <label id="q11_a"><input type="radio" name="q11" value="a"> Analista de Requerimientos</label>
+      <label id="q11_b"><input type="radio" name="q11" value="b"> Propietario del Sistema</label>
+      <label id="q11_c"><input type="radio" name="q11" value="c"> Líder del Proyecto</label>
+      <label id="q11_d"><input type="radio" name="q11" value="d"> Arquitecto de Software</label>
+    </div>
+    <button class="btn-check" onclick="grade('q11','c',4)">Calificar</button>
+  </div>
+
+  <!-- Q12 -->
+  <div class="question" id="q12">
+    <div class="q-head">
+      <span><span class="q-num">12</span><span class="q-type mc">Selección</span></span>
+      <span class="q-pts">4 pts</span>
+    </div>
+    <div class="q-text">Un requerimiento que especifica rendimiento, confiabilidad o disponibilidad del sistema se clasifica como:</div>
+    <div class="options">
+      <label id="q12_a"><input type="radio" name="q12" value="a"> Requerimiento funcional</label>
+      <label id="q12_b"><input type="radio" name="q12" value="b"> Requerimiento no funcional</label>
+      <label id="q12_c"><input type="radio" name="q12" value="c"> Restricción</label>
+      <label id="q12_d"><input type="radio" name="q12" value="d"> Objetivo del proyecto</label>
+    </div>
+    <button class="btn-check" onclick="grade('q12','b',4)">Calificar</button>
+  </div>
+
+  <!-- ===================== CAP 2 — CIERTO O FALSO ===================== -->
+  <div class="section-title cap2">Capítulo 2 — Cierto o Falso</div>
+
+  <!-- Q13 -->
+  <div class="question" id="q13">
+    <div class="q-head">
+      <span><span class="q-num">13</span><span class="q-type tf">C / F</span></span>
+      <span class="q-pts">4 pts</span>
+    </div>
+    <div class="q-text">Las reglas de negocio son requisitos del sistema.</div>
+    <div class="options">
+      <label id="q13_a"><input type="radio" name="q13" value="a"> Cierto</label>
+      <label id="q13_b"><input type="radio" name="q13" value="b"> Falso</label>
+    </div>
+    <button class="btn-check" onclick="grade('q13','b',4)">Calificar</button>
+  </div>
+
+  <!-- Q14 -->
+  <div class="question" id="q14">
+    <div class="q-head">
+      <span><span class="q-num">14</span><span class="q-type tf">C / F</span></span>
+      <span class="q-pts">4 pts</span>
+    </div>
+    <div class="q-text">Un actor del negocio puede representar a un grupo de personas o a una compañía, no solo a un individuo.</div>
+    <div class="options">
+      <label id="q14_a"><input type="radio" name="q14" value="a"> Cierto</label>
+      <label id="q14_b"><input type="radio" name="q14" value="b"> Falso</label>
+    </div>
+    <button class="btn-check" onclick="grade('q14','a',4)">Calificar</button>
+  </div>
+
+  <!-- Q15 -->
+  <div class="question" id="q15">
+    <div class="q-head">
+      <span><span class="q-num">15</span><span class="q-type tf">C / F</span></span>
+      <span class="q-pts">4 pts</span>
+    </div>
+    <div class="q-text">Los trabajadores del negocio representan posiciones dentro de la organización, no roles.</div>
+    <div class="options">
+      <label id="q15_a"><input type="radio" name="q15" value="a"> Cierto</label>
+      <label id="q15_b"><input type="radio" name="q15" value="b"> Falso</label>
+    </div>
+    <button class="btn-check" onclick="grade('q15','b',4)">Calificar</button>
+  </div>
+
+  <!-- Q16 -->
+  <div class="question" id="q16">
+    <div class="q-head">
+      <span><span class="q-num">16</span><span class="q-type tf">C / F</span></span>
+      <span class="q-pts">4 pts</span>
+    </div>
+    <div class="q-text">La especificación de un caso de uso de negocio debe presentar el "cómo" del proceso, no el "qué".</div>
+    <div class="options">
+      <label id="q16_a"><input type="radio" name="q16" value="a"> Cierto</label>
+      <label id="q16_b"><input type="radio" name="q16" value="b"> Falso</label>
+    </div>
+    <button class="btn-check" onclick="grade('q16','b',4)">Calificar</button>
+  </div>
+
+  <!-- ===================== CAP 2 — MEJOR RESPUESTA ===================== -->
+  <div class="section-title cap2">Capítulo 2 — Mejor Respuesta</div>
+
+  <!-- Q17 -->
+  <div class="question" id="q17">
+    <div class="q-head">
+      <span><span class="q-num">17</span><span class="q-type mc">Selección</span></span>
+      <span class="q-pts">4 pts</span>
+    </div>
+    <div class="q-text">¿Cuál es el propósito principal de la Ingeniería de Negocios?</div>
+    <div class="options">
+      <label id="q17_a"><input type="radio" name="q17" value="a"> Diseñar la interfaz de usuario del sistema</label>
+      <label id="q17_b"><input type="radio" name="q17" value="b"> Diseñar y modelar el negocio de acuerdo a ciertos objetivos</label>
+      <label id="q17_c"><input type="radio" name="q17" value="c"> Programar los módulos del sistema</label>
+      <label id="q17_d"><input type="radio" name="q17" value="d"> Realizar pruebas de aceptación</label>
+    </div>
+    <button class="btn-check" onclick="grade('q17','b',4)">Calificar</button>
+  </div>
+
+  <!-- Q18 -->
+  <div class="question" id="q18">
+    <div class="q-head">
+      <span><span class="q-num">18</span><span class="q-type mc">Selección</span></span>
+      <span class="q-pts">4 pts</span>
+    </div>
+    <div class="q-text">¿Cuál es la desventaja principal de la técnica de Observación de Campo?</div>
+    <div class="options">
+      <label id="q18_a"><input type="radio" name="q18" value="a"> No permite recopilar datos cualitativos</label>
+      <label id="q18_b"><input type="radio" name="q18" value="b"> El efecto de Hawthorne (influenciar las actividades)</label>
+      <label id="q18_c"><input type="radio" name="q18" value="c"> Solo se puede usar con grupos grandes</label>
+      <label id="q18_d"><input type="radio" name="q18" value="d"> Requiere software especializado</label>
+    </div>
+    <button class="btn-check" onclick="grade('q18','b',4)">Calificar</button>
+  </div>
+
+  <!-- Q19 -->
+  <div class="question" id="q19">
+    <div class="q-head">
+      <span><span class="q-num">19</span><span class="q-type mc">Selección</span></span>
+      <span class="q-pts">4 pts</span>
+    </div>
+    <div class="q-text">¿Cuántos participantes tiene normalmente un Focus Group?</div>
+    <div class="options">
+      <label id="q19_a"><input type="radio" name="q19" value="a"> 1 a 3</label>
+      <label id="q19_b"><input type="radio" name="q19" value="b"> 5 a 10</label>
+      <label id="q19_c"><input type="radio" name="q19" value="c"> 15 a 20</label>
+      <label id="q19_d"><input type="radio" name="q19" value="d"> 25 a 30</label>
+    </div>
+    <button class="btn-check" onclick="grade('q19','b',4)">Calificar</button>
+  </div>
+
+  <!-- Q20 -->
+  <div class="question" id="q20">
+    <div class="q-head">
+      <span><span class="q-num">20</span><span class="q-type mc">Selección</span></span>
+      <span class="q-pts">4 pts</span>
+    </div>
+    <div class="q-text">En la transición del Modelo del Negocio al Modelo del Sistema, ¿en qué se puede convertir cada trabajador del negocio?</div>
+    <div class="options">
+      <label id="q20_a"><input type="radio" name="q20" value="a"> En una entidad de negocio</label>
+      <label id="q20_b"><input type="radio" name="q20" value="b"> En un actor del sistema y/o un Caso de Uso del Sistema</label>
+      <label id="q20_c"><input type="radio" name="q20" value="c"> En una regla de negocio</label>
+      <label id="q20_d"><input type="radio" name="q20" value="d"> En un diagrama de actividades</label>
+    </div>
+    <button class="btn-check" onclick="grade('q20','b',4)">Calificar</button>
+  </div>
+
+  <!-- Q21 -->
+  <div class="question" id="q21">
+    <div class="q-head">
+      <span><span class="q-num">21</span><span class="q-type mc">Selección</span></span>
+      <span class="q-pts">4 pts</span>
+    </div>
+    <div class="q-text">¿Qué elementos caracterizan un proceso de negocio?</div>
+    <div class="options">
+      <label id="q21_a"><input type="radio" name="q21" value="a"> Código fuente, compiladores y pruebas</label>
+      <label id="q21_b"><input type="radio" name="q21" value="b"> Datos, tareas, agentes y flujo de trabajo</label>
+      <label id="q21_c"><input type="radio" name="q21" value="c"> Diagramas UML, clases y herencia</label>
+      <label id="q21_d"><input type="radio" name="q21" value="d"> Servidores, redes y bases de datos</label>
+    </div>
+    <button class="btn-check" onclick="grade('q21','b',4)">Calificar</button>
+  </div>
+
+  <!-- ===================== EMPAREJAMIENTO ===================== -->
+  <div class="section-title match">Ambos Capítulos — Emparejamiento</div>
+
+  <!-- Q22 -->
+  <div class="question" id="q22">
+    <div class="q-head">
+      <span><span class="q-num">22</span><span class="q-type mt">Emparejar</span></span>
+      <span class="q-pts">4 pts</span>
+    </div>
+    <div class="q-text">Relacione cada rol con su responsabilidad principal:</div>
+    <div class="match-row"><span class="match-label">a) Propietario del Sistema</span>
+      <select class="match-select" id="q22a"><option value="">-- Seleccione --</option><option value="1">Fijar presupuesto y plazos</option><option value="2">Escribir código fuente</option><option value="3">Definir arquitectura de SW</option><option value="4">Desarrollar plan de pruebas</option></select>
+    </div>
+    <div class="match-row"><span class="match-label">b) Programador</span>
+      <select class="match-select" id="q22b"><option value="">-- Seleccione --</option><option value="1">Fijar presupuesto y plazos</option><option value="2">Escribir código fuente</option><option value="3">Definir arquitectura de SW</option><option value="4">Desarrollar plan de pruebas</option></select>
+    </div>
+    <div class="match-row"><span class="match-label">c) Arquitecto de SW</span>
+      <select class="match-select" id="q22c"><option value="">-- Seleccione --</option><option value="1">Fijar presupuesto y plazos</option><option value="2">Escribir código fuente</option><option value="3">Definir arquitectura de SW</option><option value="4">Desarrollar plan de pruebas</option></select>
+    </div>
+    <div class="match-row"><span class="match-label">d) Probador</span>
+      <select class="match-select" id="q22d"><option value="">-- Seleccione --</option><option value="1">Fijar presupuesto y plazos</option><option value="2">Escribir código fuente</option><option value="3">Definir arquitectura de SW</option><option value="4">Desarrollar plan de pruebas</option></select>
+    </div>
+    <button class="btn-check" onclick="gradeMatch('q22',{a:'1',b:'2',c:'3',d:'4'},4)">Calificar</button>
+    <div class="feedback" id="fb_q22"></div>
+  </div>
+
+  <!-- Q23 -->
+  <div class="question" id="q23">
+    <div class="q-head">
+      <span><span class="q-num">23</span><span class="q-type mt">Emparejar</span></span>
+      <span class="q-pts">4 pts</span>
+    </div>
+    <div class="q-text">Relacione cada elemento del Modelado de Negocios con su definición:</div>
+    <div class="match-row"><span class="match-label">a) Actor del Negocio</span>
+      <select class="match-select" id="q23a"><option value="">-- Seleccione --</option><option value="1">Externo al proceso, interactúa con el negocio</option><option value="2">Interno al proceso, colabora para lograr el objetivo</option><option value="3">Producto o entregable del proceso</option><option value="4">Secuencia de acciones con resultado observable</option></select>
+    </div>
+    <div class="match-row"><span class="match-label">b) Trabajador del Negocio</span>
+      <select class="match-select" id="q23b"><option value="">-- Seleccione --</option><option value="1">Externo al proceso, interactúa con el negocio</option><option value="2">Interno al proceso, colabora para lograr el objetivo</option><option value="3">Producto o entregable del proceso</option><option value="4">Secuencia de acciones con resultado observable</option></select>
+    </div>
+    <div class="match-row"><span class="match-label">c) Entidad de Negocio</span>
+      <select class="match-select" id="q23c"><option value="">-- Seleccione --</option><option value="1">Externo al proceso, interactúa con el negocio</option><option value="2">Interno al proceso, colabora para lograr el objetivo</option><option value="3">Producto o entregable del proceso</option><option value="4">Secuencia de acciones con resultado observable</option></select>
+    </div>
+    <div class="match-row"><span class="match-label">d) Caso de Uso del Negocio</span>
+      <select class="match-select" id="q23d"><option value="">-- Seleccione --</option><option value="1">Externo al proceso, interactúa con el negocio</option><option value="2">Interno al proceso, colabora para lograr el objetivo</option><option value="3">Producto o entregable del proceso</option><option value="4">Secuencia de acciones con resultado observable</option></select>
+    </div>
+    <button class="btn-check" onclick="gradeMatch('q23',{a:'1',b:'2',c:'3',d:'4'},4)">Calificar</button>
+    <div class="feedback" id="fb_q23"></div>
+  </div>
+
+  <!-- Q24 -->
+  <div class="question" id="q24">
+    <div class="q-head">
+      <span><span class="q-num">24</span><span class="q-type mc">Selección</span></span>
+      <span class="q-pts">4 pts</span>
+    </div>
+    <div class="q-text">Las historias de usuario son utilizadas principalmente en:</div>
+    <div class="options">
+      <label id="q24_a"><input type="radio" name="q24" value="a"> Metodologías tradicionales (Cascada)</label>
+      <label id="q24_b"><input type="radio" name="q24" value="b"> Metodologías de desarrollo ágiles</label>
+      <label id="q24_c"><input type="radio" name="q24" value="c"> Solo en pruebas de software</label>
+      <label id="q24_d"><input type="radio" name="q24" value="d"> En la fase de mantenimiento</label>
+    </div>
+    <button class="btn-check" onclick="grade('q24','b',4)">Calificar</button>
+  </div>
+
+  <!-- Q25 -->
+  <div class="question" id="q25">
+    <div class="q-head">
+      <span><span class="q-num">25</span><span class="q-type mc">Selección</span></span>
+      <span class="q-pts">4 pts</span>
+    </div>
+    <div class="q-text">¿Cuál es el orden correcto de las actividades del ciclo de vida clásico del desarrollo de software?</div>
+    <div class="options">
+      <label id="q25_a"><input type="radio" name="q25" value="a"> Diseño → Análisis → Requerimientos → Implementación → Pruebas</label>
+      <label id="q25_b"><input type="radio" name="q25" value="b"> Requerimientos → Análisis → Diseño del Sistema → Diseño de Objetos → Implementación</label>
+      <label id="q25_c"><input type="radio" name="q25" value="c"> Implementación → Diseño → Análisis → Requerimientos → Mantenimiento</label>
+      <label id="q25_d"><input type="radio" name="q25" value="d"> Análisis → Requerimientos → Implementación → Diseño → Pruebas</label>
+    </div>
+    <button class="btn-check" onclick="grade('q25','b',4)">Calificar</button>
+  </div>
+
+  <!-- ===================== SCORE ===================== -->
+  <div class="score-section">
+    <h2>Resultado Final</h2>
+    <div class="score-display" id="totalScore">-- <span>/ 100</span></div>
+    <br>
+    <button class="btn-score" onclick="calcTotal()">
+      <svg class="icon" style="stroke:#fff"><polyline points="1 4 1 10 7 10"/><polyline points="9 15 15 15 15 9"/><path d="M13 3L7 10"/><path d="M3 13l6-7"/></svg>
+      Calcular puntuación
+    </button>
+    <br>
+    <button class="btn-reset" onclick="resetExam()">
+      <svg class="icon"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+      Reiniciar
+    </button>
+  </div>
 </div>
-</main>
 
 <script>
-// ══════════════════════════════════════════════
-//  DATOS DEL PARCIAL
-// ══════════════════════════════════════════════
-const tfQuestions = [
-  { text: "La técnica basada en archivos prestaba diversos servicios a los usuarios finales pero presentaba el inconveniente de que existían problemas al querer establecer referencias cruzadas.", answer: "C" },
-  { text: "Cuando existe una dependencia entre los datos y los programas resulta difícil realizar cambios a una estructura que depende del almacenamiento y de programas de aplicación.", answer: "C" },
-  { text: "Lo que se busca al utilizar sistemas de BD es contar con diferentes repositorios corporativos de datos centralizados, compuestos por datos que pueden ser utilizados simultáneamente por múltiples departamentos y usuarios.", answer: "F" },
-  { text: "Las BD representan las entidades, atributos y relaciones lógicas entre las entidades de forma independiente y no se establecen las interrelaciones de forma marcada.", answer: "F" },
-  { text: "Los sistemas de gestión de base de datos se refieren al sistema de software que permite a los usuarios definir, crear, mantener y controlar el acceso a la base de datos.", answer: "C" },
-  { text: "Las arquitecturas de bases de datos han evolucionado mucho desde sus comienzos, aunque la considerada estándar es la descrita por el comité ANSI-ISO 1200.", answer: "F" },
-  { text: "El modelo de los datos es el conjunto de conceptos para describir la estructura de la base de datos: los datos, relaciones, semántica asociada a los datos y restricciones de consistencia.", answer: "C" },
-  { text: "El lenguaje de manipulación de datos (LMD), se utiliza para definir los esquemas en un gestor de base de datos.", answer: "F" },
-  { text: "Una transacción es una colección de operaciones que hacen una función lógica simple en una aplicación de base de datos.", answer: "C" },
-  { text: "La arquitectura de tres esquemas o tres niveles está compuesta por el nivel externo, nivel de capa de datos (incluye metadata) y el nivel de aplicaciones.", answer: "F" },
-  { text: "Un SGBD debe proporcionar un mecanismo que garantice que se lleven a cabo todas las actualizaciones correspondientes a una determinada transacción, o que no se lleve a cabo ninguna.", answer: "C" },
-  { text: "Uno de los objetivos de la arquitectura ANSI SPARC es que ayuda a ocultar los detalles físicos de almacenamiento a los usuarios que manejan diferentes vistas.", answer: "C" },
-  { text: "Como los sistemas de BD son un componente fundamental de los sistemas de información corporativos, el ciclo de vida de desarrollo de un sistema de BD no puede estar asociado al ciclo de vida de los sistemas de información.", answer: "F" },
-  { text: "Los modelos de datos son medios formales para representar los datos asociados a una situación real y para manipular tal representación.", answer: "C" },
-  { text: "Las bases de datos almacenan el conjunto de datos que se relacionan lógicamente y que se representan a través de tablas.", answer: "C" },
-  { text: "Los usuarios que comparten una misma base de datos tienen acceso a toda la información contenida en ella.", answer: "F" },
-  { text: "El lenguaje de definición de datos (LDD), especifica la estructura, tipo de datos, así como las restricciones sobre los datos.", answer: "C" },
-  { text: "Un DBMS, puede ser descrito como una colección desorganizada y no relacionada de datos.", answer: "F" },
-  { text: "La independencia física de los datos permite modificar la forma en que los datos están almacenados en una base de datos sin necesidad de cambiar las aplicaciones que acceden a ellos.", answer: "C" },
-  { text: "A nivel externo (arquitectura de tres niveles), diferentes usuarios tendrán la misma vista de la data del sistema.", answer: "F" }
-];
+const scores={};
+const total=25;
 
-const mcQuestions = [
-  {
-    text: "Al disponer de un repositorio centralizado para todos los datos, se dispone de un lenguaje que permite a los usuarios insertar, actualizar, borrar y extraer datos de la base de datos. Dicho lenguaje se conoce como:",
-    options: [
-      { letter: "a", text: "Lenguaje de consulta" },
-      { letter: "b", text: "Lenguaje estructurado de consulta (SQL)" },
-      { letter: "c", text: "Lenguaje de manipulación de datos" },
-      { letter: "d", text: "Lenguaje de definición de datos" },
-      { letter: "e", text: "Lenguaje de aplicación" }
-    ],
-    answer: "c"
-  },
-  {
-    text: "Son aquellos programas que le permiten a los usuarios interactuar con la base de datos y que se utilizan para alimentar y mantener la base de datos y para generar información:",
-    options: [
-      { letter: "a", text: "Programas de consulta" },
-      { letter: "b", text: "Lenguaje estructurado de consulta (SQL)" },
-      { letter: "c", text: "Lenguaje de manipulación de datos" },
-      { letter: "d", text: "Lenguaje de definición de datos" },
-      { letter: "e", text: "Programas de aplicación" }
-    ],
-    answer: "e"
-  },
-  {
-    text: "Es todo sistema de software que permite a los usuarios definir, crear, mantener y controlar el acceso a la base de datos:",
-    options: [
-      { letter: "a", text: "Base de Datos" },
-      { letter: "b", text: "Sistema de gestión de base de datos" },
-      { letter: "c", text: "Programas de aplicación de base de datos" },
-      { letter: "d", text: "Sistemas de archivos" },
-      { letter: "e", text: "Sistemas de registros" }
-    ],
-    answer: "b"
-  },
-  {
-    text: "Es aquel concepto que hace referencia a la validez y coherencia de los datos, misma que se expresa en términos de sus restricciones, es decir reglas de coherencia que no se permite que la base de datos viole.",
-    options: [
-      { letter: "a", text: "Coherencia" },
-      { letter: "b", text: "Integridad de los datos" },
-      { letter: "c", text: "Seguridad" },
-      { letter: "d", text: "Redundancia" },
-      { letter: "e", text: "Compartición de datos" }
-    ],
-    answer: "b"
-  },
-  {
-    text: "Uno de los beneficios o ventajas del uso de las bases de datos habla sobre eliminar los desperdicios de espacio al almacenar la misma información en más de un archivo. Este concepto es conocido como:",
-    options: [
-      { letter: "a", text: "Imposición de estándares" },
-      { letter: "b", text: "Control de la redundancia de los datos" },
-      { letter: "c", text: "Seguridad de los datos" },
-      { letter: "d", text: "Nivel de concurrencia" },
-      { letter: "e", text: "Compartición de los datos" }
-    ],
-    answer: "b"
-  },
-  {
-    text: "Una de las funcionalidades a nivel de los SGBD que permiten a los usuarios especificar las estructuras y tipos de datos y las restricciones aplicables a los datos que hay que almacenar en la base de datos:",
-    options: [
-      { letter: "a", text: "Lenguaje de consulta" },
-      { letter: "b", text: "Lenguaje estructurado de consulta (SQL)" },
-      { letter: "c", text: "Lenguaje de manipulación de datos" },
-      { letter: "d", text: "Lenguaje de definición de datos" },
-      { letter: "e", text: "Lenguaje de aplicación" }
-    ],
-    answer: "d"
-  },
-  {
-    text: "Propiedad que describe algún aspecto del objeto que se quiere almacenar a nivel del esquema conceptual de la base de datos.",
-    options: [
-      { letter: "a", text: "Entidad" },
-      { letter: "b", text: "Atributo" },
-      { letter: "c", text: "Relaciones" },
-      { letter: "d", text: "Caso de uso" }
-    ],
-    answer: "b"
-  },
-  {
-    text: "Capacidad de cambiar el esquema conceptual sin tener que cambiar el esquema externo o los programas. Ejemplo: eliminación de una entidad, atributo.",
-    options: [
-      { letter: "a", text: "Independencia lógica" },
-      { letter: "b", text: "Independencia física" },
-      { letter: "c", text: "Interdependencia de datos y programas" },
-      { letter: "d", text: "Independencia total de datos" }
-    ],
-    answer: "a"
-  },
-  {
-    text: "Capacidad de cambiar el esquema interno sin tener cambios en el conceptual o en el externo. Ejemplo de estos cambios pueden ser los que se producen por una reorganización física de los archivos.",
-    options: [
-      { letter: "a", text: "Independencia lógica" },
-      { letter: "b", text: "Independencia física" },
-      { letter: "c", text: "Interdependencia de datos y programas" },
-      { letter: "d", text: "Independencia total de datos" }
-    ],
-    answer: "b"
-  },
-  {
-    text: "Es un objeto distintivo dentro la organización y que es de gran valor para la representación de un modelo conceptual de BD.",
-    options: [
-      { letter: "a", text: "Entidad" },
-      { letter: "b", text: "Atributo" },
-      { letter: "c", text: "Relaciones" },
-      { letter: "d", text: "Caso de uso" }
-    ],
-    answer: "a"
-  }
-];
-
-// ══════════════════════════════════════════════
-//  ESTADO
-// ══════════════════════════════════════════════
-const tfAnswers = new Array(tfQuestions.length).fill(null);
-const mcAnswers = new Array(mcQuestions.length).fill(null);
-
-// SVG icon for error
-const errorIcon = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`;
-
-// ══════════════════════════════════════════════
-//  RENDER
-// ══════════════════════════════════════════════
-function renderTF() {
-  const container = document.getElementById('tf-section');
-  tfQuestions.forEach((q, i) => {
-    const card = document.createElement('div');
-    card.className = 'tf-card';
-    card.id = `tf-card-${i}`;
-    card.innerHTML = `
-      <div class="q-num">Pregunta ${i + 1} de ${tfQuestions.length}</div>
-      <p>${q.text}</p>
-      <div class="tf-options">
-        <button class="tf-btn" id="tf-C-${i}" onclick="selectTF(${i}, 'C')">C — Cierto</button>
-        <button class="tf-btn" id="tf-F-${i}" onclick="selectTF(${i}, 'F')">F — Falso</button>
-      </div>
-      <div class="inline-error" id="tf-error-${i}">${errorIcon} Debes seleccionar Cierto o Falso para continuar.</div>
-      <div id="tf-feedback-${i}"></div>
-    `;
-    container.appendChild(card);
-  });
-}
-
-function renderMC() {
-  const container = document.getElementById('mc-section');
-  mcQuestions.forEach((q, i) => {
-    const card = document.createElement('div');
-    card.className = 'mc-card';
-    card.id = `mc-card-${i}`;
-    const optionsHTML = q.options.map(opt => `
-      <div class="mc-option" id="mc-opt-${i}-${opt.letter}" onclick="selectMC(${i}, '${opt.letter}')">
-        <span class="opt-letter">${opt.letter.toUpperCase()}</span>
-        <span>${opt.text}</span>
-      </div>
-    `).join('');
-    card.innerHTML = `
-      <div class="q-num">Pregunta ${i + 1} de ${mcQuestions.length}</div>
-      <div class="q-text">${i + 1}. ${q.text}</div>
-      <div class="mc-options">${optionsHTML}</div>
-      <div class="inline-error" id="mc-error-${i}">${errorIcon} Debes seleccionar una opción para continuar.</div>
-      <div id="mc-feedback-${i}"></div>
-    `;
-    container.appendChild(card);
-  });
-}
-
-// ══════════════════════════════════════════════
-//  SELECCIÓN
-// ══════════════════════════════════════════════
-function selectTF(i, val) {
-  tfAnswers[i] = val;
-  document.getElementById(`tf-C-${i}`).classList.toggle('selected', val === 'C');
-  document.getElementById(`tf-F-${i}`).classList.toggle('selected', val === 'F');
-  // Clear error state
-  const card = document.getElementById(`tf-card-${i}`);
-  card.classList.remove('unanswered');
-  document.getElementById(`tf-error-${i}`).classList.remove('visible');
-  updateGlobalError();
-}
-
-function selectMC(i, letter) {
-  mcAnswers[i] = letter;
-  const card = document.getElementById(`mc-card-${i}`);
-  card.querySelectorAll('.mc-option').forEach(opt => opt.classList.remove('selected'));
-  document.getElementById(`mc-opt-${i}-${letter}`).classList.add('selected');
-  // Clear error state
-  card.classList.remove('unanswered');
-  document.getElementById(`mc-error-${i}`).classList.remove('visible');
-  updateGlobalError();
-}
-
-// ══════════════════════════════════════════════
-//  GLOBAL ERROR UPDATE (live count)
-// ══════════════════════════════════════════════
-function countUnanswered() {
-  const missingTF = tfAnswers.filter(a => a === null).length;
-  const missingMC = mcAnswers.filter(a => a === null).length;
-  return missingTF + missingMC;
-}
-
-function updateGlobalError() {
-  const total = countUnanswered();
-  if (total === 0) {
-    document.getElementById('global-error').classList.remove('visible');
-    document.getElementById('goto-first-btn').classList.remove('visible');
+function grade(qId,correct,pts){
+  if(scores[qId]!==undefined)return;
+  const sel=document.querySelector('input[name="'+qId+'"]:checked');
+  if(!sel){alert('Seleccione una respuesta.');return;}
+  const picked=sel.value;
+  const qDiv=document.getElementById(qId);
+  if(picked===correct){
+    scores[qId]=pts;
+    document.getElementById(qId+'_'+picked).classList.add('correct-answer');
   } else {
-    const badge = document.getElementById('pending-badge');
-    badge.textContent = `${total} sin responder`;
-    // Update only if already visible (don't show mid-quiz)
-    if (document.getElementById('global-error').classList.contains('visible')) {
-      // keep visible, update count
-    }
+    scores[qId]=0;
+    document.getElementById(qId+'_'+picked).classList.add('wrong-answer');
+    document.getElementById(qId+'_'+correct).classList.add('correct-answer');
   }
+  qDiv.classList.add('answered');
+  qDiv.querySelector('.btn-check').disabled=true;
+  updateProgress();
 }
 
-// ══════════════════════════════════════════════
-//  GO TO FIRST UNANSWERED
-// ══════════════════════════════════════════════
-function goToFirstUnanswered() {
-  // Find first unanswered TF
-  for (let i = 0; i < tfAnswers.length; i++) {
-    if (tfAnswers[i] === null) {
-      document.getElementById(`tf-card-${i}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
-      return;
-    }
-  }
-  // Find first unanswered MC
-  for (let i = 0; i < mcAnswers.length; i++) {
-    if (mcAnswers[i] === null) {
-      document.getElementById(`mc-card-${i}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
-      return;
-    }
-  }
-}
-
-// ══════════════════════════════════════════════
-//  EVALUACIÓN
-// ══════════════════════════════════════════════
-function checkAndEvaluate() {
-  const missingTF = tfAnswers.some(a => a === null);
-  const missingMC = mcAnswers.some(a => a === null);
-
-  if (missingTF || missingMC) {
-    // Show global error banner
-    const total = countUnanswered();
-    document.getElementById('pending-badge').textContent = `${total} sin responder`;
-    document.getElementById('global-error').classList.add('visible');
-    document.getElementById('goto-first-btn').classList.add('visible');
-
-    // Mark all unanswered TF
-    tfAnswers.forEach((a, i) => {
-      if (a === null) {
-        document.getElementById(`tf-card-${i}`).classList.add('unanswered');
-        document.getElementById(`tf-error-${i}`).classList.add('visible');
-      }
-    });
-
-    // Mark all unanswered MC
-    mcAnswers.forEach((a, i) => {
-      if (a === null) {
-        document.getElementById(`mc-card-${i}`).classList.add('unanswered');
-        document.getElementById(`mc-error-${i}`).classList.add('visible');
-      }
-    });
-
-    // Scroll to first unanswered
-    goToFirstUnanswered();
-    return;
-  }
-
-  // All answered — proceed with evaluation
-  document.getElementById('global-error').classList.remove('visible');
-  document.getElementById('goto-first-btn').classList.remove('visible');
-
-  let tfCorrect = 0;
-  let mcCorrect = 0;
-
-  // Evaluate TF
-  tfQuestions.forEach((q, i) => {
-    const card = document.getElementById(`tf-card-${i}`);
-    const userAns = tfAnswers[i];
-    const correct = userAns === q.answer;
-
-    ['C','F'].forEach(v => {
-      const btn = document.getElementById(`tf-${v}-${i}`);
-      btn.onclick = null;
-      btn.style.cursor = 'default';
-      btn.classList.remove('selected');
-    });
-
-    if (correct) {
-      tfCorrect++;
-      card.classList.add('correct');
-      document.getElementById(`tf-${userAns}-${i}`).classList.add('result-correct');
-      document.getElementById(`tf-feedback-${i}`).innerHTML =
-        `<span class="feedback-badge badge-correct">✅ Correcto — ${q.answer === 'C' ? 'Cierto' : 'Falso'}</span>`;
+function gradeMatch(qId,correctMap,pts){
+  if(scores[qId]!==undefined)return;
+  const keys=Object.keys(correctMap);
+  let allFilled=true;
+  keys.forEach(k=>{if(!document.getElementById(qId+k).value)allFilled=false;});
+  if(!allFilled){alert('Complete todas las selecciones.');return;}
+  let allCorrect=true;
+  keys.forEach(k=>{
+    const sel=document.getElementById(qId+k);
+    if(sel.value===correctMap[k]){
+      sel.classList.add('match-correct');
     } else {
-      card.classList.add('incorrect');
-      document.getElementById(`tf-${userAns}-${i}`).classList.add('result-incorrect');
-      document.getElementById(`tf-${q.answer}-${i}`).classList.add('result-correct');
-      document.getElementById(`tf-feedback-${i}`).innerHTML =
-        `<span class="feedback-badge badge-incorrect">❌ Incorrecto — Tu respuesta: ${userAns === 'C' ? 'Cierto' : 'Falso'}</span>
-         <p class="correct-answer-note">✔ Respuesta correcta: ${q.answer === 'C' ? 'Cierto (C)' : 'Falso (F)'}</p>`;
+      sel.classList.add('match-wrong');
+      allCorrect=false;
     }
   });
-
-  // Evaluate MC
-  mcQuestions.forEach((q, i) => {
-    const card = document.getElementById(`mc-card-${i}`);
-    const userAns = mcAnswers[i];
-    const correct = userAns === q.answer;
-
-    card.querySelectorAll('.mc-option').forEach(opt => {
-      opt.onclick = null;
-      opt.style.cursor = 'default';
-      opt.classList.remove('selected');
+  if(allCorrect){
+    scores[qId]=pts;
+  } else {
+    scores[qId]=0;
+    // Show correct answers in feedback
+    const fb=document.getElementById('fb_'+qId);
+    let corr='Correctas: ';
+    keys.forEach(k=>{
+      const sel=document.getElementById(qId+k);
+      const opts=sel.options;
+      for(let i=0;i<opts.length;i++){
+        if(opts[i].value===correctMap[k]){corr+=k+') '+opts[i].text+' · ';break;}
+      }
     });
-
-    const correctOpt = q.options.find(o => o.letter === q.answer);
-    if (correct) {
-      mcCorrect++;
-      card.classList.add('correct');
-      document.getElementById(`mc-opt-${i}-${userAns}`).classList.add('result-correct');
-      document.getElementById(`mc-feedback-${i}`).innerHTML =
-        `<span class="feedback-badge badge-correct">✅ Correcto</span>`;
-    } else {
-      card.classList.add('incorrect');
-      document.getElementById(`mc-opt-${i}-${userAns}`).classList.add('result-incorrect');
-      document.getElementById(`mc-opt-${i}-${q.answer}`).classList.add('result-correct');
-      const userOpt = q.options.find(o => o.letter === userAns);
-      document.getElementById(`mc-feedback-${i}`).innerHTML =
-        `<span class="feedback-badge badge-incorrect">❌ Incorrecto — Elegiste: (${userAns.toUpperCase()}) ${userOpt.text}</span>
-         <p class="correct-answer-note">✔ Respuesta correcta: (${q.answer.toUpperCase()}) ${correctOpt.text}</p>`;
-    }
-  });
-
-  const ptsTF = tfCorrect * 2;
-  const ptsMC = mcCorrect * 2.4;
-  const totalPts = ptsTF + ptsMC;
-
-  document.getElementById('score-pct').textContent = totalPts.toFixed(1) + ' / 64';
-  document.getElementById('score-tf').textContent  = `Parte I: ${ptsTF}/40 (${tfCorrect}/${tfQuestions.length} correctas)`;
-  document.getElementById('score-mc').textContent  = `Parte II: ${ptsMC.toFixed(1)}/24 (${mcCorrect}/${mcQuestions.length} correctas)`;
-
-  document.getElementById('eval-btn').style.display = 'none';
-  document.getElementById('results').style.display  = 'block';
-  document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    fb.textContent=corr.slice(0,-3);
+    fb.className='feedback show wrong-fb';
+  }
+  const qDiv=document.getElementById(qId);
+  qDiv.classList.add('answered');
+  qDiv.querySelector('.btn-check').disabled=true;
+  updateProgress();
 }
 
-// ══════════════════════════════════════════════
-//  RESET
-// ══════════════════════════════════════════════
-function resetQuiz() {
-  window.location.reload();
+function updateProgress(){
+  const pct=(Object.keys(scores).length/total)*100;
+  document.getElementById('progressBar').style.width=pct+'%';
 }
 
-// ══════════════════════════════════════════════
-//  INIT
-// ══════════════════════════════════════════════
-renderTF();
-renderMC();
+function calcTotal(){
+  let s=0;for(let k in scores)s+=scores[k];
+  const ans=Object.keys(scores).length;
+  let txt=s;
+  if(ans<total)txt+=' ('+ans+'/'+total+' respondidas)';
+  document.getElementById('totalScore').innerHTML=txt+' <span>/ 100</span>';
+}
+
+function resetExam(){
+  for(let k in scores)delete scores[k];
+  document.querySelectorAll('input[type="radio"]').forEach(r=>r.checked=false);
+  document.querySelectorAll('select.match-select').forEach(s=>{s.selectedIndex=0;s.className='match-select';});
+  document.querySelectorAll('.correct-answer,.wrong-answer').forEach(el=>{el.classList.remove('correct-answer','wrong-answer');});
+  document.querySelectorAll('.feedback').forEach(f=>{f.className='feedback';f.textContent='';});
+  document.querySelectorAll('.btn-check').forEach(b=>b.disabled=false);
+  document.querySelectorAll('.answered').forEach(q=>q.classList.remove('answered'));
+  document.getElementById('totalScore').innerHTML='-- <span>/ 100</span>';
+  document.getElementById('progressBar').style.width='0%';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
 </script>
 </body>
 </html>
