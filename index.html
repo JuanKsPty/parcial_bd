@@ -3,610 +3,449 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Examen — Ingeniería de Software 1</title>
+<title>Parcial 2 — Repaso</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+  :root{
+    --ink:#15231f;
+    --paper:#f4f0e6;
+    --card:#fffdf7;
+    --accent:#1f6f5c;
+    --accent-soft:#d8e9e2;
+    --gold:#c08a2d;
+    --wrong:#b4452f;
+    --wrong-soft:#f4ddd5;
+    --right:#1f6f5c;
+    --right-soft:#d3ead f;
+    --line:#e3dcc9;
+    --muted:#6a7873;
+    --shadow:0 18px 40px -22px rgba(21,35,31,.45);
+  }
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#f4f5f7;min-height:100vh;padding:24px;color:#1a1a2e}
-  .container{max-width:820px;margin:0 auto;background:#fff;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.08);overflow:hidden}
+  html,body{height:100%}
+  body{
+    font-family:'DM Sans',system-ui,sans-serif;
+    background:
+      radial-gradient(120% 90% at 90% -10%, #e9e3d2 0%, transparent 55%),
+      radial-gradient(120% 90% at -10% 110%, #e3eee7 0%, transparent 55%),
+      var(--paper);
+    color:var(--ink);
+    min-height:100%;
+    display:flex;
+    justify-content:center;
+    padding:32px 18px 60px;
+    line-height:1.5;
+  }
+  .wrap{width:100%;max-width:760px}
 
-  /* HEADER */
-  .header{background:#1a1a2e;color:#fff;padding:48px 36px;text-align:center}
-  .header h1{font-size:1.6em;font-weight:700;letter-spacing:-.5px;margin-bottom:6px}
-  .header p{font-size:.92em;opacity:.6;font-weight:400}
-  .header .meta{margin-top:16px;display:flex;justify-content:center;gap:24px;font-size:.82em;opacity:.5}
-  .header .meta span{display:flex;align-items:center;gap:6px}
+  /* header */
+  header.masthead{
+    border-bottom:2px solid var(--ink);
+    padding-bottom:14px;margin-bottom:26px;
+    display:flex;justify-content:space-between;align-items:flex-end;gap:16px;
+  }
+  .masthead .kicker{
+    font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--muted);font-weight:600;
+  }
+  .masthead h1{
+    font-family:'Fraunces',serif;font-weight:600;
+    font-size:1.75rem;line-height:1.05;margin-top:4px;
+  }
+  .masthead .seal{
+    font-family:'Fraunces',serif;font-style:italic;
+    font-size:.95rem;color:var(--accent);text-align:right;white-space:nowrap;
+  }
 
-  /* SVG icons inline */
-  .icon{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:middle}
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:18px;
+    box-shadow:var(--shadow);
+    padding:30px;
+  }
 
-  /* PROGRESS */
-  .progress-wrap{height:3px;background:#eee}
-  .progress-bar{height:100%;width:0%;background:#1a1a2e;transition:width .5s ease}
+  /* start screen */
+  .lead{font-size:1.02rem;color:var(--muted);margin-bottom:24px}
+  .lead b{color:var(--ink)}
+  .controls{display:grid;gap:20px;margin-bottom:26px}
+  .field label{
+    display:block;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;
+    font-weight:700;color:var(--muted);margin-bottom:10px;
+  }
+  .seg{display:flex;flex-wrap:wrap;gap:8px}
+  .seg button{
+    font-family:inherit;font-size:.9rem;font-weight:600;
+    padding:9px 16px;border-radius:999px;cursor:pointer;
+    border:1.5px solid var(--line);background:transparent;color:var(--ink);
+    transition:all .15s ease;
+  }
+  .seg button:hover{border-color:var(--accent)}
+  .seg button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
 
-  /* SECTIONS */
-  .section-title{padding:14px 36px;font-size:.78em;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#fff;background:#6c63ff}
-  .section-title.cap2{background:#0ea5e9}
-  .section-title.match{background:#10b981}
+  .btn{
+    font-family:inherit;font-size:1rem;font-weight:700;cursor:pointer;
+    border:none;border-radius:12px;padding:15px 22px;
+    background:var(--accent);color:#fff;width:100%;
+    transition:transform .12s ease, background .15s ease;
+    box-shadow:0 10px 22px -12px rgba(31,111,92,.8);
+  }
+  .btn:hover{background:#185847;transform:translateY(-1px)}
+  .btn.ghost{background:transparent;color:var(--accent);border:1.5px solid var(--accent);box-shadow:none}
+  .btn.ghost:hover{background:var(--accent-soft)}
 
-  /* QUESTION */
-  .question{padding:28px 36px;border-bottom:1px solid #f0f0f0}
-  .question:last-of-type{border-bottom:none}
-  .q-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
-  .q-num{font-size:.8em;font-weight:700;color:#6c63ff;background:#f0eeff;padding:3px 10px;border-radius:6px}
-  .q-pts{font-size:.75em;color:#999}
-  .q-type{font-size:.68em;font-weight:600;padding:2px 8px;border-radius:4px;margin-left:8px;color:#fff}
-  .q-type.tf{background:#f59e0b}
-  .q-type.mc{background:#6c63ff}
-  .q-type.mt{background:#10b981}
-  .q-text{font-size:.95em;line-height:1.65;margin-bottom:16px;font-weight:500}
+  /* quiz */
+  .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;gap:14px}
+  .counter{font-size:.8rem;font-weight:700;letter-spacing:.05em;color:var(--muted)}
+  .tag{
+    font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;font-weight:700;
+    padding:5px 11px;border-radius:999px;background:var(--accent-soft);color:var(--accent);
+  }
+  .tag.vf{background:#f1e6cf;color:var(--gold)}
+  .progress{height:6px;background:var(--line);border-radius:999px;overflow:hidden;margin-bottom:26px}
+  .progress span{display:block;height:100%;background:var(--accent);width:0;transition:width .35s ease}
 
-  /* OPTIONS */
-  .options label{display:flex;align-items:center;padding:11px 14px;margin:5px 0;border:1.5px solid #e8e8e8;border-radius:8px;cursor:pointer;transition:all .15s;font-size:.9em;position:relative}
-  .options label:hover{border-color:#c5c3e6;background:#fafaff}
-  .options input[type="radio"]{margin-right:10px;accent-color:#6c63ff;flex-shrink:0}
-  .options label.correct-answer{border-color:#10b981;background:#ecfdf5;color:#065f46;font-weight:600}
-  .options label.wrong-answer{border-color:#ef4444;background:#fef2f2;color:#991b1b;font-weight:600}
+  .qtext{
+    font-family:'Fraunces',serif;font-weight:500;
+    font-size:1.4rem;line-height:1.3;margin-bottom:24px;
+  }
+  .opts{display:grid;gap:11px}
+  .opt{
+    font-family:inherit;font-size:1rem;text-align:left;cursor:pointer;
+    padding:15px 17px;border-radius:12px;
+    border:1.5px solid var(--line);background:#fff;color:var(--ink);
+    display:flex;align-items:center;gap:14px;transition:all .14s ease;
+  }
+  .opt:hover:not(:disabled){border-color:var(--accent);background:var(--accent-soft)}
+  .opt .key{
+    flex:none;width:28px;height:28px;border-radius:8px;
+    display:grid;place-items:center;font-weight:700;font-size:.85rem;
+    background:var(--paper);border:1px solid var(--line);
+  }
+  .opt.correct{border-color:var(--right);background:var(--right-soft)}
+  .opt.correct .key{background:var(--right);color:#fff;border-color:var(--right)}
+  .opt.wrong{border-color:var(--wrong);background:var(--wrong-soft)}
+  .opt.wrong .key{background:var(--wrong);color:#fff;border-color:var(--wrong)}
+  .opt:disabled{cursor:default}
 
-  /* MATCH */
-  .match-row{display:flex;align-items:center;gap:12px;padding:6px 0;flex-wrap:wrap}
-  .match-label{font-weight:600;min-width:200px;font-size:.9em}
-  select.match-select{padding:8px 12px;border:1.5px solid #e8e8e8;border-radius:8px;font-size:.88em;width:100%;max-width:380px;cursor:pointer;transition:border .2s;background:#fff;font-family:inherit}
-  select.match-select:focus{border-color:#6c63ff;outline:none}
-  select.match-correct{border-color:#10b981!important;background:#ecfdf5!important}
-  select.match-wrong{border-color:#ef4444!important;background:#fef2f2!important}
+  .feedback{margin-top:20px;font-size:.95rem;display:none}
+  .feedback.show{display:block;animation:fade .25s ease}
+  .feedback .badge{font-weight:700}
+  .feedback.ok .badge{color:var(--right)}
+  .feedback.no .badge{color:var(--wrong)}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
 
-  /* BUTTONS */
-  .btn-check{display:inline-flex;align-items:center;gap:6px;margin-top:14px;background:#1a1a2e;color:#fff;border:none;padding:9px 22px;border-radius:8px;font-size:.85em;font-weight:600;cursor:pointer;transition:opacity .2s}
-  .btn-check:hover{opacity:.85}
-  .btn-check:disabled{opacity:.3;cursor:not-allowed}
+  .nav{margin-top:26px;display:flex;justify-content:flex-end}
+  .nav .btn{width:auto;min-width:160px}
 
-  /* FEEDBACK (minimal, no text, just for matching feedback) */
-  .feedback{margin-top:8px;padding:0;font-size:.85em;font-weight:600;display:none}
-  .feedback.show{display:block}
-  .feedback.correct-fb{color:#10b981}
-  .feedback.wrong-fb{color:#ef4444}
+  /* results */
+  .score-ring{text-align:center;margin-bottom:8px}
+  .score-num{font-family:'Fraunces',serif;font-size:4rem;font-weight:700;line-height:1}
+  .score-sub{color:var(--muted);font-size:.95rem;margin-bottom:4px}
+  .grade{font-family:'Fraunces',serif;font-style:italic;font-size:1.3rem;color:var(--accent);margin-bottom:24px;text-align:center}
+  .review{display:grid;gap:12px;margin:8px 0 26px}
+  .rev-item{border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:#fff}
+  .rev-item .rq{font-weight:600;margin-bottom:8px;font-size:.95rem}
+  .rev-line{font-size:.88rem;color:var(--muted);display:flex;gap:8px;align-items:baseline}
+  .rev-line.you.bad{color:var(--wrong)}
+  .rev-line.sol{color:var(--right);font-weight:600}
+  .rev-dot{font-size:1.1rem;line-height:1}
+  .actions{display:grid;gap:10px}
 
-  /* SCORE */
-  .score-section{padding:40px 36px;text-align:center;background:#fafafa;border-top:1px solid #f0f0f0}
-  .score-section h2{font-size:1.1em;font-weight:700;color:#1a1a2e;margin-bottom:6px;letter-spacing:-.3px}
-  .score-display{font-size:2.8em;font-weight:800;color:#1a1a2e;margin:12px 0}
-  .score-display span{color:#6c63ff}
-  .btn-score{display:inline-flex;align-items:center;gap:6px;margin-top:16px;background:#6c63ff;color:#fff;border:none;padding:12px 32px;border-radius:10px;font-size:.95em;font-weight:700;cursor:pointer;transition:opacity .2s}
-  .btn-score:hover{opacity:.85}
-  .btn-reset{display:inline-flex;align-items:center;gap:6px;margin-top:12px;background:transparent;color:#999;border:1.5px solid #ddd;padding:10px 28px;border-radius:10px;font-size:.88em;font-weight:600;cursor:pointer;transition:all .2s}
-  .btn-reset:hover{border-color:#999;color:#666}
-
-  .answered .options label{cursor:default;pointer-events:none}
-  .answered select.match-select{pointer-events:none}
+  footer{text-align:center;margin-top:24px;font-size:.78rem;color:var(--muted)}
+  .hidden{display:none}
 </style>
 </head>
 <body>
-<div class="container">
-  <div class="header">
-    <h1>Examen de Ingeniería de Software 1</h1>
-    <p>Capítulo 1: Fundamentos &mdash; Capítulo 2: Modelado del Negocio</p>
-    <div class="meta">
-      <span><svg class="icon"><circle cx="8" cy="8" r="7"/><path d="M8 4v4l3 3"/></svg> 25 preguntas</span>
-      <span><svg class="icon"><polygon points="8 1 10 6 16 6 11 9.5 13 15 8 11.5 3 15 5 9.5 0 6 6 6"/></svg> 100 puntos</span>
+<div class="wrap">
+  <header class="masthead">
+    <div>
+      <div class="kicker">Cuestionario de práctica</div>
+      <h1>Parcial 2 — Repaso</h1>
     </div>
-  </div>
-  <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+  </header>
 
-  <!-- ===================== CAP 1 — CIERTO O FALSO ===================== -->
-  <div class="section-title">Capítulo 1 — Cierto o Falso</div>
+  <!-- START -->
+  <section id="start" class="card">
+    <p class="lead">Cuestionario de práctica con las secciones de <b>Cierto / Falso</b> y <b>Selección múltiple</b>. Las preguntas y las opciones aparecen en <b>orden aleatorio</b> cada vez.</p>
+    <div class="controls">
+      <div class="field">
+        <label>Secciones</label>
+        <div class="seg" id="segSection">
+          <button data-sec="all" class="on">Todas</button>
+          <button data-sec="vf">Cierto / Falso</button>
+          <button data-sec="mc">Selección</button>
+        </div>
+      </div>
+      <div class="field">
+        <label>Cantidad de preguntas</label>
+        <div class="seg" id="segCount">
+          <button data-count="10">10</button>
+          <button data-count="20">20</button>
+          <button data-count="0" class="on">Todas</button>
+        </div>
+      </div>
+    </div>
+    <button class="btn" id="startBtn">Comenzar repaso</button>
+  </section>
 
-  <!-- Q1 -->
-  <div class="question" id="q1">
-    <div class="q-head">
-      <span><span class="q-num">01</span><span class="q-type tf">C / F</span></span>
-      <span class="q-pts">4 pts</span>
+  <!-- QUIZ -->
+  <section id="quiz" class="card hidden">
+    <div class="topbar">
+      <span class="counter" id="counter">Pregunta 1 / 30</span>
+      <span class="tag" id="tag">Selección</span>
     </div>
-    <div class="q-text">El software es un producto físico que se deteriora con el tiempo.</div>
-    <div class="options">
-      <label id="q1_a"><input type="radio" name="q1" value="a"> Cierto</label>
-      <label id="q1_b"><input type="radio" name="q1" value="b"> Falso</label>
-    </div>
-    <button class="btn-check" onclick="grade('q1','b',4)">Calificar</button>
-  </div>
+    <div class="progress"><span id="bar"></span></div>
+    <div class="qtext" id="qtext"></div>
+    <div class="opts" id="opts"></div>
+    <div class="feedback" id="feedback"></div>
+    <div class="nav"><button class="btn" id="nextBtn" disabled>Siguiente</button></div>
+  </section>
 
-  <!-- Q2 -->
-  <div class="question" id="q2">
-    <div class="q-head">
-      <span><span class="q-num">02</span><span class="q-type tf">C / F</span></span>
-      <span class="q-pts">4 pts</span>
+  <!-- RESULTS -->
+  <section id="results" class="card hidden">
+    <div class="score-ring">
+      <div class="score-num" id="scoreNum">0%</div>
+      <div class="score-sub" id="scoreSub">0 de 0 correctas</div>
     </div>
-    <div class="q-text">Según el IEEE, la Ingeniería de Software es "la aplicación de un enfoque sistemático, disciplinado y cuantificable hacia el desarrollo, operación y mantenimiento del software".</div>
-    <div class="options">
-      <label id="q2_a"><input type="radio" name="q2" value="a"> Cierto</label>
-      <label id="q2_b"><input type="radio" name="q2" value="b"> Falso</label>
+    <div class="grade" id="grade"></div>
+    <div class="review" id="review"></div>
+    <div class="actions">
+      <button class="btn" id="retryBtn">Repetir (nuevo orden)</button>
+      <button class="btn ghost" id="homeBtn">Cambiar configuración</button>
     </div>
-    <button class="btn-check" onclick="grade('q2','a',4)">Calificar</button>
-  </div>
+  </section>
 
-  <!-- Q3 -->
-  <div class="question" id="q3">
-    <div class="q-head">
-      <span><span class="q-num">03</span><span class="q-type tf">C / F</span></span>
-      <span class="q-pts">4 pts</span>
-    </div>
-    <div class="q-text">Más del 80% del esfuerzo de mantenimiento del software es usado para acciones correctivas.</div>
-    <div class="options">
-      <label id="q3_a"><input type="radio" name="q3" value="a"> Cierto</label>
-      <label id="q3_b"><input type="radio" name="q3" value="b"> Falso</label>
-    </div>
-    <button class="btn-check" onclick="grade('q3','b',4)">Calificar</button>
-  </div>
-
-  <!-- Q4 -->
-  <div class="question" id="q4">
-    <div class="q-head">
-      <span><span class="q-num">04</span><span class="q-type tf">C / F</span></span>
-      <span class="q-pts">4 pts</span>
-    </div>
-    <div class="q-text">Un mismo participante en un proyecto de software puede cumplir varios roles o papeles.</div>
-    <div class="options">
-      <label id="q4_a"><input type="radio" name="q4" value="a"> Cierto</label>
-      <label id="q4_b"><input type="radio" name="q4" value="b"> Falso</label>
-    </div>
-    <button class="btn-check" onclick="grade('q4','a',4)">Calificar</button>
-  </div>
-
-  <!-- Q5 -->
-  <div class="question" id="q5">
-    <div class="q-head">
-      <span><span class="q-num">05</span><span class="q-type tf">C / F</span></span>
-      <span class="q-pts">4 pts</span>
-    </div>
-    <div class="q-text">La Ingeniería de Software es una disciplina que involucra actividades de modelado, solución de problemas y adquisición de conocimiento.</div>
-    <div class="options">
-      <label id="q5_a"><input type="radio" name="q5" value="a"> Cierto</label>
-      <label id="q5_b"><input type="radio" name="q5" value="b"> Falso</label>
-    </div>
-    <button class="btn-check" onclick="grade('q5','a',4)">Calificar</button>
-  </div>
-
-  <!-- ===================== CAP 1 — MEJOR RESPUESTA ===================== -->
-  <div class="section-title">Capítulo 1 — Mejor Respuesta</div>
-
-  <!-- Q6 -->
-  <div class="question" id="q6">
-    <div class="q-head">
-      <span><span class="q-num">06</span><span class="q-type mc">Selección</span></span>
-      <span class="q-pts">4 pts</span>
-    </div>
-    <div class="q-text">¿Cuáles son las cuatro capas de la Ingeniería de Software (de la base hacia arriba)?</div>
-    <div class="options">
-      <label id="q6_a"><input type="radio" name="q6" value="a"> Herramientas → Métodos → Proceso → Calidad</label>
-      <label id="q6_b"><input type="radio" name="q6" value="b"> Enfoque de calidad → Proceso → Métodos → Herramientas</label>
-      <label id="q6_c"><input type="radio" name="q6" value="c"> Proceso → Calidad → Herramientas → Métodos</label>
-      <label id="q6_d"><input type="radio" name="q6" value="d"> Calidad → Herramientas → Métodos → Proceso</label>
-    </div>
-    <button class="btn-check" onclick="grade('q6','b',4)">Calificar</button>
-  </div>
-
-  <!-- Q7 -->
-  <div class="question" id="q7">
-    <div class="q-head">
-      <span><span class="q-num">07</span><span class="q-type mc">Selección</span></span>
-      <span class="q-pts">4 pts</span>
-    </div>
-    <div class="q-text">¿En qué fase del desarrollo el costo relativo de corrección de errores es de 20?</div>
-    <div class="options">
-      <label id="q7_a"><input type="radio" name="q7" value="a"> Pruebas de Aceptación</label>
-      <label id="q7_b"><input type="radio" name="q7" value="b"> Diseño</label>
-      <label id="q7_c"><input type="radio" name="q7" value="c"> Mantenimiento</label>
-      <label id="q7_d"><input type="radio" name="q7" value="d"> Programación</label>
-    </div>
-    <button class="btn-check" onclick="grade('q7','c',4)">Calificar</button>
-  </div>
-
-  <!-- Q8 -->
-  <div class="question" id="q8">
-    <div class="q-head">
-      <span><span class="q-num">08</span><span class="q-type mc">Selección</span></span>
-      <span class="q-pts">4 pts</span>
-    </div>
-    <div class="q-text">¿Qué porcentaje de los proyectos de software fallan según las estadísticas presentadas?</div>
-    <div class="options">
-      <label id="q8_a"><input type="radio" name="q8" value="a"> 52%</label>
-      <label id="q8_b"><input type="radio" name="q8" value="b"> 31%</label>
-      <label id="q8_c"><input type="radio" name="q8" value="c"> 84%</label>
-      <label id="q8_d"><input type="radio" name="q8" value="d"> 67%</label>
-    </div>
-    <button class="btn-check" onclick="grade('q8','c',4)">Calificar</button>
-  </div>
-
-  <!-- Q9 -->
-  <div class="question" id="q9">
-    <div class="q-head">
-      <span><span class="q-num">09</span><span class="q-type mc">Selección</span></span>
-      <span class="q-pts">4 pts</span>
-    </div>
-    <div class="q-text">¿Cuál de los siguientes NO es un reto de la Ingeniería de Software mencionado en el capítulo?</div>
-    <div class="options">
-      <label id="q9_a"><input type="radio" name="q9" value="a"> Reto a lo heredado</label>
-      <label id="q9_b"><input type="radio" name="q9" value="b"> Reto de la heterogeneidad</label>
-      <label id="q9_c"><input type="radio" name="q9" value="c"> Reto de la entrega</label>
-      <label id="q9_d"><input type="radio" name="q9" value="d"> Reto de la inteligencia artificial</label>
-    </div>
-    <button class="btn-check" onclick="grade('q9','d',4)">Calificar</button>
-  </div>
-
-  <!-- Q10 -->
-  <div class="question" id="q10">
-    <div class="q-head">
-      <span><span class="q-num">10</span><span class="q-type mc">Selección</span></span>
-      <span class="q-pts">4 pts</span>
-    </div>
-    <div class="q-text">¿Cuál es el resultado principal de la actividad de Análisis del Sistema?</div>
-    <div class="options">
-      <label id="q10_a"><input type="radio" name="q10" value="a"> Código fuente funcional</label>
-      <label id="q10_b"><input type="radio" name="q10" value="b"> Especificación de requerimientos</label>
-      <label id="q10_c"><input type="radio" name="q10" value="c"> Modelo de objeto con atributos, operaciones y asociaciones</label>
-      <label id="q10_d"><input type="radio" name="q10" value="d"> Plan de pruebas</label>
-    </div>
-    <button class="btn-check" onclick="grade('q10','c',4)">Calificar</button>
-  </div>
-
-  <!-- Q11 -->
-  <div class="question" id="q11">
-    <div class="q-head">
-      <span><span class="q-num">11</span><span class="q-type mc">Selección</span></span>
-      <span class="q-pts">4 pts</span>
-    </div>
-    <div class="q-text">¿Quién es responsable de crear el plan de desarrollo, cronograma, calcular costos y supervisar el avance del proyecto?</div>
-    <div class="options">
-      <label id="q11_a"><input type="radio" name="q11" value="a"> Analista de Requerimientos</label>
-      <label id="q11_b"><input type="radio" name="q11" value="b"> Propietario del Sistema</label>
-      <label id="q11_c"><input type="radio" name="q11" value="c"> Líder del Proyecto</label>
-      <label id="q11_d"><input type="radio" name="q11" value="d"> Arquitecto de Software</label>
-    </div>
-    <button class="btn-check" onclick="grade('q11','c',4)">Calificar</button>
-  </div>
-
-  <!-- Q12 -->
-  <div class="question" id="q12">
-    <div class="q-head">
-      <span><span class="q-num">12</span><span class="q-type mc">Selección</span></span>
-      <span class="q-pts">4 pts</span>
-    </div>
-    <div class="q-text">Un requerimiento que especifica rendimiento, confiabilidad o disponibilidad del sistema se clasifica como:</div>
-    <div class="options">
-      <label id="q12_a"><input type="radio" name="q12" value="a"> Requerimiento funcional</label>
-      <label id="q12_b"><input type="radio" name="q12" value="b"> Requerimiento no funcional</label>
-      <label id="q12_c"><input type="radio" name="q12" value="c"> Restricción</label>
-      <label id="q12_d"><input type="radio" name="q12" value="d"> Objetivo del proyecto</label>
-    </div>
-    <button class="btn-check" onclick="grade('q12','b',4)">Calificar</button>
-  </div>
-
-  <!-- ===================== CAP 2 — CIERTO O FALSO ===================== -->
-  <div class="section-title cap2">Capítulo 2 — Cierto o Falso</div>
-
-  <!-- Q13 -->
-  <div class="question" id="q13">
-    <div class="q-head">
-      <span><span class="q-num">13</span><span class="q-type tf">C / F</span></span>
-      <span class="q-pts">4 pts</span>
-    </div>
-    <div class="q-text">Las reglas de negocio son requisitos del sistema.</div>
-    <div class="options">
-      <label id="q13_a"><input type="radio" name="q13" value="a"> Cierto</label>
-      <label id="q13_b"><input type="radio" name="q13" value="b"> Falso</label>
-    </div>
-    <button class="btn-check" onclick="grade('q13','b',4)">Calificar</button>
-  </div>
-
-  <!-- Q14 -->
-  <div class="question" id="q14">
-    <div class="q-head">
-      <span><span class="q-num">14</span><span class="q-type tf">C / F</span></span>
-      <span class="q-pts">4 pts</span>
-    </div>
-    <div class="q-text">Un actor del negocio puede representar a un grupo de personas o a una compañía, no solo a un individuo.</div>
-    <div class="options">
-      <label id="q14_a"><input type="radio" name="q14" value="a"> Cierto</label>
-      <label id="q14_b"><input type="radio" name="q14" value="b"> Falso</label>
-    </div>
-    <button class="btn-check" onclick="grade('q14','a',4)">Calificar</button>
-  </div>
-
-  <!-- Q15 -->
-  <div class="question" id="q15">
-    <div class="q-head">
-      <span><span class="q-num">15</span><span class="q-type tf">C / F</span></span>
-      <span class="q-pts">4 pts</span>
-    </div>
-    <div class="q-text">Los trabajadores del negocio representan posiciones dentro de la organización, no roles.</div>
-    <div class="options">
-      <label id="q15_a"><input type="radio" name="q15" value="a"> Cierto</label>
-      <label id="q15_b"><input type="radio" name="q15" value="b"> Falso</label>
-    </div>
-    <button class="btn-check" onclick="grade('q15','b',4)">Calificar</button>
-  </div>
-
-  <!-- Q16 -->
-  <div class="question" id="q16">
-    <div class="q-head">
-      <span><span class="q-num">16</span><span class="q-type tf">C / F</span></span>
-      <span class="q-pts">4 pts</span>
-    </div>
-    <div class="q-text">La especificación de un caso de uso de negocio debe presentar el "cómo" del proceso, no el "qué".</div>
-    <div class="options">
-      <label id="q16_a"><input type="radio" name="q16" value="a"> Cierto</label>
-      <label id="q16_b"><input type="radio" name="q16" value="b"> Falso</label>
-    </div>
-    <button class="btn-check" onclick="grade('q16','b',4)">Calificar</button>
-  </div>
-
-  <!-- ===================== CAP 2 — MEJOR RESPUESTA ===================== -->
-  <div class="section-title cap2">Capítulo 2 — Mejor Respuesta</div>
-
-  <!-- Q17 -->
-  <div class="question" id="q17">
-    <div class="q-head">
-      <span><span class="q-num">17</span><span class="q-type mc">Selección</span></span>
-      <span class="q-pts">4 pts</span>
-    </div>
-    <div class="q-text">¿Cuál es el propósito principal de la Ingeniería de Negocios?</div>
-    <div class="options">
-      <label id="q17_a"><input type="radio" name="q17" value="a"> Diseñar la interfaz de usuario del sistema</label>
-      <label id="q17_b"><input type="radio" name="q17" value="b"> Diseñar y modelar el negocio de acuerdo a ciertos objetivos</label>
-      <label id="q17_c"><input type="radio" name="q17" value="c"> Programar los módulos del sistema</label>
-      <label id="q17_d"><input type="radio" name="q17" value="d"> Realizar pruebas de aceptación</label>
-    </div>
-    <button class="btn-check" onclick="grade('q17','b',4)">Calificar</button>
-  </div>
-
-  <!-- Q18 -->
-  <div class="question" id="q18">
-    <div class="q-head">
-      <span><span class="q-num">18</span><span class="q-type mc">Selección</span></span>
-      <span class="q-pts">4 pts</span>
-    </div>
-    <div class="q-text">¿Cuál es la desventaja principal de la técnica de Observación de Campo?</div>
-    <div class="options">
-      <label id="q18_a"><input type="radio" name="q18" value="a"> No permite recopilar datos cualitativos</label>
-      <label id="q18_b"><input type="radio" name="q18" value="b"> El efecto de Hawthorne (influenciar las actividades)</label>
-      <label id="q18_c"><input type="radio" name="q18" value="c"> Solo se puede usar con grupos grandes</label>
-      <label id="q18_d"><input type="radio" name="q18" value="d"> Requiere software especializado</label>
-    </div>
-    <button class="btn-check" onclick="grade('q18','b',4)">Calificar</button>
-  </div>
-
-  <!-- Q19 -->
-  <div class="question" id="q19">
-    <div class="q-head">
-      <span><span class="q-num">19</span><span class="q-type mc">Selección</span></span>
-      <span class="q-pts">4 pts</span>
-    </div>
-    <div class="q-text">¿Cuántos participantes tiene normalmente un Focus Group?</div>
-    <div class="options">
-      <label id="q19_a"><input type="radio" name="q19" value="a"> 1 a 3</label>
-      <label id="q19_b"><input type="radio" name="q19" value="b"> 5 a 10</label>
-      <label id="q19_c"><input type="radio" name="q19" value="c"> 15 a 20</label>
-      <label id="q19_d"><input type="radio" name="q19" value="d"> 25 a 30</label>
-    </div>
-    <button class="btn-check" onclick="grade('q19','b',4)">Calificar</button>
-  </div>
-
-  <!-- Q20 -->
-  <div class="question" id="q20">
-    <div class="q-head">
-      <span><span class="q-num">20</span><span class="q-type mc">Selección</span></span>
-      <span class="q-pts">4 pts</span>
-    </div>
-    <div class="q-text">En la transición del Modelo del Negocio al Modelo del Sistema, ¿en qué se puede convertir cada trabajador del negocio?</div>
-    <div class="options">
-      <label id="q20_a"><input type="radio" name="q20" value="a"> En una entidad de negocio</label>
-      <label id="q20_b"><input type="radio" name="q20" value="b"> En un actor del sistema y/o un Caso de Uso del Sistema</label>
-      <label id="q20_c"><input type="radio" name="q20" value="c"> En una regla de negocio</label>
-      <label id="q20_d"><input type="radio" name="q20" value="d"> En un diagrama de actividades</label>
-    </div>
-    <button class="btn-check" onclick="grade('q20','b',4)">Calificar</button>
-  </div>
-
-  <!-- Q21 -->
-  <div class="question" id="q21">
-    <div class="q-head">
-      <span><span class="q-num">21</span><span class="q-type mc">Selección</span></span>
-      <span class="q-pts">4 pts</span>
-    </div>
-    <div class="q-text">¿Qué elementos caracterizan un proceso de negocio?</div>
-    <div class="options">
-      <label id="q21_a"><input type="radio" name="q21" value="a"> Código fuente, compiladores y pruebas</label>
-      <label id="q21_b"><input type="radio" name="q21" value="b"> Datos, tareas, agentes y flujo de trabajo</label>
-      <label id="q21_c"><input type="radio" name="q21" value="c"> Diagramas UML, clases y herencia</label>
-      <label id="q21_d"><input type="radio" name="q21" value="d"> Servidores, redes y bases de datos</label>
-    </div>
-    <button class="btn-check" onclick="grade('q21','b',4)">Calificar</button>
-  </div>
-
-  <!-- ===================== EMPAREJAMIENTO ===================== -->
-  <div class="section-title match">Ambos Capítulos — Emparejamiento</div>
-
-  <!-- Q22 -->
-  <div class="question" id="q22">
-    <div class="q-head">
-      <span><span class="q-num">22</span><span class="q-type mt">Emparejar</span></span>
-      <span class="q-pts">4 pts</span>
-    </div>
-    <div class="q-text">Relacione cada rol con su responsabilidad principal:</div>
-    <div class="match-row"><span class="match-label">a) Propietario del Sistema</span>
-      <select class="match-select" id="q22a"><option value="">-- Seleccione --</option><option value="1">Fijar presupuesto y plazos</option><option value="2">Escribir código fuente</option><option value="3">Definir arquitectura de SW</option><option value="4">Desarrollar plan de pruebas</option></select>
-    </div>
-    <div class="match-row"><span class="match-label">b) Programador</span>
-      <select class="match-select" id="q22b"><option value="">-- Seleccione --</option><option value="1">Fijar presupuesto y plazos</option><option value="2">Escribir código fuente</option><option value="3">Definir arquitectura de SW</option><option value="4">Desarrollar plan de pruebas</option></select>
-    </div>
-    <div class="match-row"><span class="match-label">c) Arquitecto de SW</span>
-      <select class="match-select" id="q22c"><option value="">-- Seleccione --</option><option value="1">Fijar presupuesto y plazos</option><option value="2">Escribir código fuente</option><option value="3">Definir arquitectura de SW</option><option value="4">Desarrollar plan de pruebas</option></select>
-    </div>
-    <div class="match-row"><span class="match-label">d) Probador</span>
-      <select class="match-select" id="q22d"><option value="">-- Seleccione --</option><option value="1">Fijar presupuesto y plazos</option><option value="2">Escribir código fuente</option><option value="3">Definir arquitectura de SW</option><option value="4">Desarrollar plan de pruebas</option></select>
-    </div>
-    <button class="btn-check" onclick="gradeMatch('q22',{a:'1',b:'2',c:'3',d:'4'},4)">Calificar</button>
-    <div class="feedback" id="fb_q22"></div>
-  </div>
-
-  <!-- Q23 -->
-  <div class="question" id="q23">
-    <div class="q-head">
-      <span><span class="q-num">23</span><span class="q-type mt">Emparejar</span></span>
-      <span class="q-pts">4 pts</span>
-    </div>
-    <div class="q-text">Relacione cada elemento del Modelado de Negocios con su definición:</div>
-    <div class="match-row"><span class="match-label">a) Actor del Negocio</span>
-      <select class="match-select" id="q23a"><option value="">-- Seleccione --</option><option value="1">Externo al proceso, interactúa con el negocio</option><option value="2">Interno al proceso, colabora para lograr el objetivo</option><option value="3">Producto o entregable del proceso</option><option value="4">Secuencia de acciones con resultado observable</option></select>
-    </div>
-    <div class="match-row"><span class="match-label">b) Trabajador del Negocio</span>
-      <select class="match-select" id="q23b"><option value="">-- Seleccione --</option><option value="1">Externo al proceso, interactúa con el negocio</option><option value="2">Interno al proceso, colabora para lograr el objetivo</option><option value="3">Producto o entregable del proceso</option><option value="4">Secuencia de acciones con resultado observable</option></select>
-    </div>
-    <div class="match-row"><span class="match-label">c) Entidad de Negocio</span>
-      <select class="match-select" id="q23c"><option value="">-- Seleccione --</option><option value="1">Externo al proceso, interactúa con el negocio</option><option value="2">Interno al proceso, colabora para lograr el objetivo</option><option value="3">Producto o entregable del proceso</option><option value="4">Secuencia de acciones con resultado observable</option></select>
-    </div>
-    <div class="match-row"><span class="match-label">d) Caso de Uso del Negocio</span>
-      <select class="match-select" id="q23d"><option value="">-- Seleccione --</option><option value="1">Externo al proceso, interactúa con el negocio</option><option value="2">Interno al proceso, colabora para lograr el objetivo</option><option value="3">Producto o entregable del proceso</option><option value="4">Secuencia de acciones con resultado observable</option></select>
-    </div>
-    <button class="btn-check" onclick="gradeMatch('q23',{a:'1',b:'2',c:'3',d:'4'},4)">Calificar</button>
-    <div class="feedback" id="fb_q23"></div>
-  </div>
-
-  <!-- Q24 -->
-  <div class="question" id="q24">
-    <div class="q-head">
-      <span><span class="q-num">24</span><span class="q-type mc">Selección</span></span>
-      <span class="q-pts">4 pts</span>
-    </div>
-    <div class="q-text">Las historias de usuario son utilizadas principalmente en:</div>
-    <div class="options">
-      <label id="q24_a"><input type="radio" name="q24" value="a"> Metodologías tradicionales (Cascada)</label>
-      <label id="q24_b"><input type="radio" name="q24" value="b"> Metodologías de desarrollo ágiles</label>
-      <label id="q24_c"><input type="radio" name="q24" value="c"> Solo en pruebas de software</label>
-      <label id="q24_d"><input type="radio" name="q24" value="d"> En la fase de mantenimiento</label>
-    </div>
-    <button class="btn-check" onclick="grade('q24','b',4)">Calificar</button>
-  </div>
-
-  <!-- Q25 -->
-  <div class="question" id="q25">
-    <div class="q-head">
-      <span><span class="q-num">25</span><span class="q-type mc">Selección</span></span>
-      <span class="q-pts">4 pts</span>
-    </div>
-    <div class="q-text">¿Cuál es el orden correcto de las actividades del ciclo de vida clásico del desarrollo de software?</div>
-    <div class="options">
-      <label id="q25_a"><input type="radio" name="q25" value="a"> Diseño → Análisis → Requerimientos → Implementación → Pruebas</label>
-      <label id="q25_b"><input type="radio" name="q25" value="b"> Requerimientos → Análisis → Diseño del Sistema → Diseño de Objetos → Implementación</label>
-      <label id="q25_c"><input type="radio" name="q25" value="c"> Implementación → Diseño → Análisis → Requerimientos → Mantenimiento</label>
-      <label id="q25_d"><input type="radio" name="q25" value="d"> Análisis → Requerimientos → Implementación → Diseño → Pruebas</label>
-    </div>
-    <button class="btn-check" onclick="grade('q25','b',4)">Calificar</button>
-  </div>
-
-  <!-- ===================== SCORE ===================== -->
-  <div class="score-section">
-    <h2>Resultado Final</h2>
-    <div class="score-display" id="totalScore">-- <span>/ 100</span></div>
-    <br>
-    <button class="btn-score" onclick="calcTotal()">
-      <svg class="icon" style="stroke:#fff"><polyline points="1 4 1 10 7 10"/><polyline points="9 15 15 15 15 9"/><path d="M13 3L7 10"/><path d="M3 13l6-7"/></svg>
-      Calcular puntuación
-    </button>
-    <br>
-    <button class="btn-reset" onclick="resetExam()">
-      <svg class="icon"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
-      Reiniciar
-    </button>
-  </div>
+  <footer>Material de estudio · 13 preguntas C/F · 17 de selección</footer>
 </div>
 
 <script>
-const scores={};
-const total=25;
+/* ===== Banco de preguntas =====
+   type: 'vf'  -> opciones Cierto/Falso, answer = índice correcto (0 Cierto, 1 Falso)
+   type: 'mc'  -> opciones múltiples, answer = índice correcto en options
+*/
+const BANK = [
+  // ---------- CIERTO / FALSO ----------
+  { type:'vf', q:'Iniciar el desarrollo de las aplicaciones implica la obtención de requerimientos para definir el alcance y propósito del SI.', answer:0 },
+  { type:'vf', q:'El objetivo del análisis del problema es conocer los posibles usuarios del sistema.', answer:1 },
+  { type:'vf', q:'No es importante que la información que se recopila para realizar el análisis del problema sea precisa.', answer:1 },
+  { type:'vf', q:'Las metodologías ágiles reúnen prácticas y principios que se basan en la colaboración, la iteración y la entrega incremental de valor.', answer:0 },
+  { type:'vf', q:'Visión es un documento de alto nivel que describe el "Cómo" y el "Cuándo" del producto o aplicación.', answer:1 },
+  { type:'vf', q:'Los usuarios ayudan a identificar los límites del sistema.', answer:0 },
+  { type:'vf', q:'Un requerimiento es una descripción de algo que el sistema es capaz de hacer con el objeto de satisfacer el propósito del sistema.', answer:0 },
+  { type:'vf', q:'Identificar las restricciones en el sistema es una actividad del análisis del problema.', answer:0 },
+  { type:'vf', q:'Identificar características del producto es una forma de visualizar "Cómo" se hará el producto.', answer:1 },
+  { type:'vf', q:'Un requerimiento puede dejarse incompleto o ambiguo para refinarlo posteriormente.', answer:1 },
+  { type:'vf', q:'FURPS es un modelo orientado a la calidad del software desde la perspectiva de funcionalidad, facilidad de uso, confiabilidad, desempeño y facilidad de mantenimiento del software.', answer:0 },
+  { type:'vf', q:'Velocidad es un criterio del factor Facilidad de Uso del modelo FURPS.', answer:1 },
+  { type:'vf', q:'La matriz de trazabilidad permite dar seguimiento a las necesidades de los usuarios para que se contemplen en las funcionalidades del sistema.', answer:0 },
 
-function grade(qId,correct,pts){
-  if(scores[qId]!==undefined)return;
-  const sel=document.querySelector('input[name="'+qId+'"]:checked');
-  if(!sel){alert('Seleccione una respuesta.');return;}
-  const picked=sel.value;
-  const qDiv=document.getElementById(qId);
-  if(picked===correct){
-    scores[qId]=pts;
-    document.getElementById(qId+'_'+picked).classList.add('correct-answer');
-  } else {
-    scores[qId]=0;
-    document.getElementById(qId+'_'+picked).classList.add('wrong-answer');
-    document.getElementById(qId+'_'+correct).classList.add('correct-answer');
+  // ---------- SELECCIÓN ----------
+  { type:'mc', q:'Se usa en proyectos con alto nivel de incertidumbre, requisitos cambiantes o poco definidos.',
+    options:['Modelo Unificado','Modelo Incremental','Modelo Espiral'], answer:2 },
+  { type:'mc', q:'Se caracteriza por estar dirigido por casos de uso, centrado en la arquitectura y por ser iterativo e incremental.',
+    options:['Modelo Cascada','Proceso Unificado','Extreme Programming (XP)'], answer:1 },
+  { type:'mc', q:'Marco de trabajo centrado en personas, flexible, escalable para proyectos de software utilizando el desarrollo ágil.',
+    options:['Crystal Methodology','Modelo Iterativo','Modelo Espiral'], answer:0 },
+  { type:'mc', q:'Fase del modelo unificado que incluye tareas de marketing, empaquetado, instalación, configuración, soporte y mantenimiento.',
+    options:['Fase de Inicio','Fase de Elaboración','Fase de Transición'], answer:2 },
+  { type:'mc', q:'Reduce el costo global de desarrollo al evitar trabajo redundante.',
+    options:['Orientado a reutilización','Modelo Espiral','Modelo Iterativo'], answer:0 },
+  { type:'mc', q:'No se ven resultados hasta finalizar el proyecto.',
+    options:['Modelo Cascada','Modelo Incremental','Modelo Espiral'], answer:0 },
+  { type:'mc', q:'Este modelo tiene ciclos, denominados SPRINT, que duran entre dos y cuatro semanas.',
+    options:['Proceso Unificado','SCRUM','Modelo Espiral'], answer:1 },
+  { type:'mc', q:'Suministra una porción de la funcionalidad respecto de la totalidad de los requisitos del proyecto.',
+    options:['Modelo Cascada','Modelo Incremental','Modelo Espiral'], answer:1 },
+  { type:'mc', q:'En este modelo no hace falta que los requisitos estén totalmente definidos al inicio del proyecto.',
+    options:['Modelo Cascada','Modelo Iterativo','Orientado a reutilización'], answer:1 },
+  { type:'mc', q:'Está orientado a detectar y prevenir el riesgo.',
+    options:['Modelo Incremental','Lean Software','Modelo Espiral'], answer:2 },
+  { type:'mc', q:'Configura aplicaciones desde componentes preparados de software.',
+    options:['Prototipo','Orientado a reutilización','Modelo Espiral'], answer:1 },
+  { type:'mc', q:'Su objetivo es optimizar la eficiencia y minimizar el desperdicio en el proceso de desarrollo de software.',
+    options:['Lean Software','Prototipos','Proceso Unificado'], answer:0 },
+  { type:'mc', q:'Desarrolla el sistema por fases temporales de manera que el cliente puede ver avances.',
+    options:['Orientado a Reutilización','Proceso Unificado','Crystal Methodology'], answer:1 },
+  { type:'mc', q:'Se caracteriza por estar enfocado en construir sistemas a partir de funcionalidades específicas.',
+    options:['Desarrollo por Características (FDD)','Modelo Iterativo','Lean Software'], answer:0 },
+  { type:'mc', q:'Es un marco de trabajo que puede ser adaptado a organizaciones o proyectos específicos.',
+    options:['Modelo Unificado','Modelo Espiral','Modelo Iterativo'], answer:0 },
+  { type:'mc', q:'Es una lista dinámica y priorizada que contiene todos los requisitos, funcionalidades y mejoras del producto.',
+    options:['FDD','SCRUM','Lean Software'], answer:1 },
+  { type:'mc', q:'Se basa en la creación de modelos iniciales funcionales o visuales que representan de manera simplificada el producto final.',
+    options:['Prototipos','Modelo Espiral','Lean Software'], answer:0 },
+];
+
+/* ===== Estado ===== */
+let cfg = { section:'all', count:0 };
+let quiz = [];      // preguntas de la corrida (ya barajadas con opciones)
+let idx = 0;
+let answered = false;
+
+const $ = id => document.getElementById(id);
+
+function shuffle(a){
+  const arr = a.slice();
+  for(let i=arr.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]] = [arr[j],arr[i]];
   }
-  qDiv.classList.add('answered');
-  qDiv.querySelector('.btn-check').disabled=true;
-  updateProgress();
+  return arr;
 }
 
-function gradeMatch(qId,correctMap,pts){
-  if(scores[qId]!==undefined)return;
-  const keys=Object.keys(correctMap);
-  let allFilled=true;
-  keys.forEach(k=>{if(!document.getElementById(qId+k).value)allFilled=false;});
-  if(!allFilled){alert('Complete todas las selecciones.');return;}
-  let allCorrect=true;
-  keys.forEach(k=>{
-    const sel=document.getElementById(qId+k);
-    if(sel.value===correctMap[k]){
-      sel.classList.add('match-correct');
+/* Segmented controls */
+function bindSeg(containerId, key, parse){
+  $(containerId).addEventListener('click', e=>{
+    const b = e.target.closest('button'); if(!b) return;
+    [...e.currentTarget.children].forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    cfg[key] = parse(b);
+  });
+}
+bindSeg('segSection','section', b=>b.dataset.sec);
+bindSeg('segCount','count', b=>parseInt(b.dataset.count,10));
+
+/* Construir la corrida */
+function buildQuiz(){
+  let pool = BANK.filter(q => cfg.section==='all' ? true : q.type===cfg.section);
+  pool = shuffle(pool);
+  if(cfg.count>0) pool = pool.slice(0, cfg.count);
+
+  quiz = pool.map(q=>{
+    if(q.type==='vf'){
+      // Construimos opciones C/F manteniendo el índice correcto
+      const base = [{t:'Cierto',ok:q.answer===0},{t:'Falso',ok:q.answer===1}];
+      return { type:'vf', q:q.q, options:shuffle(base) };
     } else {
-      sel.classList.add('match-wrong');
-      allCorrect=false;
+      const base = q.options.map((t,i)=>({t, ok:i===q.answer}));
+      return { type:'mc', q:q.q, options:shuffle(base) };
     }
   });
-  if(allCorrect){
-    scores[qId]=pts;
-  } else {
-    scores[qId]=0;
-    // Show correct answers in feedback
-    const fb=document.getElementById('fb_'+qId);
-    let corr='Correctas: ';
-    keys.forEach(k=>{
-      const sel=document.getElementById(qId+k);
-      const opts=sel.options;
-      for(let i=0;i<opts.length;i++){
-        if(opts[i].value===correctMap[k]){corr+=k+') '+opts[i].text+' · ';break;}
-      }
-    });
-    fb.textContent=corr.slice(0,-3);
-    fb.className='feedback show wrong-fb';
+}
+
+/* Render de la pregunta actual */
+function render(){
+  answered = false;
+  const item = quiz[idx];
+  $('counter').textContent = `Pregunta ${idx+1} / ${quiz.length}`;
+  const tag = $('tag');
+  tag.textContent = item.type==='vf' ? 'Cierto / Falso' : 'Selección';
+  tag.className = 'tag ' + (item.type==='vf' ? 'vf' : '');
+  $('bar').style.width = ((idx)/quiz.length*100) + '%';
+  $('qtext').textContent = item.q;
+
+  const opts = $('opts');
+  opts.innerHTML = '';
+  const letters = ['A','B','C','D'];
+  item.options.forEach((o,i)=>{
+    const btn = document.createElement('button');
+    btn.className = 'opt';
+    btn.innerHTML = `<span class="key">${letters[i]}</span><span>${o.t}</span>`;
+    btn.addEventListener('click', ()=>choose(i));
+    opts.appendChild(btn);
+  });
+
+  const fb = $('feedback');
+  fb.className = 'feedback';
+  fb.innerHTML = '';
+  const nb = $('nextBtn');
+  nb.disabled = true;
+  nb.textContent = (idx === quiz.length-1) ? 'Ver resultados' : 'Siguiente';
+}
+
+function choose(i){
+  if(answered) return;
+  answered = true;
+  const item = quiz[idx];
+  const buttons = [...$('opts').children];
+  buttons.forEach(b=>b.disabled = true);
+
+  const correctIdx = item.options.findIndex(o=>o.ok);
+  item.chosen = i;
+  item.correct = item.options[i].ok;
+
+  buttons[correctIdx].classList.add('correct');
+  if(!item.correct) buttons[i].classList.add('wrong');
+
+  const fb = $('feedback');
+  if(item.correct){
+    fb.className = 'feedback show ok';
+    fb.innerHTML = `<span class="badge">✓ Correcto.</span>`;
+  }else{
+    fb.className = 'feedback show no';
+    fb.innerHTML = `<span class="badge">✗ Incorrecto.</span> La respuesta correcta es <b>${item.options[correctIdx].t}</b>.`;
   }
-  const qDiv=document.getElementById(qId);
-  qDiv.classList.add('answered');
-  qDiv.querySelector('.btn-check').disabled=true;
-  updateProgress();
+  $('nextBtn').disabled = false;
 }
 
-function updateProgress(){
-  const pct=(Object.keys(scores).length/total)*100;
-  document.getElementById('progressBar').style.width=pct+'%';
+function next(){
+  if(idx < quiz.length-1){ idx++; render(); }
+  else showResults();
 }
 
-function calcTotal(){
-  let s=0;for(let k in scores)s+=scores[k];
-  const ans=Object.keys(scores).length;
-  let txt=s;
-  if(ans<total)txt+=' ('+ans+'/'+total+' respondidas)';
-  document.getElementById('totalScore').innerHTML=txt+' <span>/ 100</span>';
+function showResults(){
+  $('quiz').classList.add('hidden');
+  $('results').classList.remove('hidden');
+  const total = quiz.length;
+  const right = quiz.filter(q=>q.correct).length;
+  const pct = Math.round(right/total*100);
+  $('scoreNum').textContent = pct + '%';
+  $('scoreSub').textContent = `${right} de ${total} correctas`;
+
+  let msg;
+  if(pct===100) msg='Impecable. Listo para el parcial.';
+  else if(pct>=80) msg='Muy bien. Repasa los detalles que fallaron.';
+  else if(pct>=60) msg='Vas bien, pero conviene afinar.';
+  else msg='A reforzar conceptos antes del examen.';
+  $('grade').textContent = msg;
+
+  // Revisión solo de las falladas
+  const review = $('review');
+  review.innerHTML = '';
+  const wrong = quiz.filter(q=>!q.correct);
+  if(wrong.length===0){
+    review.innerHTML = '<div class="rev-item"><div class="rq">Sin errores. 🎯</div></div>';
+  }else{
+    const head = document.createElement('div');
+    head.style.cssText='font-weight:700;font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:2px';
+    head.textContent = `Para repasar (${wrong.length})`;
+    review.appendChild(head);
+    wrong.forEach(q=>{
+      const correct = q.options.find(o=>o.ok).t;
+      const chosen = q.options[q.chosen].t;
+      const el = document.createElement('div');
+      el.className='rev-item';
+      el.innerHTML = `
+        <div class="rq">${q.q}</div>
+        <div class="rev-line you bad"><span class="rev-dot">✗</span> Tu respuesta: ${chosen}</div>
+        <div class="rev-line sol"><span class="rev-dot">✓</span> Correcta: ${correct}</div>`;
+      review.appendChild(el);
+    });
+  }
 }
 
-function resetExam(){
-  for(let k in scores)delete scores[k];
-  document.querySelectorAll('input[type="radio"]').forEach(r=>r.checked=false);
-  document.querySelectorAll('select.match-select').forEach(s=>{s.selectedIndex=0;s.className='match-select';});
-  document.querySelectorAll('.correct-answer,.wrong-answer').forEach(el=>{el.classList.remove('correct-answer','wrong-answer');});
-  document.querySelectorAll('.feedback').forEach(f=>{f.className='feedback';f.textContent='';});
-  document.querySelectorAll('.btn-check').forEach(b=>b.disabled=false);
-  document.querySelectorAll('.answered').forEach(q=>q.classList.remove('answered'));
-  document.getElementById('totalScore').innerHTML='-- <span>/ 100</span>';
-  document.getElementById('progressBar').style.width='0%';
-  window.scrollTo({top:0,behavior:'smooth'});
+/* Navegación de pantallas */
+function startQuiz(){
+  buildQuiz();
+  if(quiz.length===0) return;
+  idx = 0;
+  $('start').classList.add('hidden');
+  $('results').classList.add('hidden');
+  $('quiz').classList.remove('hidden');
+  render();
 }
+
+$('startBtn').addEventListener('click', startQuiz);
+$('nextBtn').addEventListener('click', next);
+$('retryBtn').addEventListener('click', startQuiz);
+$('homeBtn').addEventListener('click', ()=>{
+  $('results').classList.add('hidden');
+  $('quiz').classList.add('hidden');
+  $('start').classList.remove('hidden');
+});
 </script>
 </body>
 </html>
