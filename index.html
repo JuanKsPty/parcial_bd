@@ -2,421 +2,543 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Quiz BD – Parcial 3</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.11.0/dist/tabler-icons.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz de Práctica — Redes (Parcial 3: Config. de router y enrutamiento)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--surface-0,#f1efe8);color:var(--text-primary,#1a1a18);min-height:100vh;padding:0}
-:root{
-  --surface-0:#f1efe8;--surface-1:#fafaf7;--surface-2:#ffffff;
-  --text-primary:#1a1a18;--text-secondary:#5f5e5a;--text-muted:#888780;
-  --border:rgba(0,0,0,0.1);--border-strong:rgba(0,0,0,0.18);
-  --accent:#185FA5;--accent-bg:#E6F1FB;--accent-text:#0C447C;
-  --success:#3B6D11;--success-bg:#EAF3DE;--success-border:#639922;
-  --danger:#A32D2D;--danger-bg:#FCEBEB;--danger-border:#E24B4A;
-  --radius:8px;--shadow:0 1px 4px rgba(0,0,0,.07),0 0 0 0.5px rgba(0,0,0,.08);
-}
-@media(prefers-color-scheme:dark){
   :root{
-    --surface-0:#1c1c1a;--surface-1:#252522;--surface-2:#2e2e2b;
-    --text-primary:#e8e6df;--text-secondary:#a8a69f;--text-muted:#666460;
-    --border:rgba(255,255,255,0.09);--border-strong:rgba(255,255,255,0.15);
-    --accent:#378ADD;--accent-bg:#042C53;--accent-text:#85B7EB;
-    --success:#97C459;--success-bg:#173404;--success-border:#3B6D11;
-    --danger:#E24B4A;--danger-bg:#501313;--danger-border:#A32D2D;
+    --ink:#16203a; --muted:#5b6678; --faint:#8b94a6;
+    --bg:#e9edf4; --surface:#ffffff; --surface-2:#f4f7fb; --line:#dce3ee;
+    --brand:#2f4a7c; --brand-2:#3d6bc4; --brand-soft:#eaf1fb;
+    --accent:#e8930c; --accent-soft:#fff4e0;
+    --ok:#1f8a44; --ok-bg:#e9f8ee; --ok-line:#a6dcb8;
+    --no:#cf2e2e; --no-bg:#fdeeee; --no-line:#f0b6b6;
+    --radius:14px; --shadow:0 1px 2px rgba(22,32,58,.05), 0 6px 22px rgba(22,32,58,.06);
+    --mono:'JetBrains Mono','SF Mono',Consolas,monospace;
+    --sans:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
   }
-}
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; font-family:var(--sans); color:var(--ink); background:var(--bg);
+    line-height:1.5; -webkit-font-smoothing:antialiased; padding-bottom:80px;
+  }
+  .wrap{max-width:760px; margin:0 auto; padding:0 16px}
 
-/* ── SETUP SCREEN ── */
-#setup{display:flex;flex-direction:column;min-height:100vh;align-items:center;justify-content:center;padding:24px}
-.setup-card{background:var(--surface-2);border:0.5px solid var(--border);border-radius:16px;padding:32px;max-width:480px;width:100%}
-.setup-card h1{font-size:20px;font-weight:500;margin-bottom:4px}
-.setup-card .sub{font-size:13px;color:var(--text-muted);margin-bottom:28px}
-.field{margin-bottom:20px}
-.field label{display:block;font-size:13px;font-weight:500;color:var(--text-secondary);margin-bottom:8px}
-.chip-group{display:flex;gap:8px;flex-wrap:wrap}
-.chip{padding:7px 16px;border-radius:var(--radius);border:0.5px solid var(--border-strong);background:var(--surface-1);color:var(--text-secondary);font-size:13px;cursor:pointer;transition:all .15s}
-.chip:hover{border-color:var(--accent);color:var(--accent)}
-.chip.active{background:var(--accent-bg);border-color:var(--accent);color:var(--accent-text);font-weight:500}
-.qty-row{display:flex;align-items:center;gap:12px}
-.qty-row input[type=range]{flex:1;accent-color:var(--accent)}
-.qty-val{font-size:18px;font-weight:500;min-width:32px;text-align:center;color:var(--accent-text)}
-.qty-max{font-size:12px;color:var(--text-muted)}
-.btn-primary{width:100%;padding:11px;border:none;border-radius:var(--radius);background:var(--accent);color:#fff;font-size:15px;font-weight:500;cursor:pointer;margin-top:8px;transition:opacity .15s}
-.btn-primary:hover{opacity:.88}
-.btn-primary:disabled{opacity:.4;cursor:default}
+  /* ---------- header ---------- */
+  header.hero{
+    background:
+      radial-gradient(120% 120% at 100% 0%, rgba(61,107,196,.35) 0%, rgba(61,107,196,0) 55%),
+      linear-gradient(160deg,#243a63 0%, #2f4a7c 60%, #355488 100%);
+    color:#fff; padding:34px 0 30px; position:relative; overflow:hidden;
+  }
+  header.hero::after{
+    content:""; position:absolute; inset:0; opacity:.5; pointer-events:none;
+    background-image:linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px);
+    background-size:30px 30px; mask-image:linear-gradient(180deg,#000,transparent 80%);
+  }
+  .hero .wrap{position:relative; z-index:1}
+  .eyebrow{font:600 12px/1 var(--mono); letter-spacing:.16em; text-transform:uppercase;
+    color:#adc4ea; margin-bottom:12px}
+  header.hero h1{margin:0; font-size:clamp(23px,5vw,32px); font-weight:800; letter-spacing:-.01em}
+  header.hero p.sub{margin:8px 0 0; color:#c9d8ef; font-size:15px; max-width:54ch}
+  .meta{margin-top:16px; font:500 12.5px/1 var(--mono); color:#9fb6dc; letter-spacing:.02em}
 
-/* ── QUIZ SCREEN ── */
-#quiz-screen{display:none;flex-direction:column;min-height:100vh}
-.quiz-header{position:sticky;top:0;z-index:10;background:var(--surface-2);border-bottom:0.5px solid var(--border);padding:12px 20px;display:flex;align-items:center;gap:12px}
-.quiz-header h2{font-size:14px;font-weight:500;flex:1}
-.progress-wrap{flex:1;background:var(--surface-0);border-radius:4px;height:4px;overflow:hidden}
-.progress-bar{height:4px;background:var(--accent);border-radius:4px;transition:width .3s}
-.score-badge{font-size:13px;font-weight:500;padding:4px 12px;border-radius:20px;background:var(--accent-bg);color:var(--accent-text)}
-.btn-icon{background:none;border:0.5px solid var(--border-strong);border-radius:var(--radius);padding:6px 12px;font-size:13px;cursor:pointer;color:var(--text-secondary);display:flex;align-items:center;gap:6px;transition:background .15s}
-.btn-icon:hover{background:var(--surface-1)}
+  /* ---------- sticky control bar ---------- */
+  .bar{
+    position:sticky; top:0; z-index:20; background:rgba(255,255,255,.86);
+    backdrop-filter:saturate(160%) blur(10px); border-bottom:1px solid var(--line);
+  }
+  .bar-in{display:flex; align-items:center; gap:12px; padding:11px 16px; max-width:760px; margin:0 auto; flex-wrap:wrap}
+  .progress{flex:1 1 150px; min-width:140px}
+  .progress .track{height:8px; background:#dde4ef; border-radius:999px; overflow:hidden}
+  .progress .fill{height:100%; width:0%; background:linear-gradient(90deg,var(--brand-2),var(--brand));
+    border-radius:999px; transition:width .35s ease}
+  .progress .lbl{font:600 12px/1 var(--mono); color:var(--muted); margin-top:6px; letter-spacing:.02em}
+  .btns{display:flex; gap:8px; flex-wrap:wrap}
+  button.act{font-family:var(--sans); font-weight:600; font-size:14px; border-radius:10px;
+    padding:9px 15px; cursor:pointer; border:1px solid transparent; transition:.15s; white-space:nowrap}
+  button.act:focus-visible{outline:3px solid #9bc0ff; outline-offset:2px}
+  .primary{background:var(--brand); color:#fff}
+  .primary:hover{background:#26406e}
+  .ghost{background:#fff; color:var(--brand); border-color:var(--line)}
+  .ghost:hover{background:var(--surface-2); border-color:#c4cfe0}
 
-.quiz-body{flex:1;padding:20px;max-width:680px;margin:0 auto;width:100%}
-.q-card{background:var(--surface-2);border:0.5px solid var(--border);border-radius:12px;padding:20px 22px;transition:border-color .2s}
-.q-meta{font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;display:flex;align-items:center;gap:6px}
-.q-type-pill{padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600;letter-spacing:.05em}
-.pill-tf{background:var(--accent-bg);color:var(--accent-text)}
-.pill-mc{background:#EDE9FB;color:#3C3489}
-@media(prefers-color-scheme:dark){.pill-mc{background:#26215C;color:#AFA9EC}}
-.q-text{font-size:16px;line-height:1.6;margin-bottom:18px;font-weight:400}
-.options{display:flex;flex-direction:column;gap:8px}
-.opt-btn{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:var(--radius);border:0.5px solid var(--border-strong);background:var(--surface-1);cursor:pointer;font-size:14px;color:var(--text-primary);text-align:left;transition:all .15s;width:100%}
-.opt-btn:hover:not(:disabled){background:var(--accent-bg);border-color:var(--accent)}
-.opt-btn:disabled{cursor:default}
-.opt-btn.correct{background:var(--success-bg);border-color:var(--success-border);color:var(--success)}
-.opt-btn.wrong{background:var(--danger-bg);border-color:var(--danger-border);color:var(--danger)}
-.opt-letter{width:22px;height:22px;border-radius:50%;border:0.5px solid var(--border-strong);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0;background:var(--surface-2);color:var(--text-muted)}
-.opt-btn.correct .opt-letter{background:var(--success-border);border-color:var(--success-border);color:#fff}
-.opt-btn.wrong .opt-letter{background:var(--danger-border);border-color:var(--danger-border);color:#fff}
-.feedback-row{margin-top:12px;display:flex;align-items:center;gap:8px;font-size:13px;min-height:20px}
-.fb-correct{color:var(--success)}
-.fb-wrong{color:var(--danger)}
+  /* ---------- score gauge (appears after grading) ---------- */
+  .scorecard{display:none; gap:16px; align-items:center; background:var(--surface);
+    border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow);
+    padding:16px 18px; margin:18px 0}
+  .scorecard.show{display:flex}
+  .gauge{flex:0 0 auto; width:108px; height:108px; position:relative}
+  .gauge svg{transform:rotate(-90deg)}
+  .gauge .ring-bg{stroke:#e6ebf3}
+  .gauge .ring-fg{stroke:var(--accent); stroke-linecap:round;
+    transition:stroke-dashoffset 1s cubic-bezier(.2,.8,.2,1)}
+  .gauge .pct{position:absolute; inset:0; display:flex; flex-direction:column;
+    align-items:center; justify-content:center}
+  .gauge .pct b{font-size:24px; font-weight:800; line-height:1; color:var(--ink)}
+  .gauge .pct span{font:600 10px/1 var(--mono); color:var(--faint); letter-spacing:.1em; margin-top:3px}
+  .score-detail{flex:1 1 auto; min-width:180px}
+  .score-detail h3{margin:0 0 4px; font-size:17px; font-weight:700}
+  .score-detail .lines{font-size:13.5px; color:var(--muted); display:flex; flex-direction:column; gap:2px}
+  .score-detail .lines b{color:var(--ink)}
+  .wrongnav{margin-top:10px; font-size:13px; color:var(--muted)}
+  .wrongnav a{display:inline-block; margin:3px 5px 0 0; padding:2px 8px; border-radius:7px;
+    background:var(--no-bg); color:var(--no); border:1px solid var(--no-line);
+    font:600 12px/1.4 var(--mono); text-decoration:none}
+  .wrongnav a:hover{filter:brightness(.97)}
+  .wrongnav.perfect a{background:var(--ok-bg); color:var(--ok); border-color:var(--ok-line)}
 
-.nav-row{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;max-width:680px;margin:0 auto;width:100%}
-.btn-nav{padding:9px 20px;border-radius:var(--radius);border:0.5px solid var(--border-strong);background:var(--surface-2);font-size:14px;cursor:pointer;color:var(--text-primary);display:flex;align-items:center;gap:6px;transition:background .15s}
-.btn-nav:hover{background:var(--surface-1)}
-.btn-nav:disabled{opacity:.35;cursor:default}
-.btn-nav.primary{background:var(--accent);border-color:var(--accent);color:#fff}
-.btn-nav.primary:hover{opacity:.88}
+  /* ---------- sections ---------- */
+  section{margin:26px 0}
+  .sec-head{display:flex; align-items:baseline; gap:12px; margin:0 2px 4px}
+  .sec-head .tag{font:700 12px/1 var(--mono); letter-spacing:.12em; text-transform:uppercase;
+    color:#fff; background:var(--brand); padding:5px 9px; border-radius:7px}
+  .sec-head h2{margin:0; font-size:19px; font-weight:700}
+  .sec-sub{margin:2px 4px 14px; color:var(--muted); font-size:13.5px}
 
-/* ── RESULTS SCREEN ── */
-#results-screen{display:none;flex-direction:column;min-height:100vh;align-items:center;justify-content:center;padding:24px}
-.results-card{background:var(--surface-2);border:0.5px solid var(--border);border-radius:16px;padding:32px;max-width:480px;width:100%;text-align:center}
-.score-circle{width:100px;height:100px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 20px;font-weight:500}
-.score-num{font-size:28px;line-height:1}
-.score-den{font-size:12px;color:inherit;opacity:.7}
-.grade-label{font-size:20px;font-weight:500;margin-bottom:6px}
-.grade-sub{font-size:13px;color:var(--text-muted);margin-bottom:24px}
-.stats-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px}
-.stat-box{background:var(--surface-1);border-radius:var(--radius);padding:14px;text-align:center}
-.stat-n{font-size:22px;font-weight:500}
-.stat-l{font-size:12px;color:var(--text-muted);margin-top:2px}
-.results-btns{display:flex;flex-direction:column;gap:8px}
-.btn-outline{padding:10px;border-radius:var(--radius);border:0.5px solid var(--border-strong);background:none;font-size:14px;cursor:pointer;color:var(--text-primary);transition:background .15s}
-.btn-outline:hover{background:var(--surface-1)}
+  /* ---------- question card ---------- */
+  .q{background:var(--surface); border:1px solid var(--line); border-left:4px solid var(--line);
+    border-radius:var(--radius); box-shadow:var(--shadow); padding:16px 17px; margin:11px 0; scroll-margin-top:84px;
+    transition:border-color .2s}
+  .q-head{display:flex; gap:11px; align-items:flex-start}
+  .q-num{flex:0 0 auto; width:27px; height:27px; border-radius:8px; background:var(--brand-soft);
+    color:var(--brand); font:700 13px/27px var(--mono); text-align:center}
+  .q-text{margin:2px 0 0; font-size:15px; font-weight:500}
+  .opts{display:flex; flex-direction:column; gap:8px; margin:13px 0 0; padding-left:38px}
+  .opt{display:flex; align-items:center; gap:11px; width:100%; text-align:left; cursor:pointer;
+    background:var(--surface-2); border:1.5px solid var(--line); border-radius:10px;
+    padding:10px 13px; font-family:var(--sans); font-size:14.5px; color:var(--ink); transition:.13s}
+  .opt:hover{border-color:#bcccea; background:#eef3fb}
+  .opt:focus-visible{outline:3px solid #9bc0ff; outline-offset:1px}
+  .opt .mk{flex:0 0 auto; width:24px; height:24px; border-radius:7px; background:#fff;
+    border:1.5px solid #cdd7e7; font:700 12px/22px var(--mono); text-align:center; color:var(--muted);
+    transition:.13s}
+  .opt.sel{border-color:var(--brand-2); background:var(--brand-soft)}
+  .opt.sel .mk{background:var(--brand-2); border-color:var(--brand-2); color:#fff}
+
+  /* graded / revealed states */
+  .opt.is-correct{border-color:var(--ok-line); background:var(--ok-bg)}
+  .opt.is-correct .mk{background:var(--ok); border-color:var(--ok); color:#fff}
+  .opt.is-wrong{border-color:var(--no-line); background:var(--no-bg)}
+  .opt.is-wrong .mk{background:var(--no); border-color:var(--no); color:#fff}
+  .q.locked .opt{cursor:default}
+  .q.locked .opt:hover{border-color:var(--line); background:var(--surface-2)}
+  .q.locked .opt.sel:hover{border-color:var(--brand-2); background:var(--brand-soft)}
+  .q.locked .opt.is-correct:hover{border-color:var(--ok-line); background:var(--ok-bg)}
+  .q.locked .opt.is-wrong:hover{border-color:var(--no-line); background:var(--no-bg)}
+  .q.ok{border-left-color:var(--ok)}
+  .q.bad{border-left-color:var(--no)}
+  .q.blank{border-left-color:var(--accent)}
+
+  .why{margin:12px 0 0 38px; padding:11px 13px; border-radius:10px; background:var(--surface-2);
+    border:1px dashed #cdd7e7; font-size:13.5px; color:#34405a; display:none}
+  .why.show{display:block}
+  .why .badge{display:inline-block; font:700 11px/1 var(--mono); letter-spacing:.06em; text-transform:uppercase;
+    padding:3px 7px; border-radius:6px; margin-right:8px; vertical-align:1px}
+  .why .badge.c{background:var(--ok-bg); color:var(--ok); border:1px solid var(--ok-line)}
+  .why .badge.w{background:var(--no-bg); color:var(--no); border:1px solid var(--no-line)}
+  .why .badge.b{background:var(--accent-soft); color:#b9740a; border:1px solid #f0d39a}
+  .why .nuance{display:block; margin-top:7px; padding-top:7px; border-top:1px solid #e2e8f1;
+    color:var(--muted); font-style:italic}
+
+  /* ---------- Parte III ---------- */
+  .dev{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+    box-shadow:var(--shadow); padding:18px 18px}
+  .dev p.case{font-size:14.5px; color:#33405a; margin:0 0 4px}
+  .dev .asks{margin:12px 0 0; padding:12px 14px; background:var(--surface-2); border-radius:10px;
+    font-size:13.5px}
+  .dev .asks ol{margin:0; padding-left:20px} .dev .asks li{margin:3px 0; font-weight:500}
+  .reveal-btn{margin-top:16px}
+  .solution{display:none; margin-top:18px; padding-top:18px; border-top:1px solid var(--line)}
+  .solution.show{display:block}
+  .solution h4{margin:18px 0 8px; font-size:15px; font-weight:700; color:var(--brand)}
+  .solution h4:first-child{margin-top:0}
+  ul.card-list{list-style:none; margin:0; padding:0}
+  ul.card-list li{font-size:13.8px; padding:7px 0; border-bottom:1px solid #eef2f8; color:#33405a}
+  ul.card-list li:last-child{border-bottom:0}
+  ul.card-list b{color:var(--ink)}
+  .pill{display:inline-block; font:700 12px var(--mono); padding:1px 7px; border-radius:6px;
+    background:var(--brand-soft); color:var(--brand)}
+
+  .schema{font-family:var(--mono); font-size:13px; background:#1c2740; color:#dfe7f4;
+    border-radius:10px; padding:14px 15px; overflow-x:auto; line-height:1.7; white-space:pre}
+  .schema .cmd{color:#9be3b0} .schema .pr{color:#ffd479} .schema .cm{color:#8794ad}
+  .tabla-dir{width:100%; border-collapse:collapse; font-size:12.8px; margin:4px 0}
+  .tabla-dir th,.tabla-dir td{border:1px solid var(--line); padding:5px 8px; text-align:left}
+  .tabla-dir th{background:var(--surface-2)}
+  .note-box{margin-top:12px; padding:11px 13px; background:var(--accent-soft); border:1px solid #f0d39a;
+    border-radius:10px; font-size:13.3px; color:#7a5207}
+
+  footer{max-width:760px; margin:34px auto 0; padding:18px 16px 0; border-top:1px solid var(--line);
+    color:var(--faint); font-size:12.5px; text-align:center}
+
+  @media (max-width:560px){
+    .opts,.why{padding-left:0; margin-left:0}
+    .why{margin-left:0}
+    .q-text{font-size:14.5px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none !important; scroll-behavior:auto}
+    .gauge .ring-fg{transition:none !important}
+  }
 </style>
 </head>
 <body>
 
-<!-- ── SETUP ── -->
-<div id="setup">
-  <div class="setup-card">
-    <h1>Bases de Datos — Parcial 3</h1>
-    <p class="sub">Configura tu sesión de práctica</p>
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Parcial 3 · Redes Informáticas</div>
+    <h1>Quiz de Práctica — Configuración de router y enrutamiento</h1>
+    <p class="sub">Responde las tres partes y pulsa <b>Calificar</b> para verificar las preguntas cerradas. La Parte III es de desarrollo práctico: resuélvela y compárala con la solución.</p>
+    <div class="meta">Prof. Emilio Dutari · UTP · Cap. 1–3 · 32 preguntas cerradas + 1 caso práctico</div>
+  </div>
+</header>
 
-    <div class="field">
-      <label>Tipo de preguntas</label>
-      <div class="chip-group">
-        <button class="chip active" data-type="both" onclick="setType('both',this)">Ambas</button>
-        <button class="chip" data-type="tf" onclick="setType('tf',this)">Solo verdadero / falso</button>
-        <button class="chip" data-type="mc" onclick="setType('mc',this)">Solo selección múltiple</button>
+<div class="bar">
+  <div class="bar-in">
+    <div class="progress">
+      <div class="track"><div class="fill" id="fill"></div></div>
+      <div class="lbl" id="plbl">0 / 32 respondidas</div>
+    </div>
+    <div class="btns">
+      <button class="act ghost" id="revealBtn" type="button">Mostrar respuestas</button>
+      <button class="act ghost" id="resetBtn" type="button">Reiniciar</button>
+      <button class="act primary" id="gradeBtn" type="button">Calificar</button>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="scorecard" id="scorecard">
+    <div class="gauge">
+      <svg width="108" height="108" viewBox="0 0 108 108">
+        <circle class="ring-bg" cx="54" cy="54" r="48" fill="none" stroke-width="11"></circle>
+        <circle class="ring-fg" id="ring" cx="54" cy="54" r="48" fill="none" stroke-width="11"
+                stroke-dasharray="301.6" stroke-dashoffset="301.6"></circle>
+      </svg>
+      <div class="pct"><b id="pctNum">0%</b><span>PUNTAJE</span></div>
+    </div>
+    <div class="score-detail">
+      <h3 id="scoreTitle">Resultado</h3>
+      <div class="lines">
+        <div>Parte I (Cierto/Falso): <b id="s1">0 / 16</b></div>
+        <div>Parte II (Opción múltiple): <b id="s2">0 / 16</b></div>
+        <div>Total cerradas: <b id="sTotal">0 / 32</b></div>
+      </div>
+      <div class="wrongnav" id="wrongnav"></div>
+    </div>
+  </div>
+
+  <section id="partI">
+    <div class="sec-head"><span class="tag">Parte I</span><h2>Cierto (C) o Falso (F)</h2></div>
+    <p class="sec-sub">Decide si cada afirmación es cierta o falsa.</p>
+    <div id="listI"></div>
+  </section>
+
+  <section id="partII">
+    <div class="sec-head"><span class="tag">Parte II</span><h2>Opción múltiple</h2></div>
+    <p class="sec-sub">Escoge la mejor respuesta.</p>
+    <div id="listII"></div>
+  </section>
+
+  <section id="partIII">
+    <div class="sec-head"><span class="tag">Parte III</span><h2>Desarrollo práctico — Rutas estáticas (Packet Tracer)</h2></div>
+    <p class="sec-sub">Resuélvelo en papel / Packet Tracer y luego abre la solución para comparar.</p>
+    <div class="dev">
+      <p class="case">Tres routers (R1 – R2 – R3) conectados por enlaces seriales WAN, cada uno con una LAN. Configure el direccionamiento y las <b>rutas estáticas</b> necesarias para que haya comunicación de extremo a extremo entre todas las PC.</p>
+
+      <div class="schema"><span class="cm">          172.16.1.0/24
+            [PC2]
+              |  Fa0/0
+          [  R2  ]
+   S0/0/0 /         \ S0/0/1 (DCE)
+172.16.2.0/24      192.168.1.0/24
+       /                 \
+ S0/0/0(DCE)           S0/0/1
+   [ R1 ]               [ R3 ]
+    Fa0/0                Fa0/0
+      |                    |
+   [PC1]                 [PC3]
+ 172.16.3.0/24        192.168.2.0/24</span></div>
+
+      <table class="tabla-dir">
+        <tr><th>Disp.</th><th>Interfaz</th><th>IP</th><th>Máscara</th><th>Gateway</th></tr>
+        <tr><td>R1</td><td>Fa0/0</td><td>172.16.3.1</td><td>255.255.255.0</td><td>N/C</td></tr>
+        <tr><td>R1</td><td>S0/0/0 (DCE)</td><td>172.16.2.1</td><td>255.255.255.0</td><td>N/C</td></tr>
+        <tr><td>R2</td><td>Fa0/0</td><td>172.16.1.1</td><td>255.255.255.0</td><td>N/C</td></tr>
+        <tr><td>R2</td><td>S0/0/0</td><td>172.16.2.2</td><td>255.255.255.0</td><td>N/C</td></tr>
+        <tr><td>R2</td><td>S0/0/1 (DCE)</td><td>192.168.1.2</td><td>255.255.255.0</td><td>N/C</td></tr>
+        <tr><td>R3</td><td>Fa0/0</td><td>192.168.2.1</td><td>255.255.255.0</td><td>N/C</td></tr>
+        <tr><td>R3</td><td>S0/0/1</td><td>192.168.1.1</td><td>255.255.255.0</td><td>N/C</td></tr>
+        <tr><td>PC1</td><td>NIC</td><td>172.16.3.10</td><td>255.255.255.0</td><td>172.16.3.1</td></tr>
+        <tr><td>PC2</td><td>NIC</td><td>172.16.1.10</td><td>255.255.255.0</td><td>172.16.1.1</td></tr>
+        <tr><td>PC3</td><td>NIC</td><td>192.168.2.10</td><td>255.255.255.0</td><td>192.168.2.1</td></tr>
+      </table>
+
+      <div class="asks">
+        <ol>
+          <li>Configure nombre de host, contraseña <i>enable secret</i> y banner en cada router.</li>
+          <li>Configure y active todas las interfaces (recuerde <span class="pill">clock rate</span> en los extremos DCE).</li>
+          <li>Configure las rutas estáticas necesarias: una <b>ruta por defecto</b> en R1 y una <b>ruta resumida /22</b> en R3.</li>
+          <li>Verifique con <span class="pill">show ip route</span> y demuestre con <span class="pill">ping</span> entre PC1↔PC3 y PC2↔PC3.</li>
+        </ol>
+      </div>
+
+      <button class="act primary reveal-btn" id="solBtn" type="button">Ver solución</button>
+
+      <div class="solution" id="solution">
+        <h4>1) Configuración de R1 (router stub → ruta por defecto)</h4>
+        <div class="schema"><span class="pr">R1(config)#</span><span class="cmd"> hostname R1</span>
+<span class="pr">R1(config)#</span><span class="cmd"> enable secret class</span>
+<span class="pr">R1(config)#</span><span class="cmd"> interface fa0/0</span>
+<span class="pr">R1(config-if)#</span><span class="cmd"> ip address 172.16.3.1 255.255.255.0</span>
+<span class="pr">R1(config-if)#</span><span class="cmd"> no shutdown</span>
+<span class="pr">R1(config-if)#</span><span class="cmd"> interface s0/0/0</span>
+<span class="pr">R1(config-if)#</span><span class="cmd"> ip address 172.16.2.1 255.255.255.0</span>
+<span class="pr">R1(config-if)#</span><span class="cmd"> clock rate 64000</span>     <span class="cm">! R1 es DCE</span>
+<span class="pr">R1(config-if)#</span><span class="cmd"> no shutdown</span>
+<span class="pr">R1(config)#</span><span class="cmd"> ip route 0.0.0.0 0.0.0.0 172.16.2.2</span>  <span class="cm">! ruta por defecto</span></div>
+
+        <h4>2) Configuración de R2 (router intermedio)</h4>
+        <div class="schema"><span class="pr">R2(config)#</span><span class="cmd"> interface fa0/0</span>
+<span class="pr">R2(config-if)#</span><span class="cmd"> ip address 172.16.1.1 255.255.255.0</span>
+<span class="pr">R2(config-if)#</span><span class="cmd"> no shutdown</span>
+<span class="pr">R2(config-if)#</span><span class="cmd"> interface s0/0/0</span>
+<span class="pr">R2(config-if)#</span><span class="cmd"> ip address 172.16.2.2 255.255.255.0</span>
+<span class="pr">R2(config-if)#</span><span class="cmd"> no shutdown</span>            <span class="cm">! DTE: sin clock rate</span>
+<span class="pr">R2(config-if)#</span><span class="cmd"> interface s0/0/1</span>
+<span class="pr">R2(config-if)#</span><span class="cmd"> ip address 192.168.1.2 255.255.255.0</span>
+<span class="pr">R2(config-if)#</span><span class="cmd"> clock rate 64000</span>     <span class="cm">! R2 es DCE hacia R3</span>
+<span class="pr">R2(config-if)#</span><span class="cmd"> no shutdown</span>
+<span class="pr">R2(config)#</span><span class="cmd"> ip route 172.16.3.0 255.255.255.0 serial0/0/0</span>
+<span class="pr">R2(config)#</span><span class="cmd"> ip route 192.168.2.0 255.255.255.0 192.168.1.1</span></div>
+
+        <h4>3) Configuración de R3 (ruta resumida /22)</h4>
+        <div class="schema"><span class="pr">R3(config)#</span><span class="cmd"> interface fa0/0</span>
+<span class="pr">R3(config-if)#</span><span class="cmd"> ip address 192.168.2.1 255.255.255.0</span>
+<span class="pr">R3(config-if)#</span><span class="cmd"> no shutdown</span>
+<span class="pr">R3(config-if)#</span><span class="cmd"> interface s0/0/1</span>
+<span class="pr">R3(config-if)#</span><span class="cmd"> ip address 192.168.1.1 255.255.255.0</span>
+<span class="pr">R3(config-if)#</span><span class="cmd"> no shutdown</span>            <span class="cm">! DTE: sin clock rate</span>
+<span class="pr">R3(config)#</span><span class="cmd"> ip route 172.16.0.0 255.255.252.0 192.168.1.2</span>  <span class="cm">! /22 cubre 172.16.0–3.0</span></div>
+
+        <h4>4) Verificación</h4>
+        <ul class="card-list">
+          <li><b>show ip interface brief</b> → todas las interfaces deben estar <span class="pill">up / up</span>.</li>
+          <li><b>show ip route</b> → en cada router deben aparecer las 5 redes (C de conectadas, S de estáticas).</li>
+          <li><b>ping</b> de PC1 a 192.168.2.10 y de PC2 a 192.168.2.10 → <b>!!!!!</b> = éxito.</li>
+        </ul>
+        <div class="note-box"><b>Por qué estas rutas:</b> cada router solo conoce sus redes conectadas. R1 es <i>stub</i> (solo va a R2) → ruta por defecto. R3 usa una ruta <b>resumida /22</b> que agrupa 172.16.0.0–172.16.3.0 en una sola línea. R2 está en el medio, por eso necesita rutas hacia ambos extremos. Si un ping falla, casi siempre es por una <b>ruta de regreso</b> faltante o una interfaz en <i>down</i>.</div>
       </div>
     </div>
+  </section>
 
-    <div class="field">
-      <label>Cantidad de preguntas <span class="qty-max" id="qty-max-label">(39 disponibles)</span></label>
-      <div class="chip-group" id="qty-chips"></div>
-    </div>
-
-    <button class="btn-primary" onclick="startQuiz()"><i class="ti ti-player-play" aria-hidden="true"></i> Comenzar</button>
-  </div>
 </div>
 
-<!-- ── QUIZ ── -->
-<div id="quiz-screen">
-  <div class="quiz-header">
-    <h2 id="q-counter">Pregunta 1 de 10</h2>
-    <div class="progress-wrap"><div class="progress-bar" id="progress-bar" style="width:0%"></div></div>
-    <span class="score-badge" id="score-live">✓ 0</span>
-    <button class="btn-icon" onclick="goSetup()"><i class="ti ti-x" aria-hidden="true"></i> Salir</button>
-  </div>
-
-  <div class="quiz-body">
-    <div class="q-card" id="q-card">
-      <div class="q-meta">
-        <span id="q-type-pill" class="q-type-pill pill-tf">Verdadero / Falso</span>
-        <span id="q-num-meta"></span>
-      </div>
-      <p class="q-text" id="q-text"></p>
-      <div class="options" id="options"></div>
-      <div class="feedback-row" id="feedback"></div>
-    </div>
-  </div>
-
-  <div class="nav-row">
-    <button class="btn-nav" id="btn-prev" onclick="navigate(-1)" disabled>
-      <i class="ti ti-arrow-left" aria-hidden="true"></i> Anterior
-    </button>
-    <button class="btn-nav primary" id="btn-next" onclick="navigate(1)">
-      Siguiente <i class="ti ti-arrow-right" aria-hidden="true"></i>
-    </button>
-  </div>
-</div>
-
-<!-- ── RESULTS ── -->
-<div id="results-screen">
-  <div class="results-card">
-    <div class="score-circle" id="res-circle">
-      <span class="score-num" id="res-num"></span>
-      <span class="score-den" id="res-den"></span>
-    </div>
-    <p class="grade-label" id="res-label"></p>
-    <p class="grade-sub" id="res-sub"></p>
-    <div class="stats-row">
-      <div class="stat-box"><div class="stat-n" id="res-correct" style="color:var(--success)"></div><div class="stat-l">correctas</div></div>
-      <div class="stat-box"><div class="stat-n" id="res-wrong" style="color:var(--danger)"></div><div class="stat-l">incorrectas</div></div>
-    </div>
-    <div class="results-btns">
-      <button class="btn-primary" onclick="reviewMode()"><i class="ti ti-eye" aria-hidden="true"></i> Revisar respuestas</button>
-      <button class="btn-outline" onclick="startQuiz()"><i class="ti ti-refresh" aria-hidden="true"></i> Repetir misma config</button>
-      <button class="btn-outline" onclick="goSetup()"><i class="ti ti-settings" aria-hidden="true"></i> Nueva configuración</button>
-    </div>
-  </div>
-</div>
+<footer>
+  Simulacro interactivo · Parcial 3 · Redes Informáticas (UTP) · Material basado en CCNA Exploration 2 (Cap. 1–3) y el estilo de evaluación del Prof. Emilio Dutari. Las respuestas son para autoestudio.
+</footer>
 
 <script>
-const TF=[
-  {q:"Base de datos relacional es una colección de relaciones normalizadas en la que cada relación tiene un nombre distintivo.",ans:"Cierto"},
-  {q:"Cuando la cardinalidad de una relación es de 1:M, el esquema lógico (relacional) resultante debe tener por obligación una tabla que represente esa relación entre entidades.",ans:"Falso"},
-  {q:"Si una llave foránea es parte de una llave primaria, significa que esa llave foránea no puede ser nula.",ans:"Cierto"},
-  {q:"En una relación 1:N la ubicación de la llave foránea es arbitraria.",ans:"Falso"},
-  {q:"La regla de la integridad de entidad en el modelo relacional hace referencia a que los atributos de la clave primaria puedan ser de valor nulo.",ans:"Falso"},
-  {q:"El modelo Entidad-Relación se utiliza principalmente para implementar físicamente una base de datos.",ans:"Falso"},
-  {q:"Una relación en el modelo relacional corresponde a una tabla en una base de datos.",ans:"Cierto"},
-  {q:"Las claves primarias pueden repetirse en una tabla relacional.",ans:"Falso"},
-  {q:"Llave candidata es la combinación de varios atributos, de forma tal que la combinación es única.",ans:"Falso"},
-  {q:"La estructura principal del modelo relacional es una tabla constituida por tuplas y atributos.",ans:"Cierto"},
-  {q:"Una entidad débil por identificación es una entidad en la que su llave es compuesta y en la que ninguna de sus partes es un identificador (o llave) de otra entidad.",ans:"Falso"},
-  {q:"Cuando en el modelo E/R representamos una relación M:M, la llave primaria de la tabla asociada es una llave compuesta por las llaves primarias de cada uno de los tipos de entidades que se relacionan.",ans:"Cierto"},
-  {q:"La integridad de entidad es una restricción que indica que en una relación base ningún atributo de una clave principal puede ser nulo.",ans:"Cierto"},
-  {q:"Un modelo Entidad-Relación es un aspecto del mundo real que el diseñador intenta capturar en un sistema de información.",ans:"Cierto"},
-  {q:"En el modelo relacional, los atributos multivaluados se almacenan directamente en una sola columna de una tabla.",ans:"Falso"},
-  {q:"Una relación de cardinalidad uno a muchos implica que una entidad A puede estar relacionada con muchas entidades B, pero no al revés.",ans:"Cierto"},
-  {q:"Las claves foráneas (foreign keys) se utilizan para garantizar la integridad referencial entre tablas.",ans:"Cierto"},
-  {q:"Una llave compuesta puede ser parcialmente nula.",ans:"Falso"},
-  {q:"Entre los componentes de un Modelo E/R se incluyen solamente: Entidades, Atributos y Llaves.",ans:"Falso"},
-  {q:"Cuando se transforma un diagrama E/R a esquema relacional, todas las relaciones se convierten en esquema.",ans:"Falso"},
-  {q:"Cuando un atributo se señala como Multivalorado para una entidad de un Modelo E/R, el diseño tabular del modelo Relacional se ve alterado por la inclusión de una tabla.",ans:"Cierto"},
-  {q:"La existencia de una instancia de una entidad débil está supeditada a la existencia de una instancia de la entidad fuerte con la cual está relacionada.",ans:"Cierto"},
-  {q:"La clave principal o PK, es la que se selecciona para identificar de forma unívoca cada entidad de un conjunto de entidades.",ans:"Cierto"},
-  {q:"La cláusula Where de una sentencia SELECT selecciona las filas a incluir en el resultado, aplicando una condición de búsqueda a las filas de la tabla.",ans:"Cierto"}
+/* ===== Datos de las preguntas ===== */
+const partI = [
+  {n:1,  t:"La memoria RAM del router conserva su contenido cuando el router se apaga o reinicia.", a:"F", why:"La RAM es volátil: pierde su contenido (running-config, tabla de rutas) al apagar."},
+  {n:2,  t:"El IOS de Cisco se almacena de forma permanente en la memoria Flash.", a:"C", why:"El IOS vive en la Flash y se copia a la RAM durante el arranque."},
+  {n:3,  t:"El archivo startup-config se guarda en la NVRAM.", a:"C", why:"La NVRAM es permanente y guarda la configuración de inicio."},
+  {n:4,  t:"El router toma su decisión principal de envío en la Capa 2 del modelo OSI.", a:"F", why:"La decisión principal es en Capa 3, según la dirección IP de destino."},
+  {n:5,  t:"Una ruta estática tiene una distancia administrativa por defecto de 1.", a:"C", why:"AD = 1, incluso cuando se configura con interfaz de salida. Solo la red conectada tiene AD 0."},
+  {n:6,  t:"Una red conectada directamente tiene una distancia administrativa de 0.", a:"C", why:"Es el origen más preferido y no se puede cambiar."},
+  {n:7,  t:"EIGRP es un protocolo con clase que no admite VLSM.", a:"F", why:"EIGRP es SIN clase (admite VLSM). Los con clase son RIPv1 e IGRP."},
+  {n:8,  t:"El comando clock rate se configura en el extremo DCE del enlace serial.", a:"C", why:"El lado DCE provee la señal de reloj; el DTE no lleva clock rate."},
+  {n:9,  t:"Al pasar un paquete de un router a otro, la dirección IP de destino no cambia.", a:"C", why:"Las IP de Capa 3 no cambian; lo que cambia en cada salto son las direcciones MAC de Capa 2."},
+  {n:10, t:"BGP es un protocolo de gateway interior (IGP).", a:"F", why:"BGP es EGP (entre sistemas autónomos). Los IGP son RIP, EIGRP, OSPF, IS-IS."},
+  {n:11, t:"La implementación de OSPF de Cisco usa el ancho de banda como base de su métrica (costo).", a:"C", why:"OSPF calcula el costo a partir del ancho de banda del enlace."},
+  {n:12, t:"Una ruta estática por defecto se configura con la red 0.0.0.0 y máscara 0.0.0.0.", a:"C", why:"La ruta 'quad-zero' coincide con todo destino sin una ruta más específica."},
+  {n:13, t:"El protocolo CDP opera en la Capa 3 del modelo OSI.", a:"F", why:"CDP opera en Capa 2 y descubre dispositivos Cisco conectados directamente."},
+  {n:14, t:"La convergencia ocurre cuando todas las tablas de enrutamiento están en estado de uniformidad.", a:"C", why:"Convergencia = información completa y precisa en todos los routers."},
+  {n:15, t:"Los protocolos de vector de distancia utilizan el algoritmo Dijkstra (SPF).", a:"F", why:"Vector de distancia usa Bellman-Ford; Dijkstra lo usan los de estado de enlace (OSPF)."},
+  {n:16, t:"El comando 'show ip interface brief' muestra un resumen del estado (up/up) de las interfaces.", a:"C", why:"Es la forma rápida de ver IP y estado de todas las interfaces."}
 ];
 
-const MC=[
-  {q:"Un atributo compuesto se divide en:",opts:["Subpartes","Cadenas de texto","Subpartes y cadenas de texto","En un único valor"],ans:"Subpartes"},
-  {q:"Es requerido que cada subclase pueda tener:",opts:["Dos categorías padre","Ninguna clase padre","Una clase padre","Ninguna"],ans:"Una clase padre"},
-  {q:"La Superclase también se llama:",opts:["Especialización","Generalización","Subclase","a ó b"],ans:"Generalización"},
-  {q:"La cláusula FROM especifica:",opts:["Las columnas que se incluirán en los resultados de una recuperación","La tabla o tablas que contienen los datos de una recuperación","a y b","Ninguna de las anteriores"],ans:"La tabla o tablas que contienen los datos de una recuperación"},
-  {q:"Representa alguna propiedad de una entidad o relación:",opts:["Datos o valor","Tipos de datos","Atributos","Modelo"],ans:"Atributos"},
-  {q:"¿Cuál de las siguientes aseveraciones es correcta?",opts:["Cada llave candidata es una llave foránea","Cada llave primaria es una llave foránea","Cada llave foránea es una llave candidata","Cada llave foránea es llave primaria en alguna relación"],ans:"Cada llave foránea es llave primaria en alguna relación"},
-  {q:"El modelo relacional representa la base de datos como:",opts:["Una colección de relaciones","Modelo conceptual","Conjunto de tuplas","Conjunto de atributos"],ans:"Una colección de relaciones"},
-  {q:"Durante el proceso de modelado entidad/relación, el diseñador debe:",opts:["Definir entidades, atributos, llaves primarias y foráneas","Tomar decisiones sobre añadir atributos de llave primaria","Tomar decisiones sobre el tratamiento de atributos multivaluados","Todas las anteriores"],ans:"Todas las anteriores"},
-  {q:"En el modelo relacional, un atributo compuesto como \"nombre completo\" se recomienda:",opts:["Almacenarlo tal cual en una sola columna","Dividirlo en atributos más simples como nombre y apellido","Ignorarlo en el diseño","Convertirlo en una clave primaria"],ans:"Dividirlo en atributos más simples como nombre y apellido"},
-  {q:"Base de datos principal para la ejecución de SQL Server:",opts:["BD Master","BD Model","BD Pubs","Todas las anteriores"],ans:"BD Master"},
-  {q:"Una relación 1:1 entre dos entidades generalmente se implementa en el modelo relacional como:",opts:["Dos tablas sin claves","Dos tablas unidas por una tabla puente","Una clave foránea en una de las dos tablas","Una sola tabla combinada"],ans:"Una clave foránea en una de las dos tablas"},
-  {q:"¿Cómo se denominan las cosas del mundo real con existencia física o conceptual que se almacenan en el modelo relacional?",opts:["Entidades","Propiedades","Objetos","Consultas"],ans:"Entidades"},
-  {q:"Indique el tipo de cardinalidad: Una entidad en A se asocia con cualquier número de entidades en B. Una entidad en B puede asociarse a lo sumo con alguna entidad en A.",opts:["Varios a varios","Uno a uno","Varios a uno","Uno a varios"],ans:"Varios a uno"},
-  {q:"¿Cuál es la función principal de una clave foránea?",opts:["Eliminar registros duplicados","Garantizar la unicidad de una fila","Establecer una relación con otra tabla","Calcular promedios entre tablas"],ans:"Establecer una relación con otra tabla"},
-  {q:"¿Cómo se denominan los atributos que tienen un conjunto de valores para una entidad específica?",opts:["Multimedias","Multivaluados","Multicódigos","Multicausales"],ans:"Multivaluados"}
+const partII = [
+  {n:1,  t:"¿Qué memoria del router almacena el archivo startup-config?", o:["RAM","Flash","NVRAM","ROM"], a:2, why:"La NVRAM es permanente y guarda la configuración de inicio."},
+  {n:2,  t:"El IOS de Cisco se almacena de forma permanente en:", o:["RAM","Flash","NVRAM","Caché ARP"], a:1, why:"En la Flash; se copia a la RAM al arrancar."},
+  {n:3,  t:"¿Cuál es la primera etapa del proceso de arranque del router?", o:["Cargar el IOS","Cargar el bootstrap","Ejecutar la POST","Cargar la startup-config"], a:2, why:"La POST prueba el hardware desde la ROM antes que todo lo demás."},
+  {n:4,  t:"La distancia administrativa por defecto de una ruta estática es:", o:["0","1","90","120"], a:1, why:"AD = 1. Solo la red conectada directamente tiene AD 0."},
+  {n:5,  t:"El comando que configura la señal de reloj en el extremo DCE es:", o:["bandwidth 64000","speed 64000","clock rate 64000","set clock 64000"], a:2, why:"clock rate 64000 (solo en el lado DCE)."},
+  {n:6,  t:"¿Cuál de los siguientes es un protocolo de enrutamiento exterior (EGP)?", o:["OSPF","EIGRP","RIP","BGP"], a:3, why:"BGP es el EGP de Internet; los demás son IGP."},
+  {n:7,  t:"¿Cuáles protocolos NO admiten VLSM por ser con clase?", o:["RIPv2 y EIGRP","RIPv1 e IGRP","OSPF e IS-IS","EIGRP y OSPF"], a:1, why:"RIPv1 e IGRP son con clase (no envían la máscara)."},
+  {n:8,  t:"La métrica que utiliza el protocolo RIP es:", o:["Ancho de banda","Costo","Retardo","Conteo de saltos"], a:3, why:"RIP usa conteo de saltos; menos saltos = mejor ruta."},
+  {n:9,  t:"En la tabla de enrutamiento, la entrada S* 0.0.0.0/0 representa:", o:["Una red conectada","Una ruta RIP","Una ruta estática por defecto","Una ruta resumida"], a:2, why:"El * indica ruta candidata por defecto (gateway of last resort)."},
+  {n:10, t:"El algoritmo utilizado por los protocolos de vector de distancia es:", o:["Dijkstra (SPF)","Bellman-Ford","Spanning-Tree","Diffie-Hellman"], a:1, why:"Bellman-Ford; Dijkstra es de estado de enlace."},
+  {n:11, t:"La distancia administrativa de OSPF es:", o:["90","100","110","120"], a:2, why:"OSPF = 110. EIGRP interno = 90, RIP = 120."},
+  {n:12, t:"El comando para activar (encender) una interfaz es:", o:["enable","no shutdown","interface up","start"], a:1, why:"no shutdown cambia la interfaz de administratively down a activa."},
+  {n:13, t:"El comando para guardar la configuración en la NVRAM es:", o:["save config","write erase","copy running-config startup-config","copy startup-config running-config"], a:2, why:"copy running-config startup-config (RAM → NVRAM)."},
+  {n:14, t:"Una interfaz serial queda en estado 'up/down' cuando:", o:["Falta asignar la IP","Falta el comando no shutdown","Falta clock rate en el DCE o el otro extremo no está configurado","Se usó un cable cruzado"], a:2, why:"Capa física OK pero protocolo de línea caído: típicamente falta el reloj del DCE o el otro lado."},
+  {n:15, t:"¿Cuál es un protocolo de enrutamiento de estado de enlace?", o:["RIP","IGRP","OSPF","EIGRP"], a:2, why:"OSPF (e IS-IS) son de estado de enlace; construyen un mapa de la topología."},
+  {n:16, t:"La distancia administrativa de EIGRP interno es:", o:["90","110","120","170"], a:0, why:"EIGRP interno = 90; EIGRP externo = 170."}
 ];
 
-const LETTERS=['A','B','C','D'];
+const LETTERS = ["a","b","c","d","e"];
+const state = { sel:{}, graded:false, revealed:false };
+const TOTAL = partI.length + partII.length;
 
-let selectedType='both', qty=10, questions=[], current=0, answers=[], score=0, isReview=false;
+function el(tag, cls, html){ const e=document.createElement(tag); if(cls)e.className=cls; if(html!=null)e.innerHTML=html; return e; }
 
-function shuffle(a){let b=[...a];for(let i=b.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
-
-function setType(t, el){
-  selectedType=t;
-  document.querySelectorAll('.chip[data-type]').forEach(c=>c.classList.remove('active'));
-  el.classList.add('active');
-  rebuildQtyChips();
-}
-
-function getPoolSize(){
-  return selectedType==='tf'?TF.length:selectedType==='mc'?MC.length:TF.length+MC.length;
-}
-
-function rebuildQtyChips(){
-  const max=getPoolSize();
-  document.getElementById('qty-max-label').textContent='('+max+' disponibles)';
-  const steps=[5,10,15,20];
-  const chipsDiv=document.getElementById('qty-chips');
-  chipsDiv.innerHTML='';
-  steps.filter(s=>s<max).forEach(s=>{
-    const b=document.createElement('button');
-    b.className='chip';
-    b.textContent=s;
-    b.onclick=()=>setQty(s,b);
-    chipsDiv.appendChild(b);
+function buildQuestion(part, q){
+  const id = part + "-" + q.n;
+  const card = el("div","q"); card.id = id;
+  const head = el("div","q-head");
+  head.appendChild(el("span","q-num", q.n));
+  head.appendChild(el("p","q-text", q.t));
+  card.appendChild(head);
+  const opts = el("div","opts");
+  const list = part==="I" ? [{v:"C",label:"Cierto"},{v:"F",label:"Falso"}]
+                          : q.o.map((txt,i)=>({v:i,label:txt}));
+  list.forEach((o,i)=>{
+    const b = el("button","opt");
+    b.type="button";
+    b.dataset.q=id; b.dataset.val=o.v;
+    const mkLabel = part==="I" ? o.v : LETTERS[i];
+    b.appendChild(el("span","mk", mkLabel));
+    b.appendChild(el("span","txt", o.label));
+    b.setAttribute("aria-pressed","false");
+    b.addEventListener("click", ()=>onSelect(id, o.v, part));
+    opts.appendChild(b);
   });
-  const all=document.createElement('button');
-  all.className='chip active';
-  all.textContent='Todas ('+max+')';
-  all.onclick=()=>setQty(max,all);
-  chipsDiv.appendChild(all);
-  qty=max;
+  card.appendChild(opts);
+  card.appendChild(el("div","why"));
+  return card;
 }
 
-function setQty(v, el){
-  qty=v;
-  document.querySelectorAll('#qty-chips .chip').forEach(c=>c.classList.remove('active'));
-  el.classList.add('active');
+function onSelect(id, val, part){
+  if(state.graded) return;
+  state.sel[id] = val;
+  paintCard(id, part);
+  updateProgress();
 }
+function qData(part, n){ return (part==="I"?partI:partII).find(x=>x.n===n); }
 
-function buildPool(){
-  let pool;
-  if(selectedType==='tf') pool=TF.map(x=>({...x,type:'tf'}));
-  else if(selectedType==='mc') pool=MC.map(x=>({...x,type:'mc'}));
-  else pool=[...TF.map(x=>({...x,type:'tf'})),...MC.map(x=>({...x,type:'mc'}))];
-  pool=shuffle(pool);
-  pool=pool.slice(0,qty);
-  pool.forEach(p=>{
-    if(p.type==='tf') p.opts=shuffle(['Cierto','Falso']);
-    else p.opts=shuffle(p.opts);
-  });
-  return pool;
-}
+function paintCard(id, part){
+  const card = document.getElementById(id);
+  const n = parseInt(id.split("-")[1],10);
+  const q = qData(part,n);
+  const correct = q.a;
+  const sel = state.sel[id];
+  const opts = card.querySelectorAll(".opt");
+  const why = card.querySelector(".why");
 
-function startQuiz(){
-  questions=buildPool();
-  answers=Array(questions.length).fill(null);
-  score=0; current=0; isReview=false;
-  document.getElementById('setup').style.display='none';
-  document.getElementById('results-screen').style.display='none';
-  document.getElementById('quiz-screen').style.display='flex';
-  document.getElementById('btn-next').disabled=false;
-  renderQuestion();
-}
-
-function goSetup(){
-  document.getElementById('quiz-screen').style.display='none';
-  document.getElementById('results-screen').style.display='none';
-  document.getElementById('setup').style.display='flex';
-}
-
-function renderQuestion(){
-  const q=questions[current];
-  const userAns=answers[current];
-  const answered=userAns!==null;
-
-  document.getElementById('q-counter').textContent='Pregunta '+(current+1)+' de '+questions.length;
-  document.getElementById('q-num-meta').textContent=(current+1)+' / '+questions.length;
-  document.getElementById('progress-bar').style.width=(((current+1)/questions.length)*100)+'%';
-
-  const pill=document.getElementById('q-type-pill');
-  if(q.type==='tf'){pill.textContent='Verdadero / Falso';pill.className='q-type-pill pill-tf';}
-  else{pill.textContent='Selección múltiple';pill.className='q-type-pill pill-mc';}
-
-  document.getElementById('q-text').textContent=q.q;
-
-  const optsDiv=document.getElementById('options');
-  optsDiv.innerHTML='';
-  q.opts.forEach((opt,i)=>{
-    const btn=document.createElement('button');
-    btn.className='opt-btn';
-    btn.innerHTML=`<span class="opt-letter">${LETTERS[i]}</span><span>${opt}</span>`;
-    if(!answered&&!isReview) btn.onclick=()=>selectAnswer(opt);
-    else btn.disabled=true;
-    if(answered||isReview){
-      if(opt===q.ans) btn.classList.add('correct');
-      else if(opt===userAns&&userAns!==q.ans) btn.classList.add('wrong');
+  card.classList.remove("ok","bad","blank","locked");
+  opts.forEach(o=>{
+    o.classList.remove("sel","is-correct","is-wrong");
+    const v = (part==="I") ? o.dataset.val : parseInt(o.dataset.val,10);
+    const isSel = (sel!==undefined && String(sel)===String(v));
+    o.setAttribute("aria-pressed", isSel ? "true":"false");
+    if(isSel && !state.graded && !state.revealed) o.classList.add("sel");
+    if(state.revealed && !state.graded){
+      if(String(v)===String(correct)) o.classList.add("is-correct");
+      if(isSel && String(v)!==String(correct)) o.classList.add("sel");
     }
-    optsDiv.appendChild(btn);
+    if(state.graded){
+      if(String(v)===String(correct)) o.classList.add("is-correct");
+      if(isSel && String(v)!==String(correct)) o.classList.add("is-wrong");
+    }
   });
 
-  const fb=document.getElementById('feedback');
-  if(answered||isReview){
-    const ok=userAns===q.ans||(isReview&&userAns===null);
-    if(isReview&&userAns===null){fb.innerHTML='';return;}
-    fb.innerHTML=userAns===q.ans
-      ? `<i class="ti ti-check" style="color:var(--success)"></i><span class="fb-correct">Correcto</span>`
-      : `<i class="ti ti-x" style="color:var(--danger)"></i><span class="fb-wrong">Incorrecto — la respuesta es: <strong>${q.ans}</strong></span>`;
-  } else {fb.innerHTML='';}
-
-  updateScoreLive();
-  document.getElementById('btn-prev').disabled=current===0;
-  const nextBtn=document.getElementById('btn-next');
-  if(current===questions.length-1){
-    nextBtn.innerHTML='Ver resultados <i class="ti ti-chart-bar" aria-hidden="true"></i>';
-    nextBtn.onclick=showResults;
+  if(state.graded || state.revealed){
+    why.classList.add("show");
+    let badge="", cls="";
+    if(state.graded){
+      if(sel===undefined){ badge="Sin responder"; cls="b"; card.classList.add("blank"); }
+      else if(String(sel)===String(correct)){ badge="Correcto"; cls="c"; card.classList.add("ok"); }
+      else { badge="Incorrecto"; cls="w"; card.classList.add("bad"); }
+    } else { badge="Respuesta"; cls="c"; }
+    let txt = '<span class="badge '+cls+'">'+badge+'</span>'+q.why;
+    if(q.nuance) txt += '<span class="nuance">⚠ '+q.nuance+'</span>';
+    why.innerHTML = txt;
+    if(state.graded) card.classList.add("locked");
   } else {
-    nextBtn.innerHTML='Siguiente <i class="ti ti-arrow-right" aria-hidden="true"></i>';
-    nextBtn.onclick=()=>navigate(1);
+    why.classList.remove("show"); why.innerHTML="";
   }
-  nextBtn.disabled=(!answered&&!isReview)&&current!==questions.length-1&&false;
-  if(!answered&&!isReview&&current===questions.length-1) nextBtn.disabled=true;
 }
 
-function selectAnswer(opt){
-  const q=questions[current];
-  answers[current]=opt;
-  if(opt===q.ans) score++;
-  updateScoreLive();
-  renderQuestion();
-  setTimeout(()=>{
-    if(current<questions.length-1) navigate(1);
-    else{
-      const nb=document.getElementById('btn-next');
-      nb.disabled=false;
-    }
-  },900);
+function repaintAll(){
+  partI.forEach(q=>paintCard("I-"+q.n,"I"));
+  partII.forEach(q=>paintCard("II-"+q.n,"II"));
+}
+function updateProgress(){
+  const answered = Object.keys(state.sel).length;
+  const pct = Math.round(answered/TOTAL*100);
+  document.getElementById("fill").style.width = pct+"%";
+  document.getElementById("plbl").textContent = answered+" / "+TOTAL+" respondidas";
 }
 
-function updateScoreLive(){
-  document.getElementById('score-live').textContent='✓ '+score;
+function grade(){
+  state.graded = true; state.revealed = false;
+  document.getElementById("revealBtn").disabled = true;
+  document.getElementById("revealBtn").textContent = "Mostrar respuestas";
+  let s1=0,s2=0; const wrong=[];
+  partI.forEach(q=>{ const sel=state.sel["I-"+q.n]; if(sel!==undefined && sel===q.a) s1++; else wrong.push("I·"+q.n); });
+  partII.forEach(q=>{ const sel=state.sel["II-"+q.n]; if(sel!==undefined && sel===q.a) s2++; else wrong.push("II·"+q.n); });
+  repaintAll();
+  const total=s1+s2, pct=Math.round(total/TOTAL*100);
+  document.getElementById("s1").textContent = s1+" / "+partI.length;
+  document.getElementById("s2").textContent = s2+" / "+partII.length;
+  document.getElementById("sTotal").textContent = total+" / "+TOTAL;
+  document.getElementById("pctNum").textContent = pct+"%";
+  const C=301.6, ring=document.getElementById("ring");
+  ring.style.strokeDashoffset = C*(1-pct/100);
+  ring.style.stroke = pct>=70 ? "var(--ok)" : (pct>=50 ? "var(--accent)" : "var(--no)");
+  const title=document.getElementById("scoreTitle");
+  title.textContent = pct>=90?"¡Excelente!":pct>=70?"Bien — sigue repasando":pct>=50?"Vas por buen camino":"A reforzar conceptos";
+  const nav=document.getElementById("wrongnav");
+  if(wrong.length===0){ nav.className="wrongnav perfect"; nav.innerHTML='<a href="#partI">¡Todas correctas! 🎉</a>'; }
+  else{
+    nav.className="wrongnav";
+    nav.innerHTML='Para repasar: ' + wrong.map(w=>{
+      const [p,n]=w.split("·"); return '<a href="#'+p+'-'+n+'">'+w+'</a>';
+    }).join("");
+  }
+  const sc=document.getElementById("scorecard"); sc.classList.add("show");
+  sc.scrollIntoView({behavior:"smooth", block:"start"});
 }
 
-function navigate(dir){
-  current+=dir;
-  if(current<0) current=0;
-  if(current>=questions.length) current=questions.length-1;
-  renderQuestion();
+function reset(){
+  state.sel={}; state.graded=false; state.revealed=false;
+  document.getElementById("revealBtn").disabled=false;
+  document.getElementById("revealBtn").textContent="Mostrar respuestas";
+  document.getElementById("scorecard").classList.remove("show");
+  document.getElementById("ring").style.strokeDashoffset="301.6";
+  repaintAll(); updateProgress();
+  document.getElementById("partI").scrollIntoView({behavior:"smooth", block:"start"});
 }
 
-function showResults(){
-  let correct=answers.filter((a,i)=>a===questions[i].ans).length;
-  let wrong=answers.filter((a,i)=>a!==null&&a!==questions[i].ans).length;
-  let unanswered=answers.filter(a=>a===null).length;
-  let pct=Math.round((correct/questions.length)*100);
-
-  document.getElementById('quiz-screen').style.display='none';
-  document.getElementById('results-screen').style.display='flex';
-
-  const circle=document.getElementById('res-circle');
-  if(pct>=70){circle.style.background='var(--success-bg)';circle.style.color='var(--success)';}
-  else{circle.style.background='var(--danger-bg)';circle.style.color='var(--danger)';}
-  document.getElementById('res-num').textContent=pct+'%';
-  document.getElementById('res-den').textContent=correct+' / '+questions.length;
-
-  let label,sub;
-  if(pct>=90){label='Excelente';sub='Dominas el tema.';}
-  else if(pct>=70){label='Aprobado';sub='Buen trabajo, repasa los errores.';}
-  else if(pct>=50){label='Por mejorar';sub='Repasa el material y vuelve a intentarlo.';}
-  else{label='Necesitas repasar';sub='Revisa bien los temas antes del parcial.';}
-  document.getElementById('res-label').textContent=label;
-  document.getElementById('res-sub').textContent=sub;
-  document.getElementById('res-correct').textContent=correct;
-  document.getElementById('res-wrong').textContent=wrong+(unanswered?' (+'+unanswered+' sin responder)':'');
+function toggleReveal(){
+  if(state.graded) return;
+  state.revealed = !state.revealed;
+  document.getElementById("revealBtn").textContent = state.revealed ? "Ocultar respuestas" : "Mostrar respuestas";
+  repaintAll();
 }
 
-function reviewMode(){
-  isReview=true; current=0;
-  document.getElementById('results-screen').style.display='none';
-  document.getElementById('quiz-screen').style.display='flex';
-  const nextBtn=document.getElementById('btn-next');
-  nextBtn.innerHTML='Siguiente <i class="ti ti-arrow-right" aria-hidden="true"></i>';
-  nextBtn.onclick=()=>navigate(1);
-  nextBtn.disabled=false;
-  renderQuestion();
-}
+const listI = document.getElementById("listI");
+partI.forEach(q=> listI.appendChild(buildQuestion("I", q)));
+const listII = document.getElementById("listII");
+partII.forEach(q=> listII.appendChild(buildQuestion("II", q)));
 
-rebuildQtyChips();
+document.getElementById("gradeBtn").addEventListener("click", grade);
+document.getElementById("resetBtn").addEventListener("click", reset);
+document.getElementById("revealBtn").addEventListener("click", toggleReveal);
+document.getElementById("solBtn").addEventListener("click", function(){
+  const sol=document.getElementById("solution");
+  const open=sol.classList.toggle("show");
+  this.textContent = open ? "Ocultar solución" : "Ver solución";
+});
+updateProgress();
 </script>
 </body>
 </html>
