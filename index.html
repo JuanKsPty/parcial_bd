@@ -2,450 +2,421 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Parcial 2 — Repaso</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>Quiz BD – Parcial 3</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.11.0/dist/tabler-icons.min.css">
 <style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--surface-0,#f1efe8);color:var(--text-primary,#1a1a18);min-height:100vh;padding:0}
+:root{
+  --surface-0:#f1efe8;--surface-1:#fafaf7;--surface-2:#ffffff;
+  --text-primary:#1a1a18;--text-secondary:#5f5e5a;--text-muted:#888780;
+  --border:rgba(0,0,0,0.1);--border-strong:rgba(0,0,0,0.18);
+  --accent:#185FA5;--accent-bg:#E6F1FB;--accent-text:#0C447C;
+  --success:#3B6D11;--success-bg:#EAF3DE;--success-border:#639922;
+  --danger:#A32D2D;--danger-bg:#FCEBEB;--danger-border:#E24B4A;
+  --radius:8px;--shadow:0 1px 4px rgba(0,0,0,.07),0 0 0 0.5px rgba(0,0,0,.08);
+}
+@media(prefers-color-scheme:dark){
   :root{
-    --ink:#15231f;
-    --paper:#f4f0e6;
-    --card:#fffdf7;
-    --accent:#1f6f5c;
-    --accent-soft:#d8e9e2;
-    --gold:#c08a2d;
-    --wrong:#b4452f;
-    --wrong-soft:#f4ddd5;
-    --right:#1f6f5c;
-    --right-soft:#d3ead f;
-    --line:#e3dcc9;
-    --muted:#6a7873;
-    --shadow:0 18px 40px -22px rgba(21,35,31,.45);
+    --surface-0:#1c1c1a;--surface-1:#252522;--surface-2:#2e2e2b;
+    --text-primary:#e8e6df;--text-secondary:#a8a69f;--text-muted:#666460;
+    --border:rgba(255,255,255,0.09);--border-strong:rgba(255,255,255,0.15);
+    --accent:#378ADD;--accent-bg:#042C53;--accent-text:#85B7EB;
+    --success:#97C459;--success-bg:#173404;--success-border:#3B6D11;
+    --danger:#E24B4A;--danger-bg:#501313;--danger-border:#A32D2D;
   }
-  *{box-sizing:border-box;margin:0;padding:0}
-  html,body{height:100%}
-  body{
-    font-family:'DM Sans',system-ui,sans-serif;
-    background:
-      radial-gradient(120% 90% at 90% -10%, #e9e3d2 0%, transparent 55%),
-      radial-gradient(120% 90% at -10% 110%, #e3eee7 0%, transparent 55%),
-      var(--paper);
-    color:var(--ink);
-    min-height:100%;
-    display:flex;
-    justify-content:center;
-    padding:32px 18px 60px;
-    line-height:1.5;
-  }
-  .wrap{width:100%;max-width:760px}
+}
 
-  /* header */
-  header.masthead{
-    border-bottom:2px solid var(--ink);
-    padding-bottom:14px;margin-bottom:26px;
-    display:flex;justify-content:space-between;align-items:flex-end;gap:16px;
-  }
-  .masthead .kicker{
-    font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;
-    color:var(--muted);font-weight:600;
-  }
-  .masthead h1{
-    font-family:'Fraunces',serif;font-weight:600;
-    font-size:1.75rem;line-height:1.05;margin-top:4px;
-  }
-  .masthead .seal{
-    font-family:'Fraunces',serif;font-style:italic;
-    font-size:.95rem;color:var(--accent);text-align:right;white-space:nowrap;
-  }
+/* ── SETUP SCREEN ── */
+#setup{display:flex;flex-direction:column;min-height:100vh;align-items:center;justify-content:center;padding:24px}
+.setup-card{background:var(--surface-2);border:0.5px solid var(--border);border-radius:16px;padding:32px;max-width:480px;width:100%}
+.setup-card h1{font-size:20px;font-weight:500;margin-bottom:4px}
+.setup-card .sub{font-size:13px;color:var(--text-muted);margin-bottom:28px}
+.field{margin-bottom:20px}
+.field label{display:block;font-size:13px;font-weight:500;color:var(--text-secondary);margin-bottom:8px}
+.chip-group{display:flex;gap:8px;flex-wrap:wrap}
+.chip{padding:7px 16px;border-radius:var(--radius);border:0.5px solid var(--border-strong);background:var(--surface-1);color:var(--text-secondary);font-size:13px;cursor:pointer;transition:all .15s}
+.chip:hover{border-color:var(--accent);color:var(--accent)}
+.chip.active{background:var(--accent-bg);border-color:var(--accent);color:var(--accent-text);font-weight:500}
+.qty-row{display:flex;align-items:center;gap:12px}
+.qty-row input[type=range]{flex:1;accent-color:var(--accent)}
+.qty-val{font-size:18px;font-weight:500;min-width:32px;text-align:center;color:var(--accent-text)}
+.qty-max{font-size:12px;color:var(--text-muted)}
+.btn-primary{width:100%;padding:11px;border:none;border-radius:var(--radius);background:var(--accent);color:#fff;font-size:15px;font-weight:500;cursor:pointer;margin-top:8px;transition:opacity .15s}
+.btn-primary:hover{opacity:.88}
+.btn-primary:disabled{opacity:.4;cursor:default}
 
-  .card{
-    background:var(--card);
-    border:1px solid var(--line);
-    border-radius:18px;
-    box-shadow:var(--shadow);
-    padding:30px;
-  }
+/* ── QUIZ SCREEN ── */
+#quiz-screen{display:none;flex-direction:column;min-height:100vh}
+.quiz-header{position:sticky;top:0;z-index:10;background:var(--surface-2);border-bottom:0.5px solid var(--border);padding:12px 20px;display:flex;align-items:center;gap:12px}
+.quiz-header h2{font-size:14px;font-weight:500;flex:1}
+.progress-wrap{flex:1;background:var(--surface-0);border-radius:4px;height:4px;overflow:hidden}
+.progress-bar{height:4px;background:var(--accent);border-radius:4px;transition:width .3s}
+.score-badge{font-size:13px;font-weight:500;padding:4px 12px;border-radius:20px;background:var(--accent-bg);color:var(--accent-text)}
+.btn-icon{background:none;border:0.5px solid var(--border-strong);border-radius:var(--radius);padding:6px 12px;font-size:13px;cursor:pointer;color:var(--text-secondary);display:flex;align-items:center;gap:6px;transition:background .15s}
+.btn-icon:hover{background:var(--surface-1)}
 
-  /* start screen */
-  .lead{font-size:1.02rem;color:var(--muted);margin-bottom:24px}
-  .lead b{color:var(--ink)}
-  .controls{display:grid;gap:20px;margin-bottom:26px}
-  .field label{
-    display:block;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;
-    font-weight:700;color:var(--muted);margin-bottom:10px;
-  }
-  .seg{display:flex;flex-wrap:wrap;gap:8px}
-  .seg button{
-    font-family:inherit;font-size:.9rem;font-weight:600;
-    padding:9px 16px;border-radius:999px;cursor:pointer;
-    border:1.5px solid var(--line);background:transparent;color:var(--ink);
-    transition:all .15s ease;
-  }
-  .seg button:hover{border-color:var(--accent)}
-  .seg button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.quiz-body{flex:1;padding:20px;max-width:680px;margin:0 auto;width:100%}
+.q-card{background:var(--surface-2);border:0.5px solid var(--border);border-radius:12px;padding:20px 22px;transition:border-color .2s}
+.q-meta{font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.q-type-pill{padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600;letter-spacing:.05em}
+.pill-tf{background:var(--accent-bg);color:var(--accent-text)}
+.pill-mc{background:#EDE9FB;color:#3C3489}
+@media(prefers-color-scheme:dark){.pill-mc{background:#26215C;color:#AFA9EC}}
+.q-text{font-size:16px;line-height:1.6;margin-bottom:18px;font-weight:400}
+.options{display:flex;flex-direction:column;gap:8px}
+.opt-btn{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:var(--radius);border:0.5px solid var(--border-strong);background:var(--surface-1);cursor:pointer;font-size:14px;color:var(--text-primary);text-align:left;transition:all .15s;width:100%}
+.opt-btn:hover:not(:disabled){background:var(--accent-bg);border-color:var(--accent)}
+.opt-btn:disabled{cursor:default}
+.opt-btn.correct{background:var(--success-bg);border-color:var(--success-border);color:var(--success)}
+.opt-btn.wrong{background:var(--danger-bg);border-color:var(--danger-border);color:var(--danger)}
+.opt-letter{width:22px;height:22px;border-radius:50%;border:0.5px solid var(--border-strong);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0;background:var(--surface-2);color:var(--text-muted)}
+.opt-btn.correct .opt-letter{background:var(--success-border);border-color:var(--success-border);color:#fff}
+.opt-btn.wrong .opt-letter{background:var(--danger-border);border-color:var(--danger-border);color:#fff}
+.feedback-row{margin-top:12px;display:flex;align-items:center;gap:8px;font-size:13px;min-height:20px}
+.fb-correct{color:var(--success)}
+.fb-wrong{color:var(--danger)}
 
-  .btn{
-    font-family:inherit;font-size:1rem;font-weight:700;cursor:pointer;
-    border:none;border-radius:12px;padding:15px 22px;
-    background:var(--accent);color:#fff;width:100%;
-    transition:transform .12s ease, background .15s ease;
-    box-shadow:0 10px 22px -12px rgba(31,111,92,.8);
-  }
-  .btn:hover{background:#185847;transform:translateY(-1px)}
-  .btn.ghost{background:transparent;color:var(--accent);border:1.5px solid var(--accent);box-shadow:none}
-  .btn.ghost:hover{background:var(--accent-soft)}
+.nav-row{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;max-width:680px;margin:0 auto;width:100%}
+.btn-nav{padding:9px 20px;border-radius:var(--radius);border:0.5px solid var(--border-strong);background:var(--surface-2);font-size:14px;cursor:pointer;color:var(--text-primary);display:flex;align-items:center;gap:6px;transition:background .15s}
+.btn-nav:hover{background:var(--surface-1)}
+.btn-nav:disabled{opacity:.35;cursor:default}
+.btn-nav.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn-nav.primary:hover{opacity:.88}
 
-  /* quiz */
-  .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;gap:14px}
-  .counter{font-size:.8rem;font-weight:700;letter-spacing:.05em;color:var(--muted)}
-  .tag{
-    font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;font-weight:700;
-    padding:5px 11px;border-radius:999px;background:var(--accent-soft);color:var(--accent);
-  }
-  .tag.vf{background:#f1e6cf;color:var(--gold)}
-  .progress{height:6px;background:var(--line);border-radius:999px;overflow:hidden;margin-bottom:26px}
-  .progress span{display:block;height:100%;background:var(--accent);width:0;transition:width .35s ease}
-
-  .qtext{
-    font-family:'Fraunces',serif;font-weight:500;
-    font-size:1.4rem;line-height:1.3;margin-bottom:24px;
-  }
-  .opts{display:grid;gap:11px}
-  .opt{
-    font-family:inherit;font-size:1rem;text-align:left;cursor:pointer;
-    padding:15px 17px;border-radius:12px;
-    border:1.5px solid var(--line);background:#fff;color:var(--ink);
-    display:flex;align-items:center;gap:14px;transition:all .14s ease;
-  }
-  .opt:hover:not(:disabled){border-color:var(--accent);background:var(--accent-soft)}
-  .opt .key{
-    flex:none;width:28px;height:28px;border-radius:8px;
-    display:grid;place-items:center;font-weight:700;font-size:.85rem;
-    background:var(--paper);border:1px solid var(--line);
-  }
-  .opt.correct{border-color:var(--right);background:var(--right-soft)}
-  .opt.correct .key{background:var(--right);color:#fff;border-color:var(--right)}
-  .opt.wrong{border-color:var(--wrong);background:var(--wrong-soft)}
-  .opt.wrong .key{background:var(--wrong);color:#fff;border-color:var(--wrong)}
-  .opt:disabled{cursor:default}
-
-  .feedback{margin-top:20px;font-size:.95rem;display:none}
-  .feedback.show{display:block;animation:fade .25s ease}
-  .feedback .badge{font-weight:700}
-  .feedback.ok .badge{color:var(--right)}
-  .feedback.no .badge{color:var(--wrong)}
-  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
-
-  .nav{margin-top:26px;display:flex;justify-content:flex-end}
-  .nav .btn{width:auto;min-width:160px}
-
-  /* results */
-  .score-ring{text-align:center;margin-bottom:8px}
-  .score-num{font-family:'Fraunces',serif;font-size:4rem;font-weight:700;line-height:1}
-  .score-sub{color:var(--muted);font-size:.95rem;margin-bottom:4px}
-  .grade{font-family:'Fraunces',serif;font-style:italic;font-size:1.3rem;color:var(--accent);margin-bottom:24px;text-align:center}
-  .review{display:grid;gap:12px;margin:8px 0 26px}
-  .rev-item{border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:#fff}
-  .rev-item .rq{font-weight:600;margin-bottom:8px;font-size:.95rem}
-  .rev-line{font-size:.88rem;color:var(--muted);display:flex;gap:8px;align-items:baseline}
-  .rev-line.you.bad{color:var(--wrong)}
-  .rev-line.sol{color:var(--right);font-weight:600}
-  .rev-dot{font-size:1.1rem;line-height:1}
-  .actions{display:grid;gap:10px}
-
-  footer{text-align:center;margin-top:24px;font-size:.78rem;color:var(--muted)}
-  .hidden{display:none}
+/* ── RESULTS SCREEN ── */
+#results-screen{display:none;flex-direction:column;min-height:100vh;align-items:center;justify-content:center;padding:24px}
+.results-card{background:var(--surface-2);border:0.5px solid var(--border);border-radius:16px;padding:32px;max-width:480px;width:100%;text-align:center}
+.score-circle{width:100px;height:100px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 20px;font-weight:500}
+.score-num{font-size:28px;line-height:1}
+.score-den{font-size:12px;color:inherit;opacity:.7}
+.grade-label{font-size:20px;font-weight:500;margin-bottom:6px}
+.grade-sub{font-size:13px;color:var(--text-muted);margin-bottom:24px}
+.stats-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px}
+.stat-box{background:var(--surface-1);border-radius:var(--radius);padding:14px;text-align:center}
+.stat-n{font-size:22px;font-weight:500}
+.stat-l{font-size:12px;color:var(--text-muted);margin-top:2px}
+.results-btns{display:flex;flex-direction:column;gap:8px}
+.btn-outline{padding:10px;border-radius:var(--radius);border:0.5px solid var(--border-strong);background:none;font-size:14px;cursor:pointer;color:var(--text-primary);transition:background .15s}
+.btn-outline:hover{background:var(--surface-1)}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header class="masthead">
-    <div>
-      <div class="kicker">Cuestionario de práctica</div>
-      <h1>Parcial 2 — Repaso</h1>
-    </div>
-  </header>
 
-  <!-- START -->
-  <section id="start" class="card">
-    <p class="lead">Cuestionario de práctica con las secciones de <b>Cierto / Falso</b> y <b>Selección múltiple</b>. Las preguntas y las opciones aparecen en <b>orden aleatorio</b> cada vez.</p>
-    <div class="controls">
-      <div class="field">
-        <label>Secciones</label>
-        <div class="seg" id="segSection">
-          <button data-sec="all" class="on">Todas</button>
-          <button data-sec="vf">Cierto / Falso</button>
-          <button data-sec="mc">Selección</button>
-        </div>
-      </div>
-      <div class="field">
-        <label>Cantidad de preguntas</label>
-        <div class="seg" id="segCount">
-          <button data-count="10">10</button>
-          <button data-count="20">20</button>
-          <button data-count="0" class="on">Todas</button>
-        </div>
+<!-- ── SETUP ── -->
+<div id="setup">
+  <div class="setup-card">
+    <h1>Bases de Datos — Parcial 3</h1>
+    <p class="sub">Configura tu sesión de práctica</p>
+
+    <div class="field">
+      <label>Tipo de preguntas</label>
+      <div class="chip-group">
+        <button class="chip active" data-type="both" onclick="setType('both',this)">Ambas</button>
+        <button class="chip" data-type="tf" onclick="setType('tf',this)">Solo verdadero / falso</button>
+        <button class="chip" data-type="mc" onclick="setType('mc',this)">Solo selección múltiple</button>
       </div>
     </div>
-    <button class="btn" id="startBtn">Comenzar repaso</button>
-  </section>
 
-  <!-- QUIZ -->
-  <section id="quiz" class="card hidden">
-    <div class="topbar">
-      <span class="counter" id="counter">Pregunta 1 / 30</span>
-      <span class="tag" id="tag">Selección</span>
+    <div class="field">
+      <label>Cantidad de preguntas <span class="qty-max" id="qty-max-label">(39 disponibles)</span></label>
+      <div class="chip-group" id="qty-chips"></div>
     </div>
-    <div class="progress"><span id="bar"></span></div>
-    <div class="qtext" id="qtext"></div>
-    <div class="opts" id="opts"></div>
-    <div class="feedback" id="feedback"></div>
-    <div class="nav"><button class="btn" id="nextBtn" disabled>Siguiente</button></div>
-  </section>
 
-  <!-- RESULTS -->
-  <section id="results" class="card hidden">
-    <div class="score-ring">
-      <div class="score-num" id="scoreNum">0%</div>
-      <div class="score-sub" id="scoreSub">0 de 0 correctas</div>
-    </div>
-    <div class="grade" id="grade"></div>
-    <div class="review" id="review"></div>
-    <div class="actions">
-      <button class="btn" id="retryBtn">Repetir (nuevo orden)</button>
-      <button class="btn ghost" id="homeBtn">Cambiar configuración</button>
-    </div>
-  </section>
+    <button class="btn-primary" onclick="startQuiz()"><i class="ti ti-player-play" aria-hidden="true"></i> Comenzar</button>
+  </div>
+</div>
 
-  <footer>Material de estudio · 13 preguntas C/F · 17 de selección</footer>
+<!-- ── QUIZ ── -->
+<div id="quiz-screen">
+  <div class="quiz-header">
+    <h2 id="q-counter">Pregunta 1 de 10</h2>
+    <div class="progress-wrap"><div class="progress-bar" id="progress-bar" style="width:0%"></div></div>
+    <span class="score-badge" id="score-live">✓ 0</span>
+    <button class="btn-icon" onclick="goSetup()"><i class="ti ti-x" aria-hidden="true"></i> Salir</button>
+  </div>
+
+  <div class="quiz-body">
+    <div class="q-card" id="q-card">
+      <div class="q-meta">
+        <span id="q-type-pill" class="q-type-pill pill-tf">Verdadero / Falso</span>
+        <span id="q-num-meta"></span>
+      </div>
+      <p class="q-text" id="q-text"></p>
+      <div class="options" id="options"></div>
+      <div class="feedback-row" id="feedback"></div>
+    </div>
+  </div>
+
+  <div class="nav-row">
+    <button class="btn-nav" id="btn-prev" onclick="navigate(-1)" disabled>
+      <i class="ti ti-arrow-left" aria-hidden="true"></i> Anterior
+    </button>
+    <button class="btn-nav primary" id="btn-next" onclick="navigate(1)">
+      Siguiente <i class="ti ti-arrow-right" aria-hidden="true"></i>
+    </button>
+  </div>
+</div>
+
+<!-- ── RESULTS ── -->
+<div id="results-screen">
+  <div class="results-card">
+    <div class="score-circle" id="res-circle">
+      <span class="score-num" id="res-num"></span>
+      <span class="score-den" id="res-den"></span>
+    </div>
+    <p class="grade-label" id="res-label"></p>
+    <p class="grade-sub" id="res-sub"></p>
+    <div class="stats-row">
+      <div class="stat-box"><div class="stat-n" id="res-correct" style="color:var(--success)"></div><div class="stat-l">correctas</div></div>
+      <div class="stat-box"><div class="stat-n" id="res-wrong" style="color:var(--danger)"></div><div class="stat-l">incorrectas</div></div>
+    </div>
+    <div class="results-btns">
+      <button class="btn-primary" onclick="reviewMode()"><i class="ti ti-eye" aria-hidden="true"></i> Revisar respuestas</button>
+      <button class="btn-outline" onclick="startQuiz()"><i class="ti ti-refresh" aria-hidden="true"></i> Repetir misma config</button>
+      <button class="btn-outline" onclick="goSetup()"><i class="ti ti-settings" aria-hidden="true"></i> Nueva configuración</button>
+    </div>
+  </div>
 </div>
 
 <script>
-/* ===== Banco de preguntas =====
-   type: 'vf'  -> opciones Cierto/Falso, answer = índice correcto (0 Cierto, 1 Falso)
-   type: 'mc'  -> opciones múltiples, answer = índice correcto en options
-*/
-const BANK = [
-  // ---------- CIERTO / FALSO ----------
-  { type:'vf', q:'Iniciar el desarrollo de las aplicaciones implica la obtención de requerimientos para definir el alcance y propósito del SI.', answer:0 },
-  { type:'vf', q:'El objetivo del análisis del problema es conocer los posibles usuarios del sistema.', answer:1 },
-  { type:'vf', q:'No es importante que la información que se recopila para realizar el análisis del problema sea precisa.', answer:1 },
-  { type:'vf', q:'Las metodologías ágiles reúnen prácticas y principios que se basan en la colaboración, la iteración y la entrega incremental de valor.', answer:0 },
-  { type:'vf', q:'Visión es un documento de alto nivel que describe el "Cómo" y el "Cuándo" del producto o aplicación.', answer:1 },
-  { type:'vf', q:'Los usuarios ayudan a identificar los límites del sistema.', answer:0 },
-  { type:'vf', q:'Un requerimiento es una descripción de algo que el sistema es capaz de hacer con el objeto de satisfacer el propósito del sistema.', answer:0 },
-  { type:'vf', q:'Identificar las restricciones en el sistema es una actividad del análisis del problema.', answer:0 },
-  { type:'vf', q:'Identificar características del producto es una forma de visualizar "Cómo" se hará el producto.', answer:1 },
-  { type:'vf', q:'Un requerimiento puede dejarse incompleto o ambiguo para refinarlo posteriormente.', answer:1 },
-  { type:'vf', q:'FURPS es un modelo orientado a la calidad del software desde la perspectiva de funcionalidad, facilidad de uso, confiabilidad, desempeño y facilidad de mantenimiento del software.', answer:0 },
-  { type:'vf', q:'Velocidad es un criterio del factor Facilidad de Uso del modelo FURPS.', answer:1 },
-  { type:'vf', q:'La matriz de trazabilidad permite dar seguimiento a las necesidades de los usuarios para que se contemplen en las funcionalidades del sistema.', answer:0 },
-
-  // ---------- SELECCIÓN ----------
-  { type:'mc', q:'Se usa en proyectos con alto nivel de incertidumbre, requisitos cambiantes o poco definidos.',
-    options:['Modelo Unificado','Modelo Incremental','Modelo Espiral'], answer:2 },
-  { type:'mc', q:'Se caracteriza por estar dirigido por casos de uso, centrado en la arquitectura y por ser iterativo e incremental.',
-    options:['Modelo Cascada','Proceso Unificado','Extreme Programming (XP)'], answer:1 },
-  { type:'mc', q:'Marco de trabajo centrado en personas, flexible, escalable para proyectos de software utilizando el desarrollo ágil.',
-    options:['Crystal Methodology','Modelo Iterativo','Modelo Espiral'], answer:0 },
-  { type:'mc', q:'Fase del modelo unificado que incluye tareas de marketing, empaquetado, instalación, configuración, soporte y mantenimiento.',
-    options:['Fase de Inicio','Fase de Elaboración','Fase de Transición'], answer:2 },
-  { type:'mc', q:'Reduce el costo global de desarrollo al evitar trabajo redundante.',
-    options:['Orientado a reutilización','Modelo Espiral','Modelo Iterativo'], answer:0 },
-  { type:'mc', q:'No se ven resultados hasta finalizar el proyecto.',
-    options:['Modelo Cascada','Modelo Incremental','Modelo Espiral'], answer:0 },
-  { type:'mc', q:'Este modelo tiene ciclos, denominados SPRINT, que duran entre dos y cuatro semanas.',
-    options:['Proceso Unificado','SCRUM','Modelo Espiral'], answer:1 },
-  { type:'mc', q:'Suministra una porción de la funcionalidad respecto de la totalidad de los requisitos del proyecto.',
-    options:['Modelo Cascada','Modelo Incremental','Modelo Espiral'], answer:1 },
-  { type:'mc', q:'En este modelo no hace falta que los requisitos estén totalmente definidos al inicio del proyecto.',
-    options:['Modelo Cascada','Modelo Iterativo','Orientado a reutilización'], answer:1 },
-  { type:'mc', q:'Está orientado a detectar y prevenir el riesgo.',
-    options:['Modelo Incremental','Lean Software','Modelo Espiral'], answer:2 },
-  { type:'mc', q:'Configura aplicaciones desde componentes preparados de software.',
-    options:['Prototipo','Orientado a reutilización','Modelo Espiral'], answer:1 },
-  { type:'mc', q:'Su objetivo es optimizar la eficiencia y minimizar el desperdicio en el proceso de desarrollo de software.',
-    options:['Lean Software','Prototipos','Proceso Unificado'], answer:0 },
-  { type:'mc', q:'Desarrolla el sistema por fases temporales de manera que el cliente puede ver avances.',
-    options:['Orientado a Reutilización','Proceso Unificado','Crystal Methodology'], answer:1 },
-  { type:'mc', q:'Se caracteriza por estar enfocado en construir sistemas a partir de funcionalidades específicas.',
-    options:['Desarrollo por Características (FDD)','Modelo Iterativo','Lean Software'], answer:0 },
-  { type:'mc', q:'Es un marco de trabajo que puede ser adaptado a organizaciones o proyectos específicos.',
-    options:['Modelo Unificado','Modelo Espiral','Modelo Iterativo'], answer:0 },
-  { type:'mc', q:'Es una lista dinámica y priorizada que contiene todos los requisitos, funcionalidades y mejoras del producto.',
-    options:['FDD','SCRUM','Lean Software'], answer:1 },
-  { type:'mc', q:'Se basa en la creación de modelos iniciales funcionales o visuales que representan de manera simplificada el producto final.',
-    options:['Prototipos','Modelo Espiral','Lean Software'], answer:0 },
+const TF=[
+  {q:"Base de datos relacional es una colección de relaciones normalizadas en la que cada relación tiene un nombre distintivo.",ans:"Cierto"},
+  {q:"Cuando la cardinalidad de una relación es de 1:M, el esquema lógico (relacional) resultante debe tener por obligación una tabla que represente esa relación entre entidades.",ans:"Falso"},
+  {q:"Si una llave foránea es parte de una llave primaria, significa que esa llave foránea no puede ser nula.",ans:"Cierto"},
+  {q:"En una relación 1:N la ubicación de la llave foránea es arbitraria.",ans:"Falso"},
+  {q:"La regla de la integridad de entidad en el modelo relacional hace referencia a que los atributos de la clave primaria puedan ser de valor nulo.",ans:"Falso"},
+  {q:"El modelo Entidad-Relación se utiliza principalmente para implementar físicamente una base de datos.",ans:"Falso"},
+  {q:"Una relación en el modelo relacional corresponde a una tabla en una base de datos.",ans:"Cierto"},
+  {q:"Las claves primarias pueden repetirse en una tabla relacional.",ans:"Falso"},
+  {q:"Llave candidata es la combinación de varios atributos, de forma tal que la combinación es única.",ans:"Falso"},
+  {q:"La estructura principal del modelo relacional es una tabla constituida por tuplas y atributos.",ans:"Cierto"},
+  {q:"Una entidad débil por identificación es una entidad en la que su llave es compuesta y en la que ninguna de sus partes es un identificador (o llave) de otra entidad.",ans:"Falso"},
+  {q:"Cuando en el modelo E/R representamos una relación M:M, la llave primaria de la tabla asociada es una llave compuesta por las llaves primarias de cada uno de los tipos de entidades que se relacionan.",ans:"Cierto"},
+  {q:"La integridad de entidad es una restricción que indica que en una relación base ningún atributo de una clave principal puede ser nulo.",ans:"Cierto"},
+  {q:"Un modelo Entidad-Relación es un aspecto del mundo real que el diseñador intenta capturar en un sistema de información.",ans:"Cierto"},
+  {q:"En el modelo relacional, los atributos multivaluados se almacenan directamente en una sola columna de una tabla.",ans:"Falso"},
+  {q:"Una relación de cardinalidad uno a muchos implica que una entidad A puede estar relacionada con muchas entidades B, pero no al revés.",ans:"Cierto"},
+  {q:"Las claves foráneas (foreign keys) se utilizan para garantizar la integridad referencial entre tablas.",ans:"Cierto"},
+  {q:"Una llave compuesta puede ser parcialmente nula.",ans:"Falso"},
+  {q:"Entre los componentes de un Modelo E/R se incluyen solamente: Entidades, Atributos y Llaves.",ans:"Falso"},
+  {q:"Cuando se transforma un diagrama E/R a esquema relacional, todas las relaciones se convierten en esquema.",ans:"Falso"},
+  {q:"Cuando un atributo se señala como Multivalorado para una entidad de un Modelo E/R, el diseño tabular del modelo Relacional se ve alterado por la inclusión de una tabla.",ans:"Cierto"},
+  {q:"La existencia de una instancia de una entidad débil está supeditada a la existencia de una instancia de la entidad fuerte con la cual está relacionada.",ans:"Cierto"},
+  {q:"La clave principal o PK, es la que se selecciona para identificar de forma unívoca cada entidad de un conjunto de entidades.",ans:"Cierto"},
+  {q:"La cláusula Where de una sentencia SELECT selecciona las filas a incluir en el resultado, aplicando una condición de búsqueda a las filas de la tabla.",ans:"Cierto"}
 ];
 
-/* ===== Estado ===== */
-let cfg = { section:'all', count:0 };
-let quiz = [];      // preguntas de la corrida (ya barajadas con opciones)
-let idx = 0;
-let answered = false;
+const MC=[
+  {q:"Un atributo compuesto se divide en:",opts:["Subpartes","Cadenas de texto","Subpartes y cadenas de texto","En un único valor"],ans:"Subpartes"},
+  {q:"Es requerido que cada subclase pueda tener:",opts:["Dos categorías padre","Ninguna clase padre","Una clase padre","Ninguna"],ans:"Una clase padre"},
+  {q:"La Superclase también se llama:",opts:["Especialización","Generalización","Subclase","a ó b"],ans:"Generalización"},
+  {q:"La cláusula FROM especifica:",opts:["Las columnas que se incluirán en los resultados de una recuperación","La tabla o tablas que contienen los datos de una recuperación","a y b","Ninguna de las anteriores"],ans:"La tabla o tablas que contienen los datos de una recuperación"},
+  {q:"Representa alguna propiedad de una entidad o relación:",opts:["Datos o valor","Tipos de datos","Atributos","Modelo"],ans:"Atributos"},
+  {q:"¿Cuál de las siguientes aseveraciones es correcta?",opts:["Cada llave candidata es una llave foránea","Cada llave primaria es una llave foránea","Cada llave foránea es una llave candidata","Cada llave foránea es llave primaria en alguna relación"],ans:"Cada llave foránea es llave primaria en alguna relación"},
+  {q:"El modelo relacional representa la base de datos como:",opts:["Una colección de relaciones","Modelo conceptual","Conjunto de tuplas","Conjunto de atributos"],ans:"Una colección de relaciones"},
+  {q:"Durante el proceso de modelado entidad/relación, el diseñador debe:",opts:["Definir entidades, atributos, llaves primarias y foráneas","Tomar decisiones sobre añadir atributos de llave primaria","Tomar decisiones sobre el tratamiento de atributos multivaluados","Todas las anteriores"],ans:"Todas las anteriores"},
+  {q:"En el modelo relacional, un atributo compuesto como \"nombre completo\" se recomienda:",opts:["Almacenarlo tal cual en una sola columna","Dividirlo en atributos más simples como nombre y apellido","Ignorarlo en el diseño","Convertirlo en una clave primaria"],ans:"Dividirlo en atributos más simples como nombre y apellido"},
+  {q:"Base de datos principal para la ejecución de SQL Server:",opts:["BD Master","BD Model","BD Pubs","Todas las anteriores"],ans:"BD Master"},
+  {q:"Una relación 1:1 entre dos entidades generalmente se implementa en el modelo relacional como:",opts:["Dos tablas sin claves","Dos tablas unidas por una tabla puente","Una clave foránea en una de las dos tablas","Una sola tabla combinada"],ans:"Una clave foránea en una de las dos tablas"},
+  {q:"¿Cómo se denominan las cosas del mundo real con existencia física o conceptual que se almacenan en el modelo relacional?",opts:["Entidades","Propiedades","Objetos","Consultas"],ans:"Entidades"},
+  {q:"Indique el tipo de cardinalidad: Una entidad en A se asocia con cualquier número de entidades en B. Una entidad en B puede asociarse a lo sumo con alguna entidad en A.",opts:["Varios a varios","Uno a uno","Varios a uno","Uno a varios"],ans:"Varios a uno"},
+  {q:"¿Cuál es la función principal de una clave foránea?",opts:["Eliminar registros duplicados","Garantizar la unicidad de una fila","Establecer una relación con otra tabla","Calcular promedios entre tablas"],ans:"Establecer una relación con otra tabla"},
+  {q:"¿Cómo se denominan los atributos que tienen un conjunto de valores para una entidad específica?",opts:["Multimedias","Multivaluados","Multicódigos","Multicausales"],ans:"Multivaluados"}
+];
 
-const $ = id => document.getElementById(id);
+const LETTERS=['A','B','C','D'];
 
-function shuffle(a){
-  const arr = a.slice();
-  for(let i=arr.length-1;i>0;i--){
-    const j = Math.floor(Math.random()*(i+1));
-    [arr[i],arr[j]] = [arr[j],arr[i]];
-  }
-  return arr;
+let selectedType='both', qty=10, questions=[], current=0, answers=[], score=0, isReview=false;
+
+function shuffle(a){let b=[...a];for(let i=b.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
+
+function setType(t, el){
+  selectedType=t;
+  document.querySelectorAll('.chip[data-type]').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  rebuildQtyChips();
 }
 
-/* Segmented controls */
-function bindSeg(containerId, key, parse){
-  $(containerId).addEventListener('click', e=>{
-    const b = e.target.closest('button'); if(!b) return;
-    [...e.currentTarget.children].forEach(x=>x.classList.remove('on'));
-    b.classList.add('on');
-    cfg[key] = parse(b);
+function getPoolSize(){
+  return selectedType==='tf'?TF.length:selectedType==='mc'?MC.length:TF.length+MC.length;
+}
+
+function rebuildQtyChips(){
+  const max=getPoolSize();
+  document.getElementById('qty-max-label').textContent='('+max+' disponibles)';
+  const steps=[5,10,15,20];
+  const chipsDiv=document.getElementById('qty-chips');
+  chipsDiv.innerHTML='';
+  steps.filter(s=>s<max).forEach(s=>{
+    const b=document.createElement('button');
+    b.className='chip';
+    b.textContent=s;
+    b.onclick=()=>setQty(s,b);
+    chipsDiv.appendChild(b);
   });
+  const all=document.createElement('button');
+  all.className='chip active';
+  all.textContent='Todas ('+max+')';
+  all.onclick=()=>setQty(max,all);
+  chipsDiv.appendChild(all);
+  qty=max;
 }
-bindSeg('segSection','section', b=>b.dataset.sec);
-bindSeg('segCount','count', b=>parseInt(b.dataset.count,10));
 
-/* Construir la corrida */
-function buildQuiz(){
-  let pool = BANK.filter(q => cfg.section==='all' ? true : q.type===cfg.section);
-  pool = shuffle(pool);
-  if(cfg.count>0) pool = pool.slice(0, cfg.count);
+function setQty(v, el){
+  qty=v;
+  document.querySelectorAll('#qty-chips .chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+}
 
-  quiz = pool.map(q=>{
-    if(q.type==='vf'){
-      // Construimos opciones C/F manteniendo el índice correcto
-      const base = [{t:'Cierto',ok:q.answer===0},{t:'Falso',ok:q.answer===1}];
-      return { type:'vf', q:q.q, options:shuffle(base) };
-    } else {
-      const base = q.options.map((t,i)=>({t, ok:i===q.answer}));
-      return { type:'mc', q:q.q, options:shuffle(base) };
+function buildPool(){
+  let pool;
+  if(selectedType==='tf') pool=TF.map(x=>({...x,type:'tf'}));
+  else if(selectedType==='mc') pool=MC.map(x=>({...x,type:'mc'}));
+  else pool=[...TF.map(x=>({...x,type:'tf'})),...MC.map(x=>({...x,type:'mc'}))];
+  pool=shuffle(pool);
+  pool=pool.slice(0,qty);
+  pool.forEach(p=>{
+    if(p.type==='tf') p.opts=shuffle(['Cierto','Falso']);
+    else p.opts=shuffle(p.opts);
+  });
+  return pool;
+}
+
+function startQuiz(){
+  questions=buildPool();
+  answers=Array(questions.length).fill(null);
+  score=0; current=0; isReview=false;
+  document.getElementById('setup').style.display='none';
+  document.getElementById('results-screen').style.display='none';
+  document.getElementById('quiz-screen').style.display='flex';
+  document.getElementById('btn-next').disabled=false;
+  renderQuestion();
+}
+
+function goSetup(){
+  document.getElementById('quiz-screen').style.display='none';
+  document.getElementById('results-screen').style.display='none';
+  document.getElementById('setup').style.display='flex';
+}
+
+function renderQuestion(){
+  const q=questions[current];
+  const userAns=answers[current];
+  const answered=userAns!==null;
+
+  document.getElementById('q-counter').textContent='Pregunta '+(current+1)+' de '+questions.length;
+  document.getElementById('q-num-meta').textContent=(current+1)+' / '+questions.length;
+  document.getElementById('progress-bar').style.width=(((current+1)/questions.length)*100)+'%';
+
+  const pill=document.getElementById('q-type-pill');
+  if(q.type==='tf'){pill.textContent='Verdadero / Falso';pill.className='q-type-pill pill-tf';}
+  else{pill.textContent='Selección múltiple';pill.className='q-type-pill pill-mc';}
+
+  document.getElementById('q-text').textContent=q.q;
+
+  const optsDiv=document.getElementById('options');
+  optsDiv.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt-btn';
+    btn.innerHTML=`<span class="opt-letter">${LETTERS[i]}</span><span>${opt}</span>`;
+    if(!answered&&!isReview) btn.onclick=()=>selectAnswer(opt);
+    else btn.disabled=true;
+    if(answered||isReview){
+      if(opt===q.ans) btn.classList.add('correct');
+      else if(opt===userAns&&userAns!==q.ans) btn.classList.add('wrong');
     }
-  });
-}
-
-/* Render de la pregunta actual */
-function render(){
-  answered = false;
-  const item = quiz[idx];
-  $('counter').textContent = `Pregunta ${idx+1} / ${quiz.length}`;
-  const tag = $('tag');
-  tag.textContent = item.type==='vf' ? 'Cierto / Falso' : 'Selección';
-  tag.className = 'tag ' + (item.type==='vf' ? 'vf' : '');
-  $('bar').style.width = ((idx)/quiz.length*100) + '%';
-  $('qtext').textContent = item.q;
-
-  const opts = $('opts');
-  opts.innerHTML = '';
-  const letters = ['A','B','C','D'];
-  item.options.forEach((o,i)=>{
-    const btn = document.createElement('button');
-    btn.className = 'opt';
-    btn.innerHTML = `<span class="key">${letters[i]}</span><span>${o.t}</span>`;
-    btn.addEventListener('click', ()=>choose(i));
-    opts.appendChild(btn);
+    optsDiv.appendChild(btn);
   });
 
-  const fb = $('feedback');
-  fb.className = 'feedback';
-  fb.innerHTML = '';
-  const nb = $('nextBtn');
-  nb.disabled = true;
-  nb.textContent = (idx === quiz.length-1) ? 'Ver resultados' : 'Siguiente';
-}
+  const fb=document.getElementById('feedback');
+  if(answered||isReview){
+    const ok=userAns===q.ans||(isReview&&userAns===null);
+    if(isReview&&userAns===null){fb.innerHTML='';return;}
+    fb.innerHTML=userAns===q.ans
+      ? `<i class="ti ti-check" style="color:var(--success)"></i><span class="fb-correct">Correcto</span>`
+      : `<i class="ti ti-x" style="color:var(--danger)"></i><span class="fb-wrong">Incorrecto — la respuesta es: <strong>${q.ans}</strong></span>`;
+  } else {fb.innerHTML='';}
 
-function choose(i){
-  if(answered) return;
-  answered = true;
-  const item = quiz[idx];
-  const buttons = [...$('opts').children];
-  buttons.forEach(b=>b.disabled = true);
-
-  const correctIdx = item.options.findIndex(o=>o.ok);
-  item.chosen = i;
-  item.correct = item.options[i].ok;
-
-  buttons[correctIdx].classList.add('correct');
-  if(!item.correct) buttons[i].classList.add('wrong');
-
-  const fb = $('feedback');
-  if(item.correct){
-    fb.className = 'feedback show ok';
-    fb.innerHTML = `<span class="badge">✓ Correcto.</span>`;
-  }else{
-    fb.className = 'feedback show no';
-    fb.innerHTML = `<span class="badge">✗ Incorrecto.</span> La respuesta correcta es <b>${item.options[correctIdx].t}</b>.`;
+  updateScoreLive();
+  document.getElementById('btn-prev').disabled=current===0;
+  const nextBtn=document.getElementById('btn-next');
+  if(current===questions.length-1){
+    nextBtn.innerHTML='Ver resultados <i class="ti ti-chart-bar" aria-hidden="true"></i>';
+    nextBtn.onclick=showResults;
+  } else {
+    nextBtn.innerHTML='Siguiente <i class="ti ti-arrow-right" aria-hidden="true"></i>';
+    nextBtn.onclick=()=>navigate(1);
   }
-  $('nextBtn').disabled = false;
+  nextBtn.disabled=(!answered&&!isReview)&&current!==questions.length-1&&false;
+  if(!answered&&!isReview&&current===questions.length-1) nextBtn.disabled=true;
 }
 
-function next(){
-  if(idx < quiz.length-1){ idx++; render(); }
-  else showResults();
+function selectAnswer(opt){
+  const q=questions[current];
+  answers[current]=opt;
+  if(opt===q.ans) score++;
+  updateScoreLive();
+  renderQuestion();
+  setTimeout(()=>{
+    if(current<questions.length-1) navigate(1);
+    else{
+      const nb=document.getElementById('btn-next');
+      nb.disabled=false;
+    }
+  },900);
+}
+
+function updateScoreLive(){
+  document.getElementById('score-live').textContent='✓ '+score;
+}
+
+function navigate(dir){
+  current+=dir;
+  if(current<0) current=0;
+  if(current>=questions.length) current=questions.length-1;
+  renderQuestion();
 }
 
 function showResults(){
-  $('quiz').classList.add('hidden');
-  $('results').classList.remove('hidden');
-  const total = quiz.length;
-  const right = quiz.filter(q=>q.correct).length;
-  const pct = Math.round(right/total*100);
-  $('scoreNum').textContent = pct + '%';
-  $('scoreSub').textContent = `${right} de ${total} correctas`;
+  let correct=answers.filter((a,i)=>a===questions[i].ans).length;
+  let wrong=answers.filter((a,i)=>a!==null&&a!==questions[i].ans).length;
+  let unanswered=answers.filter(a=>a===null).length;
+  let pct=Math.round((correct/questions.length)*100);
 
-  let msg;
-  if(pct===100) msg='Impecable. Listo para el parcial.';
-  else if(pct>=80) msg='Muy bien. Repasa los detalles que fallaron.';
-  else if(pct>=60) msg='Vas bien, pero conviene afinar.';
-  else msg='A reforzar conceptos antes del examen.';
-  $('grade').textContent = msg;
+  document.getElementById('quiz-screen').style.display='none';
+  document.getElementById('results-screen').style.display='flex';
 
-  // Revisión solo de las falladas
-  const review = $('review');
-  review.innerHTML = '';
-  const wrong = quiz.filter(q=>!q.correct);
-  if(wrong.length===0){
-    review.innerHTML = '<div class="rev-item"><div class="rq">Sin errores. 🎯</div></div>';
-  }else{
-    const head = document.createElement('div');
-    head.style.cssText='font-weight:700;font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:2px';
-    head.textContent = `Para repasar (${wrong.length})`;
-    review.appendChild(head);
-    wrong.forEach(q=>{
-      const correct = q.options.find(o=>o.ok).t;
-      const chosen = q.options[q.chosen].t;
-      const el = document.createElement('div');
-      el.className='rev-item';
-      el.innerHTML = `
-        <div class="rq">${q.q}</div>
-        <div class="rev-line you bad"><span class="rev-dot">✗</span> Tu respuesta: ${chosen}</div>
-        <div class="rev-line sol"><span class="rev-dot">✓</span> Correcta: ${correct}</div>`;
-      review.appendChild(el);
-    });
-  }
+  const circle=document.getElementById('res-circle');
+  if(pct>=70){circle.style.background='var(--success-bg)';circle.style.color='var(--success)';}
+  else{circle.style.background='var(--danger-bg)';circle.style.color='var(--danger)';}
+  document.getElementById('res-num').textContent=pct+'%';
+  document.getElementById('res-den').textContent=correct+' / '+questions.length;
+
+  let label,sub;
+  if(pct>=90){label='Excelente';sub='Dominas el tema.';}
+  else if(pct>=70){label='Aprobado';sub='Buen trabajo, repasa los errores.';}
+  else if(pct>=50){label='Por mejorar';sub='Repasa el material y vuelve a intentarlo.';}
+  else{label='Necesitas repasar';sub='Revisa bien los temas antes del parcial.';}
+  document.getElementById('res-label').textContent=label;
+  document.getElementById('res-sub').textContent=sub;
+  document.getElementById('res-correct').textContent=correct;
+  document.getElementById('res-wrong').textContent=wrong+(unanswered?' (+'+unanswered+' sin responder)':'');
 }
 
-/* Navegación de pantallas */
-function startQuiz(){
-  buildQuiz();
-  if(quiz.length===0) return;
-  idx = 0;
-  $('start').classList.add('hidden');
-  $('results').classList.add('hidden');
-  $('quiz').classList.remove('hidden');
-  render();
+function reviewMode(){
+  isReview=true; current=0;
+  document.getElementById('results-screen').style.display='none';
+  document.getElementById('quiz-screen').style.display='flex';
+  const nextBtn=document.getElementById('btn-next');
+  nextBtn.innerHTML='Siguiente <i class="ti ti-arrow-right" aria-hidden="true"></i>';
+  nextBtn.onclick=()=>navigate(1);
+  nextBtn.disabled=false;
+  renderQuestion();
 }
 
-$('startBtn').addEventListener('click', startQuiz);
-$('nextBtn').addEventListener('click', next);
-$('retryBtn').addEventListener('click', startQuiz);
-$('homeBtn').addEventListener('click', ()=>{
-  $('results').classList.add('hidden');
-  $('quiz').classList.add('hidden');
-  $('start').classList.remove('hidden');
-});
+rebuildQtyChips();
 </script>
 </body>
 </html>
