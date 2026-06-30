@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quiz de Práctica — Redes (Parcial 3: Config. de router y enrutamiento)</title>
+<title>Simulacro Parcial 3 — Redes (Cap. 1-3 · selector + desorden)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -67,6 +67,31 @@
   .ghost{background:#fff; color:var(--brand); border-color:var(--line)}
   .ghost:hover{background:var(--surface-2); border-color:#c4cfe0}
 
+  /* ---------- setup panel (chapter + shuffle) ---------- */
+  .setup{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+    box-shadow:var(--shadow); padding:14px 16px; margin:22px 0 4px;
+    display:flex; flex-wrap:wrap; gap:13px 26px; align-items:center}
+  .setup-row{display:flex; align-items:center; gap:11px}
+  .setup-lbl{font:700 11px/1 var(--mono); letter-spacing:.12em; text-transform:uppercase; color:var(--muted)}
+  .seg{display:inline-flex; background:var(--surface-2); border:1px solid var(--line);
+    border-radius:11px; padding:3px; gap:2px}
+  .seg-btn{font-family:var(--sans); font-weight:600; font-size:13.5px; color:var(--muted);
+    background:transparent; border:0; border-radius:8px; padding:7px 14px; cursor:pointer; transition:.15s}
+  .seg-btn:hover{color:var(--brand)}
+  .seg-btn:focus-visible{outline:3px solid #9bc0ff; outline-offset:2px}
+  .seg-btn.active{background:var(--brand); color:#fff; box-shadow:0 1px 3px rgba(22,32,58,.18)}
+  .switch{display:inline-flex; align-items:center; gap:10px; cursor:pointer; user-select:none}
+  .switch input{position:absolute; opacity:0; width:0; height:0}
+  .slider{position:relative; width:42px; height:24px; background:#cdd7e7; border-radius:999px;
+    transition:.2s; flex:0 0 auto}
+  .slider::before{content:""; position:absolute; top:3px; left:3px; width:18px; height:18px;
+    background:#fff; border-radius:50%; transition:.2s; box-shadow:0 1px 2px rgba(0,0,0,.2)}
+  .switch input:checked + .slider{background:var(--brand-2)}
+  .switch input:checked + .slider::before{transform:translateX(18px)}
+  .switch input:focus-visible + .slider{outline:3px solid #9bc0ff; outline-offset:2px}
+  .switch-txt{font-size:14px; font-weight:600; color:var(--ink)}
+  .setup-meta{font:600 12.5px/1 var(--mono); color:var(--faint); margin-left:auto}
+
   /* ---------- score gauge (appears after grading) ---------- */
   .scorecard{display:none; gap:16px; align-items:center; background:var(--surface);
     border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow);
@@ -107,6 +132,9 @@
   .q-head{display:flex; gap:11px; align-items:flex-start}
   .q-num{flex:0 0 auto; width:27px; height:27px; border-radius:8px; background:var(--brand-soft);
     color:var(--brand); font:700 13px/27px var(--mono); text-align:center}
+  .q-cap{flex:0 0 auto; align-self:flex-start; margin-left:auto; font:700 10.5px/1 var(--mono);
+    letter-spacing:.08em; text-transform:uppercase; color:var(--brand); background:var(--brand-soft);
+    border:1px solid #cfe0fb; padding:4px 8px; border-radius:999px; white-space:nowrap}
   .q-text{margin:2px 0 0; font-size:15px; font-weight:500}
   .opts{display:flex; flex-direction:column; gap:8px; margin:13px 0 0; padding-left:38px}
   .opt{display:flex; align-items:center; gap:11px; width:100%; text-align:left; cursor:pointer;
@@ -145,7 +173,7 @@
   .why .nuance{display:block; margin-top:7px; padding-top:7px; border-top:1px solid #e2e8f1;
     color:var(--muted); font-style:italic}
 
-  /* ---------- Parte III ---------- */
+  /* ---------- Parte práctica ---------- */
   .dev{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
     box-shadow:var(--shadow); padding:18px 18px}
   .dev p.case{font-size:14.5px; color:#33405a; margin:0 0 4px}
@@ -172,6 +200,7 @@
   .tabla-dir th{background:var(--surface-2)}
   .note-box{margin-top:12px; padding:11px 13px; background:var(--accent-soft); border:1px solid #f0d39a;
     border-radius:10px; font-size:13.3px; color:#7a5207}
+  .sec-empty{color:var(--muted); font-size:14px; padding:6px 2px 0}
 
   footer{max-width:760px; margin:34px auto 0; padding:18px 16px 0; border-top:1px solid var(--line);
     color:var(--faint); font-size:12.5px; text-align:center}
@@ -180,6 +209,7 @@
     .opts,.why{padding-left:0; margin-left:0}
     .why{margin-left:0}
     .q-text{font-size:14.5px}
+    .setup-meta{margin-left:0; width:100%}
   }
   @media (prefers-reduced-motion:reduce){
     *{transition:none !important; scroll-behavior:auto}
@@ -192,9 +222,9 @@
 <header class="hero">
   <div class="wrap">
     <div class="eyebrow">Parcial 3 · Redes Informáticas</div>
-    <h1>Quiz de Práctica — Configuración de router y enrutamiento</h1>
-    <p class="sub">Responde las tres partes y pulsa <b>Calificar</b> para verificar las preguntas cerradas. La Parte III es de desarrollo práctico: resuélvela y compárala con la solución.</p>
-    <div class="meta">Prof. Emilio Dutari · UTP · Cap. 1–3 · 32 preguntas cerradas + 1 caso práctico</div>
+    <h1>Simulacro interactivo — Configuración de router y enrutamiento</h1>
+    <p class="sub">Elige los capítulos que quieras practicar y, si deseas, <b>desordena</b> las preguntas. Responde y pulsa <b>Calificar</b> para ver tu puntaje y las explicaciones.</p>
+    <div class="meta">Prof. Emilio Dutari · UTP · Cap. 1–3 · banco de 45 preguntas + 1 caso práctico</div>
   </div>
 </header>
 
@@ -202,7 +232,7 @@
   <div class="bar-in">
     <div class="progress">
       <div class="track"><div class="fill" id="fill"></div></div>
-      <div class="lbl" id="plbl">0 / 32 respondidas</div>
+      <div class="lbl" id="plbl">0 / 0 respondidas</div>
     </div>
     <div class="btns">
       <button class="act ghost" id="revealBtn" type="button">Mostrar respuestas</button>
@@ -213,6 +243,28 @@
 </div>
 
 <div class="wrap">
+
+  <!-- ===== Setup: chapter + shuffle ===== -->
+  <div class="setup" id="setup">
+    <div class="setup-row">
+      <span class="setup-lbl">Capítulos</span>
+      <div class="seg" id="capSeg" role="group" aria-label="Seleccionar capítulos">
+        <button class="seg-btn active" type="button" data-cap="all">Todos</button>
+        <button class="seg-btn" type="button" data-cap="1">Cap 1</button>
+        <button class="seg-btn" type="button" data-cap="2">Cap 2</button>
+        <button class="seg-btn" type="button" data-cap="3">Cap 3</button>
+      </div>
+    </div>
+    <div class="setup-row">
+      <span class="setup-lbl">Orden</span>
+      <label class="switch">
+        <input type="checkbox" id="shuffleChk">
+        <span class="slider"></span>
+        <span class="switch-txt">Desordenar preguntas</span>
+      </label>
+    </div>
+    <div class="setup-meta" id="setupMeta"></div>
+  </div>
 
   <div class="scorecard" id="scorecard">
     <div class="gauge">
@@ -226,9 +278,9 @@
     <div class="score-detail">
       <h3 id="scoreTitle">Resultado</h3>
       <div class="lines">
-        <div>Parte I (Cierto/Falso): <b id="s1">0 / 16</b></div>
-        <div>Parte II (Opción múltiple): <b id="s2">0 / 16</b></div>
-        <div>Total cerradas: <b id="sTotal">0 / 32</b></div>
+        <div>Parte I (Cierto/Falso): <b id="s1">0 / 0</b></div>
+        <div>Parte II (Opción múltiple): <b id="s2">0 / 0</b></div>
+        <div>Total cerradas: <b id="sTotal">0 / 0</b></div>
       </div>
       <div class="wrongnav" id="wrongnav"></div>
     </div>
@@ -248,7 +300,7 @@
 
   <section id="partIII">
     <div class="sec-head"><span class="tag">Parte III</span><h2>Desarrollo práctico — Rutas estáticas (Packet Tracer)</h2></div>
-    <p class="sec-sub">Resuélvelo en papel / Packet Tracer y luego abre la solución para comparar.</p>
+    <p class="sec-sub">Caso del Capítulo 2. Resuélvelo en papel / Packet Tracer y luego abre la solución para comparar.</p>
     <div class="dev">
       <p class="case">Tres routers (R1 – R2 – R3) conectados por enlaces seriales WAN, cada uno con una LAN. Configure el direccionamiento y las <b>rutas estáticas</b> necesarias para que haya comunicación de extremo a extremo entre todas las PC.</p>
 
@@ -345,57 +397,74 @@
 </footer>
 
 <script>
-/* ===== Datos de las preguntas ===== */
+/* ===== Banco de preguntas (cada una etiquetada con su capítulo: cap) ===== */
 const partI = [
-  {n:1,  t:"La memoria RAM del router conserva su contenido cuando el router se apaga o reinicia.", a:"F", why:"La RAM es volátil: pierde su contenido (running-config, tabla de rutas) al apagar."},
-  {n:2,  t:"El IOS de Cisco se almacena de forma permanente en la memoria Flash.", a:"C", why:"El IOS vive en la Flash y se copia a la RAM durante el arranque."},
-  {n:3,  t:"El archivo startup-config se guarda en la NVRAM.", a:"C", why:"La NVRAM es permanente y guarda la configuración de inicio."},
-  {n:4,  t:"El router toma su decisión principal de envío en la Capa 2 del modelo OSI.", a:"F", why:"La decisión principal es en Capa 3, según la dirección IP de destino."},
-  {n:5,  t:"Una ruta estática tiene una distancia administrativa por defecto de 1.", a:"C", why:"AD = 1, incluso cuando se configura con interfaz de salida. Solo la red conectada tiene AD 0."},
-  {n:6,  t:"Una red conectada directamente tiene una distancia administrativa de 0.", a:"C", why:"Es el origen más preferido y no se puede cambiar."},
-  {n:7,  t:"EIGRP es un protocolo con clase que no admite VLSM.", a:"F", why:"EIGRP es SIN clase (admite VLSM). Los con clase son RIPv1 e IGRP."},
-  {n:8,  t:"El comando clock rate se configura en el extremo DCE del enlace serial.", a:"C", why:"El lado DCE provee la señal de reloj; el DTE no lleva clock rate."},
-  {n:9,  t:"Al pasar un paquete de un router a otro, la dirección IP de destino no cambia.", a:"C", why:"Las IP de Capa 3 no cambian; lo que cambia en cada salto son las direcciones MAC de Capa 2."},
-  {n:10, t:"BGP es un protocolo de gateway interior (IGP).", a:"F", why:"BGP es EGP (entre sistemas autónomos). Los IGP son RIP, EIGRP, OSPF, IS-IS."},
-  {n:11, t:"La implementación de OSPF de Cisco usa el ancho de banda como base de su métrica (costo).", a:"C", why:"OSPF calcula el costo a partir del ancho de banda del enlace."},
-  {n:12, t:"Una ruta estática por defecto se configura con la red 0.0.0.0 y máscara 0.0.0.0.", a:"C", why:"La ruta 'quad-zero' coincide con todo destino sin una ruta más específica."},
-  {n:13, t:"El protocolo CDP opera en la Capa 3 del modelo OSI.", a:"F", why:"CDP opera en Capa 2 y descubre dispositivos Cisco conectados directamente."},
-  {n:14, t:"La convergencia ocurre cuando todas las tablas de enrutamiento están en estado de uniformidad.", a:"C", why:"Convergencia = información completa y precisa en todos los routers."},
-  {n:15, t:"Los protocolos de vector de distancia utilizan el algoritmo Dijkstra (SPF).", a:"F", why:"Vector de distancia usa Bellman-Ford; Dijkstra lo usan los de estado de enlace (OSPF)."},
-  {n:16, t:"El comando 'show ip interface brief' muestra un resumen del estado (up/up) de las interfaces.", a:"C", why:"Es la forma rápida de ver IP y estado de todas las interfaces."}
+  {n:1,  cap:1, t:"La memoria RAM del router conserva su contenido cuando el router se apaga o reinicia.", a:"F", why:"La RAM es volátil: pierde su contenido (running-config, tabla de rutas) al apagar."},
+  {n:2,  cap:1, t:"El IOS de Cisco se almacena de forma permanente en la memoria Flash.", a:"C", why:"El IOS vive en la Flash y se copia a la RAM durante el arranque."},
+  {n:3,  cap:1, t:"El archivo startup-config se guarda en la NVRAM.", a:"C", why:"La NVRAM es permanente y guarda la configuración de inicio."},
+  {n:4,  cap:1, t:"El router toma su decisión principal de envío en la Capa 2 del modelo OSI.", a:"F", why:"La decisión principal es en Capa 3, según la dirección IP de destino."},
+  {n:5,  cap:3, t:"Una ruta estática tiene una distancia administrativa por defecto de 1.", a:"C", why:"AD = 1, incluso cuando se configura con interfaz de salida. Solo la red conectada tiene AD 0."},
+  {n:6,  cap:3, t:"Una red conectada directamente tiene una distancia administrativa de 0.", a:"C", why:"Es el origen más preferido y no se puede cambiar."},
+  {n:7,  cap:3, t:"EIGRP es un protocolo con clase que no admite VLSM.", a:"F", why:"EIGRP es SIN clase (admite VLSM). Los con clase son RIPv1 e IGRP."},
+  {n:8,  cap:2, t:"El comando clock rate se configura en el extremo DCE del enlace serial.", a:"C", why:"El lado DCE provee la señal de reloj; el DTE no lleva clock rate."},
+  {n:9,  cap:1, t:"Al pasar un paquete de un router a otro, la dirección IP de destino no cambia.", a:"C", why:"Las IP de Capa 3 no cambian; lo que cambia en cada salto son las direcciones MAC de Capa 2."},
+  {n:10, cap:3, t:"BGP es un protocolo de gateway interior (IGP).", a:"F", why:"BGP es EGP (entre sistemas autónomos). Los IGP son RIP, EIGRP, OSPF, IS-IS."},
+  {n:11, cap:3, t:"La implementación de OSPF de Cisco usa el ancho de banda como base de su métrica (costo).", a:"C", why:"OSPF calcula el costo a partir del ancho de banda del enlace."},
+  {n:12, cap:2, t:"Una ruta estática por defecto se configura con la red 0.0.0.0 y máscara 0.0.0.0.", a:"C", why:"La ruta 'quad-zero' coincide con todo destino sin una ruta más específica."},
+  {n:13, cap:2, t:"El protocolo CDP opera en la Capa 3 del modelo OSI.", a:"F", why:"CDP opera en Capa 2 y descubre dispositivos Cisco conectados directamente."},
+  {n:14, cap:3, t:"La convergencia ocurre cuando todas las tablas de enrutamiento están en estado de uniformidad.", a:"C", why:"Convergencia = información completa y precisa en todos los routers."},
+  {n:15, cap:3, t:"Los protocolos de vector de distancia utilizan el algoritmo Dijkstra (SPF).", a:"F", why:"Vector de distancia usa Bellman-Ford; Dijkstra lo usan los de estado de enlace (OSPF)."},
+  {n:16, cap:1, t:"El comando 'show ip interface brief' muestra un resumen del estado (up/up) de las interfaces.", a:"C", why:"Es la forma rápida de ver IP y estado de todas las interfaces."},
+  {n:17, cap:1, t:"Por defecto, todas las interfaces del router están activas; no necesitan 'no shutdown'.", a:"F", why:"Las interfaces vienen administrativamente apagadas; hay que activarlas con no shutdown."},
+  {n:18, cap:1, t:"El campo TTL del paquete disminuye en 1 cada vez que atraviesa un router.", a:"C", why:"Al llegar a 0 el paquete se descarta; evita bucles infinitos."},
+  {n:19, cap:2, t:"Configurar una ruta estática con la interfaz de salida evita la búsqueda recurrente.", a:"C", why:"Con interfaz de salida el router resuelve la ruta en una sola búsqueda, no en dos."},
+  {n:20, cap:2, t:"Para modificar una ruta estática basta con volver a escribirla; el IOS reemplaza la anterior.", a:"F", why:"No se puede editar: hay que eliminarla con 'no ip route ...' y crear la nueva."},
+  {n:21, cap:3, t:"El protocolo RIP admite un máximo de 15 saltos.", a:"C", why:"A los 16 saltos el destino se considera inalcanzable; es una de las limitaciones de RIP."},
+  {n:22, cap:2, t:"En un router, el comando ping muestra '!!!!!' cuando la conexión es exitosa.", a:"C", why:"'!' = respuesta correcta; '.' = sin respuesta (fallo)."}
 ];
 
 const partII = [
-  {n:1,  t:"¿Qué memoria del router almacena el archivo startup-config?", o:["RAM","Flash","NVRAM","ROM"], a:2, why:"La NVRAM es permanente y guarda la configuración de inicio."},
-  {n:2,  t:"El IOS de Cisco se almacena de forma permanente en:", o:["RAM","Flash","NVRAM","Caché ARP"], a:1, why:"En la Flash; se copia a la RAM al arrancar."},
-  {n:3,  t:"¿Cuál es la primera etapa del proceso de arranque del router?", o:["Cargar el IOS","Cargar el bootstrap","Ejecutar la POST","Cargar la startup-config"], a:2, why:"La POST prueba el hardware desde la ROM antes que todo lo demás."},
-  {n:4,  t:"La distancia administrativa por defecto de una ruta estática es:", o:["0","1","90","120"], a:1, why:"AD = 1. Solo la red conectada directamente tiene AD 0."},
-  {n:5,  t:"El comando que configura la señal de reloj en el extremo DCE es:", o:["bandwidth 64000","speed 64000","clock rate 64000","set clock 64000"], a:2, why:"clock rate 64000 (solo en el lado DCE)."},
-  {n:6,  t:"¿Cuál de los siguientes es un protocolo de enrutamiento exterior (EGP)?", o:["OSPF","EIGRP","RIP","BGP"], a:3, why:"BGP es el EGP de Internet; los demás son IGP."},
-  {n:7,  t:"¿Cuáles protocolos NO admiten VLSM por ser con clase?", o:["RIPv2 y EIGRP","RIPv1 e IGRP","OSPF e IS-IS","EIGRP y OSPF"], a:1, why:"RIPv1 e IGRP son con clase (no envían la máscara)."},
-  {n:8,  t:"La métrica que utiliza el protocolo RIP es:", o:["Ancho de banda","Costo","Retardo","Conteo de saltos"], a:3, why:"RIP usa conteo de saltos; menos saltos = mejor ruta."},
-  {n:9,  t:"En la tabla de enrutamiento, la entrada S* 0.0.0.0/0 representa:", o:["Una red conectada","Una ruta RIP","Una ruta estática por defecto","Una ruta resumida"], a:2, why:"El * indica ruta candidata por defecto (gateway of last resort)."},
-  {n:10, t:"El algoritmo utilizado por los protocolos de vector de distancia es:", o:["Dijkstra (SPF)","Bellman-Ford","Spanning-Tree","Diffie-Hellman"], a:1, why:"Bellman-Ford; Dijkstra es de estado de enlace."},
-  {n:11, t:"La distancia administrativa de OSPF es:", o:["90","100","110","120"], a:2, why:"OSPF = 110. EIGRP interno = 90, RIP = 120."},
-  {n:12, t:"El comando para activar (encender) una interfaz es:", o:["enable","no shutdown","interface up","start"], a:1, why:"no shutdown cambia la interfaz de administratively down a activa."},
-  {n:13, t:"El comando para guardar la configuración en la NVRAM es:", o:["save config","write erase","copy running-config startup-config","copy startup-config running-config"], a:2, why:"copy running-config startup-config (RAM → NVRAM)."},
-  {n:14, t:"Una interfaz serial queda en estado 'up/down' cuando:", o:["Falta asignar la IP","Falta el comando no shutdown","Falta clock rate en el DCE o el otro extremo no está configurado","Se usó un cable cruzado"], a:2, why:"Capa física OK pero protocolo de línea caído: típicamente falta el reloj del DCE o el otro lado."},
-  {n:15, t:"¿Cuál es un protocolo de enrutamiento de estado de enlace?", o:["RIP","IGRP","OSPF","EIGRP"], a:2, why:"OSPF (e IS-IS) son de estado de enlace; construyen un mapa de la topología."},
-  {n:16, t:"La distancia administrativa de EIGRP interno es:", o:["90","110","120","170"], a:0, why:"EIGRP interno = 90; EIGRP externo = 170."}
+  {n:1,  cap:1, t:"¿Qué memoria del router almacena el archivo startup-config?", o:["RAM","Flash","NVRAM","ROM"], a:2, why:"La NVRAM es permanente y guarda la configuración de inicio."},
+  {n:2,  cap:1, t:"El IOS de Cisco se almacena de forma permanente en:", o:["RAM","Flash","NVRAM","Caché ARP"], a:1, why:"En la Flash; se copia a la RAM al arrancar."},
+  {n:3,  cap:1, t:"¿Cuál es la primera etapa del proceso de arranque del router?", o:["Cargar el IOS","Cargar el bootstrap","Ejecutar la POST","Cargar la startup-config"], a:2, why:"La POST prueba el hardware desde la ROM antes que todo lo demás."},
+  {n:4,  cap:3, t:"La distancia administrativa por defecto de una ruta estática es:", o:["0","1","90","120"], a:1, why:"AD = 1. Solo la red conectada directamente tiene AD 0."},
+  {n:5,  cap:2, t:"El comando que configura la señal de reloj en el extremo DCE es:", o:["bandwidth 64000","speed 64000","clock rate 64000","set clock 64000"], a:2, why:"clock rate 64000 (solo en el lado DCE)."},
+  {n:6,  cap:3, t:"¿Cuál de los siguientes es un protocolo de enrutamiento exterior (EGP)?", o:["OSPF","EIGRP","RIP","BGP"], a:3, why:"BGP es el EGP de Internet; los demás son IGP."},
+  {n:7,  cap:3, t:"¿Cuáles protocolos NO admiten VLSM por ser con clase?", o:["RIPv2 y EIGRP","RIPv1 e IGRP","OSPF e IS-IS","EIGRP y OSPF"], a:1, why:"RIPv1 e IGRP son con clase (no envían la máscara)."},
+  {n:8,  cap:3, t:"La métrica que utiliza el protocolo RIP es:", o:["Ancho de banda","Costo","Retardo","Conteo de saltos"], a:3, why:"RIP usa conteo de saltos; menos saltos = mejor ruta."},
+  {n:9,  cap:2, t:"En la tabla de enrutamiento, la entrada S* 0.0.0.0/0 representa:", o:["Una red conectada","Una ruta RIP","Una ruta estática por defecto","Una ruta resumida"], a:2, why:"El * indica ruta candidata por defecto (gateway of last resort)."},
+  {n:10, cap:3, t:"El algoritmo utilizado por los protocolos de vector de distancia es:", o:["Dijkstra (SPF)","Bellman-Ford","Spanning-Tree","Diffie-Hellman"], a:1, why:"Bellman-Ford; Dijkstra es de estado de enlace."},
+  {n:11, cap:3, t:"La distancia administrativa de OSPF es:", o:["90","100","110","120"], a:2, why:"OSPF = 110. EIGRP interno = 90, RIP = 120."},
+  {n:12, cap:1, t:"El comando para activar (encender) una interfaz es:", o:["enable","no shutdown","interface up","start"], a:1, why:"no shutdown cambia la interfaz de administratively down a activa."},
+  {n:13, cap:1, t:"El comando para guardar la configuración en la NVRAM es:", o:["save config","write erase","copy running-config startup-config","copy startup-config running-config"], a:2, why:"copy running-config startup-config (RAM → NVRAM)."},
+  {n:14, cap:2, t:"Una interfaz serial queda en estado 'up/down' cuando:", o:["Falta asignar la IP","Falta el comando no shutdown","Falta clock rate en el DCE o el otro extremo no está configurado","Se usó un cable cruzado"], a:2, why:"Capa física OK pero protocolo de línea caído: típicamente falta el reloj del DCE o el otro lado."},
+  {n:15, cap:3, t:"¿Cuál es un protocolo de enrutamiento de estado de enlace?", o:["RIP","IGRP","OSPF","EIGRP"], a:2, why:"OSPF (e IS-IS) son de estado de enlace; construyen un mapa de la topología."},
+  {n:16, cap:3, t:"La distancia administrativa de EIGRP interno es:", o:["90","110","120","170"], a:0, why:"EIGRP interno = 90; EIGRP externo = 170."},
+  {n:17, cap:2, t:"¿Cuál es el comando correcto para eliminar una ruta estática?", o:["delete ip route ...","no ip route ...","erase route ...","clear ip route ..."], a:1, why:"Se antepone 'no' al mismo comando ip route con que se creó."},
+  {n:18, cap:2, t:"¿Qué herramienta muestra los saltos (routers) a lo largo del camino al destino?", o:["ping","traceroute","show version","show flash"], a:1, why:"traceroute revela el recorrido y dónde se interrumpe la ruta."},
+  {n:19, cap:2, t:"Una ruta de resumen 172.16.0.0/22 agrupa las redes:", o:["172.16.0.0 hasta 172.16.255.0","172.16.0.0, .1.0, .2.0 y .3.0 /24","Solo 172.16.0.0 y 172.16.2.0","172.0.0.0 hasta 172.16.0.0"], a:1, why:"/22 cubre las cuatro /24 contiguas: 172.16.0.0–172.16.3.0."},
+  {n:20, cap:1, t:"¿Qué comando muestra la versión del IOS y el registro de configuración?", o:["show running-config","show ip route","show version","show flash"], a:2, why:"show version: IOS, bootstrap, RAM, flash, NVRAM y registro de configuración."},
+  {n:21, cap:1, t:"En 'show ip route', ¿qué letra identifica una red conectada directamente?", o:["C","S","D","R"], a:0, why:"C = conectada, S = estática, D = EIGRP, R = RIP, O = OSPF."},
+  {n:22, cap:3, t:"En 'show ip route', en [120/2] el primer número (120) representa:", o:["La métrica","La distancia administrativa","El número de saltos","El ancho de banda"], a:1, why:"El formato es [AD / métrica]: 120 es la AD (RIP) y 2 es la métrica (saltos)."},
+  {n:23, cap:3, t:"¿Qué letra identifica una ruta aprendida por EIGRP en la tabla?", o:["E","I","D","G"], a:2, why:"EIGRP se identifica con D (no E). OSPF = O, RIP = R."}
 ];
 
 const LETTERS = ["a","b","c","d","e"];
-const state = { sel:{}, graded:false, revealed:false };
-const TOTAL = partI.length + partII.length;
+const state = { sel:{}, graded:false, revealed:false, filter:"all", shuffle:false };
+let activeI = [], activeII = [], TOTAL = 0;
 
 function el(tag, cls, html){ const e=document.createElement(tag); if(cls)e.className=cls; if(html!=null)e.innerHTML=html; return e; }
+function safeScroll(node){ if(node && typeof node.scrollIntoView==="function"){ node.scrollIntoView({behavior:"smooth", block:"start"}); } }
+function shuffleArr(a){ const r=a.slice(); for(let i=r.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [r[i],r[j]]=[r[j],r[i]]; } return r; }
+function inFilter(q){ return state.filter==="all" || q.cap===parseInt(state.filter,10); }
 
-function buildQuestion(part, q){
+function buildQuestion(part, q, disp){
   const id = part + "-" + q.n;
   const card = el("div","q"); card.id = id;
   const head = el("div","q-head");
-  head.appendChild(el("span","q-num", q.n));
+  head.appendChild(el("span","q-num", disp));
   head.appendChild(el("p","q-text", q.t));
+  head.appendChild(el("span","q-cap", "Cap "+q.cap));
   card.appendChild(head);
   const opts = el("div","opts");
   const list = part==="I" ? [{v:"C",label:"Cierto"},{v:"F",label:"Falso"}]
@@ -426,6 +495,7 @@ function qData(part, n){ return (part==="I"?partI:partII).find(x=>x.n===n); }
 
 function paintCard(id, part){
   const card = document.getElementById(id);
+  if(!card) return;
   const n = parseInt(id.split("-")[1],10);
   const q = qData(part,n);
   const correct = q.a;
@@ -468,27 +538,64 @@ function paintCard(id, part){
 }
 
 function repaintAll(){
-  partI.forEach(q=>paintCard("I-"+q.n,"I"));
-  partII.forEach(q=>paintCard("II-"+q.n,"II"));
+  activeI.forEach(q=>paintCard("I-"+q.n,"I"));
+  activeII.forEach(q=>paintCard("II-"+q.n,"II"));
 }
 function updateProgress(){
   const answered = Object.keys(state.sel).length;
-  const pct = Math.round(answered/TOTAL*100);
+  const pct = TOTAL ? Math.round(answered/TOTAL*100) : 0;
   document.getElementById("fill").style.width = pct+"%";
   document.getElementById("plbl").textContent = answered+" / "+TOTAL+" respondidas";
 }
 
+/* ===== Render según filtro + desorden ===== */
+function render(){
+  // hide score + solution on every rebuild
+  state.sel={}; state.graded=false; state.revealed=false;
+  document.getElementById("revealBtn").disabled=false;
+  document.getElementById("revealBtn").textContent="Mostrar respuestas";
+  document.getElementById("scorecard").classList.remove("show");
+  document.getElementById("ring").style.strokeDashoffset="301.6";
+
+  activeI  = partI.filter(inFilter);
+  activeII = partII.filter(inFilter);
+  if(state.shuffle){ activeI = shuffleArr(activeI); activeII = shuffleArr(activeII); }
+  TOTAL = activeI.length + activeII.length;
+
+  const listI = document.getElementById("listI");
+  const listII = document.getElementById("listII");
+  listI.innerHTML=""; listII.innerHTML="";
+  activeI.forEach((q,i)=>{ q.disp=i+1; listI.appendChild(buildQuestion("I", q, i+1)); });
+  activeII.forEach((q,i)=>{ q.disp=i+1; listII.appendChild(buildQuestion("II", q, i+1)); });
+
+  // empty-state handling per section
+  document.getElementById("partI").style.display  = activeI.length  ? "" : "none";
+  document.getElementById("partII").style.display = activeII.length ? "" : "none";
+
+  // practical case belongs to Cap 2
+  document.getElementById("partIII").style.display = (state.filter==="all"||state.filter==="2") ? "" : "none";
+  const sol=document.getElementById("solution"); sol.classList.remove("show");
+  document.getElementById("solBtn").textContent="Ver solución";
+
+  // setup meta
+  const capTxt = state.filter==="all" ? "los 3 capítulos" : ("el Capítulo "+state.filter);
+  document.getElementById("setupMeta").textContent = TOTAL+" preguntas · "+capTxt + (state.shuffle?" · orden aleatorio":"");
+
+  updateProgress();
+}
+
 function grade(){
+  if(TOTAL===0) return;
   state.graded = true; state.revealed = false;
   document.getElementById("revealBtn").disabled = true;
   document.getElementById("revealBtn").textContent = "Mostrar respuestas";
   let s1=0,s2=0; const wrong=[];
-  partI.forEach(q=>{ const sel=state.sel["I-"+q.n]; if(sel!==undefined && sel===q.a) s1++; else wrong.push("I·"+q.n); });
-  partII.forEach(q=>{ const sel=state.sel["II-"+q.n]; if(sel!==undefined && sel===q.a) s2++; else wrong.push("II·"+q.n); });
+  activeI.forEach(q=>{ const sel=state.sel["I-"+q.n]; if(sel!==undefined && sel===q.a) s1++; else wrong.push({id:"I-"+q.n, d:"C/F "+q.disp}); });
+  activeII.forEach(q=>{ const sel=state.sel["II-"+q.n]; if(sel!==undefined && sel===q.a) s2++; else wrong.push({id:"II-"+q.n, d:"OM "+q.disp}); });
   repaintAll();
   const total=s1+s2, pct=Math.round(total/TOTAL*100);
-  document.getElementById("s1").textContent = s1+" / "+partI.length;
-  document.getElementById("s2").textContent = s2+" / "+partII.length;
+  document.getElementById("s1").textContent = s1+" / "+activeI.length;
+  document.getElementById("s2").textContent = s2+" / "+activeII.length;
   document.getElementById("sTotal").textContent = total+" / "+TOTAL;
   document.getElementById("pctNum").textContent = pct+"%";
   const C=301.6, ring=document.getElementById("ring");
@@ -500,12 +607,10 @@ function grade(){
   if(wrong.length===0){ nav.className="wrongnav perfect"; nav.innerHTML='<a href="#partI">¡Todas correctas! 🎉</a>'; }
   else{
     nav.className="wrongnav";
-    nav.innerHTML='Para repasar: ' + wrong.map(w=>{
-      const [p,n]=w.split("·"); return '<a href="#'+p+'-'+n+'">'+w+'</a>';
-    }).join("");
+    nav.innerHTML='Para repasar: ' + wrong.map(w=> '<a href="#'+w.id+'">'+w.d+'</a>').join("");
   }
   const sc=document.getElementById("scorecard"); sc.classList.add("show");
-  sc.scrollIntoView({behavior:"smooth", block:"start"});
+  safeScroll(sc);
 }
 
 function reset(){
@@ -515,7 +620,7 @@ function reset(){
   document.getElementById("scorecard").classList.remove("show");
   document.getElementById("ring").style.strokeDashoffset="301.6";
   repaintAll(); updateProgress();
-  document.getElementById("partI").scrollIntoView({behavior:"smooth", block:"start"});
+  safeScroll(document.getElementById("setup"));
 }
 
 function toggleReveal(){
@@ -525,11 +630,18 @@ function toggleReveal(){
   repaintAll();
 }
 
-const listI = document.getElementById("listI");
-partI.forEach(q=> listI.appendChild(buildQuestion("I", q)));
-const listII = document.getElementById("listII");
-partII.forEach(q=> listII.appendChild(buildQuestion("II", q)));
-
+/* ===== Listeners ===== */
+document.getElementById("capSeg").addEventListener("click", function(e){
+  const b=e.target.closest(".seg-btn"); if(!b) return;
+  this.querySelectorAll(".seg-btn").forEach(x=>x.classList.remove("active"));
+  b.classList.add("active");
+  state.filter = b.dataset.cap;
+  render();
+});
+document.getElementById("shuffleChk").addEventListener("change", function(){
+  state.shuffle = this.checked;
+  render();
+});
 document.getElementById("gradeBtn").addEventListener("click", grade);
 document.getElementById("resetBtn").addEventListener("click", reset);
 document.getElementById("revealBtn").addEventListener("click", toggleReveal);
@@ -538,7 +650,8 @@ document.getElementById("solBtn").addEventListener("click", function(){
   const open=sol.classList.toggle("show");
   this.textContent = open ? "Ocultar solución" : "Ver solución";
 });
-updateProgress();
+
+render();
 </script>
 </body>
 </html>
